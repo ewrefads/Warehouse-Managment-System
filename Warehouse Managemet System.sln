@@ -5,6 +5,10 @@ VisualStudioVersion = 17.14.36603.0 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse Managemet System", "Warehouse Managemet System\Warehouse Managemet System.csproj", "{CDEAED3D-5BE2-4BFC-B3A7-741E30C42D7C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse Managment Test", "Warehouse Managment Test\Warehouse Managment Test.csproj", "{A8D51073-F666-46A3-B7EC-4C95D930674D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web Management API", "Web Management API\Web Management API.csproj", "{9E2A8966-69B4-4485-8408-D05E43281DEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{CDEAED3D-5BE2-4BFC-B3A7-741E30C42D7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDEAED3D-5BE2-4BFC-B3A7-741E30C42D7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDEAED3D-5BE2-4BFC-B3A7-741E30C42D7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8D51073-F666-46A3-B7EC-4C95D930674D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8D51073-F666-46A3-B7EC-4C95D930674D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8D51073-F666-46A3-B7EC-4C95D930674D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8D51073-F666-46A3-B7EC-4C95D930674D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E2A8966-69B4-4485-8408-D05E43281DEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E2A8966-69B4-4485-8408-D05E43281DEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E2A8966-69B4-4485-8408-D05E43281DEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E2A8966-69B4-4485-8408-D05E43281DEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
