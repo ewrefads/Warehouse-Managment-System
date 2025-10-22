@@ -8,28 +8,33 @@ using Warehouse_Managemet_System.Table_Models;
 
 namespace Warehouse_Managemet_System.Commands
 {
-    public abstract class QueryHandler
+    public class QueryHandler<T> where T : IRowModel
     {
-        protected IContext context;
+        private IContext context;
 
-        public bool InsertIntoTable(List<IRowModel> itemsToBeInserted)
+        public QueryHandler(IContext context)
+        {
+            this.context = context;
+        }
+
+        public bool InsertIntoTable(List<T> itemsToBeInserted)
         {
             return false;
         }
 
-        public bool UpdateTable(List<IRowModel> itemsToBeUpdated)
+        public bool UpdateTable(List<T> itemsToBeUpdated)
         {
             return false;
         }
 
-        public bool DeleteFromTable(List<IRowModel> itemsToBeDeleted)
+        public bool DeleteFromTable(List<T> itemsToBeDeleted)
         { 
             return false;
         }
 
-        public List<IRowModel> SelectFromTable(Dictionary<string, List<string>> filters)
+        public List<T> SelectFromTable(Dictionary<string, List<string>> filters)
         {
-            return new List<IRowModel>();
+            return new List<T>();
         }
     }
 }

@@ -26,4 +26,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Mocks\External Systems mocks\" />
+  </ItemGroup>
+
 </Project>
