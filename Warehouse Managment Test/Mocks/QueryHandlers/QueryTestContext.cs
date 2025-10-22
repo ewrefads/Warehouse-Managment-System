@@ -11,14 +11,10 @@ namespace Warehouse_Managment_Test.Mocks.QueryHandlers
 {
     public class QueryTestContext : IContext
     {
-        public bool CreateTable(string pathToTable)
-        {
-            return true;
-        }
 
         public void CreateTable(ModelBuilder modelBuilder)
         {
-            throw new NotImplementedException();
+            
         }
 
         public MySqlConnection GetConnection()
