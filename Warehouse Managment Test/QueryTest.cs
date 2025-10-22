@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,8 +40,46 @@ namespace Warehouse_Managment_Test
         [Fact]
         public void QueryHandlerReturnsCompleteTable()
         {
-            List<QueryTestRowModel> result = handler.SelectFromTable<QueryTestRowModel>(new Dictionary<string, List<string>>());
+            List<QueryTestRowModel> result = handler.SelectFromTable<QueryTestRowModel>(new Dictionary<string, List<string>>(), new List<string>());
             Assert.Equal(data.Count, result.Count);
+        }
+
+        [Fact]
+        public void QueryHandlerSelectReturnsOnlyDesiredCollumn()
+        {
+            List<string> collumn = ["Name"];
+            List<QueryTestRowModel> result = handler.SelectFromTable<QueryTestRowModel>(new Dictionary<string, List<string>>(), collumn);
+            bool onlyNameWasRetrieved = true;
+            int extraCollumnValues = 0;
+            foreach(QueryTestRowModel rowModel in result)
+            {
+                if(rowModel.Id != -1 || rowModel.FilterValue1 != -1 || rowModel.FilterValue2 != -1 || rowModel.FilterValue3 != -1)
+                {
+                    extraCollumnValues++;
+                }
+            }
+            Assert.Equal(0, extraCollumnValues);
+        }
+
+        [Fact]
+        public void QueryHandlerSelectReturnsOnlyDesiredCollumns()
+        {
+            List<string> collumns = new List<string>()
+            { 
+                "Name",
+                "Id"
+            };
+            List<QueryTestRowModel> result = handler.SelectFromTable<QueryTestRowModel>(new Dictionary<string, List<string>>(), collumns);
+            bool onlyNameWasRetrieved = true;
+            int extraCollumnValues = 0;
+            foreach (QueryTestRowModel rowModel in result)
+            {
+                if (rowModel.FilterValue1 != -1 || rowModel.FilterValue2 != -1 || rowModel.FilterValue3 != -1)
+                {
+                    extraCollumnValues++;
+                }
+            }
+            Assert.Equal(0, extraCollumnValues);
         }
     }
 }

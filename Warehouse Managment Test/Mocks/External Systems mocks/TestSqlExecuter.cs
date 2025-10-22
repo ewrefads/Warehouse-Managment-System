@@ -35,14 +35,19 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
                 result.Columns.Add("FilterValue1", typeof(int));
                 result.Columns.Add("FilterValue2", typeof(int));
                 result.Columns.Add("FilterValue3", typeof(int));
+                bool selectedCollumns = false;
+                if(paramaters.ContainsKey("@selectedCollumns"))
+                {
+                    selectedCollumns = true;
+                }
                 foreach(QueryTestRowModel rowModel in results)
                 {
                     object[] values = new object[5];
-                    values[0] = rowModel.Id;
+                    values[0] = GetIntRowValue(rowModel.Id, paramaters, "@selectedCollumns", "Id");
                     values[1] = rowModel.Name;
-                    values[2] = rowModel.FilterValue1;
-                    values[3] = rowModel.FilterValue2;
-                    values[4] = rowModel.FilterValue3;
+                    values[2] = GetIntRowValue(rowModel.FilterValue1, paramaters, "@selectedCollumns", "FilterValue1");
+                    values[3] = GetIntRowValue(rowModel.FilterValue2, paramaters, "@selectedCollumns", "FilterValue2");
+                    values[4] = GetIntRowValue(rowModel.FilterValue3, paramaters, "@selectedCollumns", "FilterValue3");
                     result.Rows.Add(values);
                 }
                 return (true, result);
@@ -52,5 +57,18 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
                 return (false, null);
             }
         }
+
+        private int GetIntRowValue(int value, Dictionary<string, string> paramaters, string paramater, string field)
+        {
+            if(paramaters.ContainsKey(paramater) && !paramaters[paramater].Contains(field))
+            {
+                return -1;
+            }
+            else
+            {
+                return value;
+            }
+        }
     }
+
 }

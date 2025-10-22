@@ -37,14 +37,38 @@ namespace Warehouse_Managemet_System.Commands
             return false;
         }
 
-        public List<RowModel> SelectFromTable<RowModel>(Dictionary<string, List<string>> filters) where RowModel : IRowModel, new()
+        public List<RowModel> SelectFromTable<RowModel>(Dictionary<string, List<string>> filters, List<string> desiredCollumns) where RowModel : IRowModel, new()
         {
             try
             {
                 using (MySqlConnection conn = context.GetConnection())
                 {
-                    string command = $"SELECT * FROM {context.GetTable()}";
-                    (bool, DataTable?) res = sQLExecuter.ExecuteQuery(command, conn, new Dictionary<string, string>());
+                    Dictionary<string, string> paramaters = new Dictionary<string, string>();
+                    string command = "SELECT ";
+                    if(desiredCollumns.Count == 0)
+                    {
+                        command += $"*";
+                    }
+                    else
+                    {
+                        string collumns = "";
+                        for (int i = 0; i < desiredCollumns.Count; i++)
+                        {
+                            if(collumns.Length == 0)
+                            {
+                                collumns = desiredCollumns[i];
+                            }
+                            else
+                            {
+                                collumns += $", {desiredCollumns[i]}";
+                            }
+                        }
+                        command += "@selectedCollumns";
+                        paramaters.Add("@selectedCollumns", collumns);
+
+                    }
+                    command += $" FROM {context.GetTable()}";
+                    (bool, DataTable?) res = sQLExecuter.ExecuteQuery(command, conn, paramaters);
                     if(res.Item1)
                     {
                         DataTable dataTable = res.Item2;
