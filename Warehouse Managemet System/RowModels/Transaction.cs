@@ -1,3 +1,5 @@
+using System.Data;
+
 namespace Warehouse_Managemet_System.Table_Models
 {
     class Transaction : IRowModel
@@ -9,6 +11,11 @@ namespace Warehouse_Managemet_System.Table_Models
         public required TransactionStatus Status { set; get; }
         public string? FromWarehouseId { set; get; }
         public string? ToWareHouseId { set; get; }
+
+        public bool CreateFromDataRow(DataRow row)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     enum TransactionType

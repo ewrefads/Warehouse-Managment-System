@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Warehouse Managemet System\Warehouse Managemet System.csproj" />
+    <ProjectReference Include="..\Warehouse Managemet System\Warehouse Management System.csproj" />
   </ItemGroup>
 
   <ItemGroup>
