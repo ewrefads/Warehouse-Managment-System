@@ -8,10 +8,10 @@ namespace Warehouse_Managemet_System.Seeders
 {
     public class Seeder
     {
-        private readonly IContext _context;
-        private readonly Parser _parser;
+        private readonly Context _context;
+        private readonly Parsers.IParser _parser;
 
-        public Seeder(IContext context, Parser parser)
+        public Seeder(Context context, Parsers.IParser parser)
         {
             _context = context;
             _parser = parser;
@@ -19,7 +19,23 @@ namespace Warehouse_Managemet_System.Seeders
 
         public void PopulateTable(string filePath)
         {
-            string file = filePath;
+            var rows = _parser.Parse(filePath);
+
+            foreach (var row in rows)
+            {
+                var existing = _context.Rows.Find(row.Id);
+                if (existing == null)
+                {
+                    _context.Rows.Add(row);
+                }
+                else
+                {
+                    _context.Entry(existing).CurrentValues.SetValues(row);
+                }
+            }
+
+            _context.SaveChanges();
+    
         }
     }
 }
