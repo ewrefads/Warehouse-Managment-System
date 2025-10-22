@@ -11,7 +11,7 @@ namespace Warehouse_Managemet_System.Contexts
 {
     public interface IContext
     {
-        protected void CreateTable(ModelBuilder modelBuilder);
+        public void CreateTable(ModelBuilder modelBuilder);
 
         public string GetTable();
 

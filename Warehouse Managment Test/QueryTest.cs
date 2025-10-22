@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI.Common;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Warehouse_Managment_Test
         public QueryTest() 
         {
             context = new QueryTestContext();
-            context.CreateTable("");
+            context.CreateTable(new ModelBuilder());
             List<QueryTestRowModel> defaultTestData = new List<QueryTestRowModel>()
             {
                 new QueryTestRowModel(0, "test0", 3, 5, 1),

@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,11 @@ namespace Warehouse_Managment_Test.Mocks.QueryHandlers
         public bool CreateTable(string pathToTable)
         {
             return true;
+        }
+
+        public void CreateTable(ModelBuilder modelBuilder)
+        {
+            throw new NotImplementedException();
         }
 
         public MySqlConnection GetConnection()
