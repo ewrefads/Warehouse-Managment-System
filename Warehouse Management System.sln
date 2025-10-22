@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36603.0 d17.14
+VisualStudioVersion = 17.14.36603.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse Managemet System", "Warehouse Managemet System\Warehouse Managemet System.csproj", "{CDEAED3D-5BE2-4BFC-B3A7-741E30C42D7C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse Management System", "Warehouse Managemet System\Warehouse Management System.csproj", "{CDEAED3D-5BE2-4BFC-B3A7-741E30C42D7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse Managment Test", "Warehouse Managment Test\Warehouse Managment Test.csproj", "{A8D51073-F666-46A3-B7EC-4C95D930674D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Warehouse Management Test", "Warehouse Managment Test\Warehouse Management Test.csproj", "{A8D51073-F666-46A3-B7EC-4C95D930674D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web Management API", "Web Management API\Web Management API.csproj", "{9E2A8966-69B4-4485-8408-D05E43281DEE}"
 EndProject
