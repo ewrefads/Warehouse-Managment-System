@@ -1,0 +1,1 @@
+[![.NET](https://github.com/ewrefads/Warehouse-Managment-System/actions/workflows/dotnet.yml/badge.svg?branch=development)](https://github.com/ewrefads/Warehouse-Managment-System/actions/workflows/dotnet.yml)
