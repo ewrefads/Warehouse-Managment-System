@@ -1,6 +1,6 @@
 namespace Warehouse_Managemet_System.Table_Models
 {
-    class OrderItem : IRowModel
+    class Transaction : IRowModel
     {
         public required string Id { get; set; }
         public required string ProductId { get; set; }
