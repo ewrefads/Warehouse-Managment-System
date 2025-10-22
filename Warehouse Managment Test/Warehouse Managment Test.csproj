@@ -32,6 +32,18 @@
   </None>
 </ItemGroup>
 
+  <ItemGroup>
+  <None Update="CsvFilesForTesting\EmptyFile.csv">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </None>
+</ItemGroup>
+
+  <ItemGroup>
+  <None Update="CsvFilesForTesting\NotCsvFile.csv">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </None>
+</ItemGroup>
+
 
   <ItemGroup>
     <Using Include="Xunit" />

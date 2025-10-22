@@ -10,9 +10,16 @@ namespace Warehouse_Managemet_System.Parsers
     {
         public List<MockRowModel> Parse(string filePath)
         {
-            using var reader = new StreamReader(filePath);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-            return csv.GetRecords<MockRowModel>().ToList();
+            try
+            {
+                using var reader = new StreamReader(filePath);
+                using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+                return csv.GetRecords<MockRowModel>().ToList();
+            }
+            catch
+            {
+                return new List<MockRowModel>();
+            }
         }
     }
 }

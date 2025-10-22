@@ -16,5 +16,23 @@ namespace Warehouse_Managment_Test
             List<MockRowModel> rowList = parser.Parse(path);
             Assert.Equal("A1", rowList[0].Id);
         }
+
+        [Fact]
+        public void Parse_InvalidFile_ReturnsEmptyListOfRows()
+        {
+            Parser parser = new Parser();
+            string path = Path.Combine(AppContext.BaseDirectory, "CsvFilesForTesting", "EmptyFile.csv");
+            List<MockRowModel> rowList = parser.Parse(path);
+            Assert.Empty(rowList);
+        }
+
+        [Fact]
+        public void Parse_EmptyFile_ReturnsEmptyListOfRows()
+        {
+            Parser parser = new Parser();
+            string path = Path.Combine(AppContext.BaseDirectory, "CsvFilesForTesting", "NotCsvFile.txt");
+            List<MockRowModel> rowList = parser.Parse(path);
+            Assert.Empty(rowList);
+        }
     }
 }
