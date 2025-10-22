@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -12,5 +13,7 @@ namespace Warehouse_Managemet_System.Contexts
         public bool CreateTable(string pathToTable);
 
         public string GetTable();
+
+        public MySqlConnection GetConnection();
     }
 }

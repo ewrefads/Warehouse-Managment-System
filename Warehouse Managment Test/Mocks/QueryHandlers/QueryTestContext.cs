@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,12 +12,17 @@ namespace Warehouse_Managment_Test.Mocks.QueryHandlers
     {
         public bool CreateTable(string pathToTable)
         {
-            throw new NotImplementedException();
+            return true;
+        }
+
+        public MySqlConnection GetConnection()
+        {
+            return new MySqlConnection();
         }
 
         public string GetTable()
         {
-            throw new NotImplementedException();
+            return "testTable";
         }
     }
 }
