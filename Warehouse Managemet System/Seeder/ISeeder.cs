@@ -4,8 +4,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Warehouse_Managemet_System.Contexts;
 
-namespace Warehouse_Managemet_System.Seeder
+namespace Warehouse_Managemet_System.Seeders
 {
     public interface ISeeder
     {

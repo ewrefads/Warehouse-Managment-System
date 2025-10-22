@@ -4,11 +4,12 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Warehouse_Managemet_System.Table_Models;
 
-namespace Warehouse_Managemet_System.Parser
+namespace Warehouse_Managemet_System.Parsers
 {
     public interface IParser
     {
-        public DataTable Parse(string filePath);
+        public List<MockRowModel> Parse(string filePath);
     }
 }
