@@ -1,3 +1,4 @@
+using Bogus;
 using Warehouse_Managemet_System.DataFaking;
 using Warehouse_Managemet_System.Table_Models;
 
@@ -9,16 +10,16 @@ namespace Warehouse_Managment_Test
         public void TestRunGenerateProduct()
         {
             ProductGenerator generator = new();
-            Product product = generator.GenerateProduct(16);
-            Console.WriteLine("product generated. Id: " + product.Id + "Name: " + product.Name + ", Price: " + product.Price);
+            IRowModel product = generator.Generate(16);
+            Console.WriteLine(product.ToString);
         }
         
         [Fact]
         public void TestRunGenerateWarehouse()
         {
             WarehouseGenerator generator = new();
-            Warehouse warehouse = generator.GenerateWarehouse(16);
-            Console.WriteLine("warehouse generated. Id: " + warehouse.Id + "Name: " + warehouse.Name);
+            IRowModel wareHouse = generator.Generate(16);
+            Console.WriteLine(wareHouse.ToString());
         }
         
         [Fact]
