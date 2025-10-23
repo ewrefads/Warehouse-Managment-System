@@ -11,7 +11,7 @@ namespace Warehouse_Managment_Test
         {
             ProductGenerator generator = new();
             IRowModel product = generator.Generate(16);
-            Console.WriteLine(product.ToString);
+            Console.WriteLine(product.ToString());
         }
         
         [Fact]

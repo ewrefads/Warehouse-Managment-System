@@ -14,7 +14,7 @@ namespace Warehouse_Managemet_System.Table_Models
 
         public string ToString()
         {
-            return "";
+            return "Warehouse! Id: " + Id + " Name: " + Name;
         }
     }
 }
