@@ -104,5 +104,22 @@ namespace Warehouse_Managment_Test
             var Exception = Record.Exception(() => handler.SelectFromTable<QueryTestRowModel>(new Dictionary<string, List<string>>(), collumns));
             Assert.Equal("Sql query failed", Exception.Message);
         }
+
+        [Theory()]
+        [InlineData("= 3", 1)]
+        [InlineData("<= 4", 2)]
+        [InlineData("< 4", 1)]
+        [InlineData(">= 4", 2)]
+        [InlineData("> 4", 1)]
+        [InlineData("<> 4", 2)]
+        public void QueryHandlerFiltersOnOneParamater(string filter, int returnedRowModels)
+        {
+            Dictionary<string, List<string>> filterDictionary = new Dictionary<string, List<string>>
+            {
+                { "FilterValue1", new List<string>(){ filter} }
+            };
+            List<QueryTestRowModel> result = handler.SelectFromTable<QueryTestRowModel>(filterDictionary, new List<string>());
+            Assert.Equal(returnedRowModels, result.Count);
+        }
     }
 }
