@@ -13,5 +13,13 @@ namespace Warehouse_Managemet_System.Table_Models
         {
             throw new NotImplementedException();
         }
+
+        public List<string> GetAllValues()
+        {
+            return new List<string>()
+            {
+                Id, OrderId, ProductId, Amount.ToString()
+            };
+        }
     }
 }
