@@ -2,7 +2,7 @@ using System.Data;
 
 namespace Warehouse_Managemet_System.Table_Models
 {
-    class OrderItem : IRowModel
+    public class OrderItem : IRowModel
     {
         public required string Id { get; set; }
         public required string OrderId { get; set; }

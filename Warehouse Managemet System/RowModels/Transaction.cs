@@ -2,7 +2,7 @@ using System.Data;
 
 namespace Warehouse_Managemet_System.Table_Models
 {
-    class Transaction : IRowModel
+    public class Transaction : IRowModel
     {
         public required string Id { get; set; }
         public required string ProductId { get; set; }
@@ -18,14 +18,14 @@ namespace Warehouse_Managemet_System.Table_Models
         }
     }
 
-    enum TransactionType
+    public enum TransactionType
     {
         Sale,
         Return,
         Transfer
     }
 
-    enum TransactionStatus
+    public enum TransactionStatus
     {
         Waiting,
         Active,

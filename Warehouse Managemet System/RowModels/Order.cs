@@ -2,7 +2,7 @@ using System.Data;
 
 namespace Warehouse_Managemet_System.Table_Models
 {
-    class Order : IRowModel
+    public class Order : IRowModel
     {
         public required string Id { get; set; }
         public required string Customer { get; set; }
@@ -16,7 +16,7 @@ namespace Warehouse_Managemet_System.Table_Models
         }
     }
 
-    enum OrderStatus
+    public enum OrderStatus
     {
         Reserved,
         Shipping,
