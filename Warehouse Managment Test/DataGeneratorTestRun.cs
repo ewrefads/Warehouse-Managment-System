@@ -20,5 +20,13 @@ namespace Warehouse_Managment_Test
             Warehouse warehouse = generator.GenerateWarehouse(16);
             Console.WriteLine("warehouse generated. Id: " + warehouse.Id + "Name: " + warehouse.Name);
         }
+        
+        [Fact]
+        public void TestRunGenerateInventoryItem()
+        {
+            DataGenerator generator = new();
+            InventoryItem item = generator.GenerateInventoryItem(16);
+            Console.WriteLine("inventory item generated. Id: " + item.Id + "Warehouse Id: " + item.WarehouseId + "Product Id: " + item.ProductId + "Amount: " + item.Amount);
+        }
     }
 }
