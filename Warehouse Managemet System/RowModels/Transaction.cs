@@ -16,6 +16,14 @@ namespace Warehouse_Managemet_System.Table_Models
         {
             throw new NotImplementedException();
         }
+
+        public List<string> GetAllValues()
+        {
+            return new List<string>()
+            {
+                Id, ProductId, type.ToString(), Amount.ToString(), Status.ToString(), FromWarehouseId, ToWareHouseId 
+            };
+        }
     }
 
     enum TransactionType

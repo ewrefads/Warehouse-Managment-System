@@ -158,18 +158,109 @@ namespace Warehouse_Managment_Test
         }
 
         [Fact]
-        public void QueryHandlerDeletesPartiallyBasedOnFilter()
+        public void QueryHandlerDeletesPartiallyBasedOnSingleFilter()
         {
-            List<string> filters = new List<string>()
+            Dictionary<string, List<string>> filters = new Dictionary<string, List<string>>
             {
-                "> 3"
+                { "FilterValue1", new List<string>(){"> 3"} }
             };
-            Dictionary<string, List<string>> filterDictionary = new Dictionary<string, List<string>>
-            {
-                { "FilterValue1", filters }
-            };
-            handler.DeleteFromTable<QueryTestRowModel>(new Dictionary<string, List<string>>());
+            handler.DeleteFromTable<QueryTestRowModel>(filters);
             Assert.Single(sqlExecuter.results);
+        }
+
+        [Fact]
+        public void QueryHandlerDeletesPartiallyBasedOnMultipleFilters()
+        {
+            Dictionary<string, List<string>> filters = new Dictionary<string, List<string>>
+            {
+                { "FilterValue1", new List<string>(){"> 3"} },
+                { "FilterValue2", new List<string>(){"= 2" } }
+
+            };
+            handler.DeleteFromTable<QueryTestRowModel>(filters);
+            Assert.Equal(2, sqlExecuter.results.Count);
+        }
+
+        [Fact]
+        public void QueryHandlerThrowsExceptionWithDelete()
+        {
+            Dictionary<string, List<string>> filters = new Dictionary<string, List<string>>
+            {
+                { "FilterValue4", new List<string>(){"> 3"} }
+            };
+            Assert.ThrowsAny<Exception>(() => handler.DeleteFromTable<QueryTestRowModel>(filters));
+        }
+
+        [Fact]
+        public void QueryHandlerUpdatesAllWithNoConditions()
+        {
+            Dictionary<string, string> updateValues = new Dictionary<string, string>()
+            {
+                {"FilterValue1", "1" }
+            };
+            handler.UpdateTable<QueryTestRowModel>(new Dictionary<string, List<string>>(), updateValues);
+            int updatedRows = 0;
+            foreach (QueryTestRowModel rowModel in sqlExecuter.results)
+            {
+                if (rowModel.FilterValue1 == 1)
+                {
+                    updatedRows++;
+                }
+            }
+            Assert.Equal(3, updatedRows);
+        }
+
+        [Fact]
+        public void QueryHandlerUpdatesString()
+        {
+            Dictionary<string, string> updateValues = new Dictionary<string, string>()
+            {
+                {"Name", "test" }
+            };
+            handler.UpdateTable<QueryTestRowModel>(new Dictionary<string, List<string>>(), updateValues);
+            int updatedRows = 0;
+            foreach (QueryTestRowModel rowModel in sqlExecuter.results)
+            {
+                if (rowModel.Name == "test")
+                {
+                    updatedRows++;
+                }
+            }
+            Assert.Equal(3, updatedRows);
+        }
+
+        [Fact]
+        public void QueryHandlerUpdatesPartiallyBasedOnFilter()
+        {
+            Dictionary<string, string> updateValues = new Dictionary<string, string>()
+            {
+                {"FilterValue1", "1" }
+            };
+            Dictionary<string, List<string>> filters = new Dictionary<string, List<string>>
+            {
+                { "FilterValue1", new List<string>(){"> 3"} }
+            };
+            handler.UpdateTable<QueryTestRowModel>(filters, updateValues);
+            int updatedRows = 0;
+            foreach (QueryTestRowModel rowModel in sqlExecuter.results)
+            {
+                if (rowModel.FilterValue1 == 1)
+                {
+                    updatedRows++;
+                }
+            }
+            Assert.Equal(2, updatedRows);
+        }
+
+        [Fact]
+        public void QueryHandlerThrowsExceptionOnUnknownCollumnName()
+        {
+            Dictionary<string, string> updateValues = new Dictionary<string, string>()
+            {
+                {"FilterValue4", "1" }
+            };
+            var exception = Record.Exception(() => handler.UpdateTable<QueryTestRowModel>(new Dictionary<string, List<string>>(), updateValues));
+            Assert.Equal("Sql query failed", exception.Message);
         }
     }
 }

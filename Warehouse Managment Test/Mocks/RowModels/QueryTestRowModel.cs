@@ -59,5 +59,13 @@ namespace Warehouse_Managment_Test.Mocks.RowModels
             }
             return true;
         }
+
+        public List<string> GetAllValues()
+        {
+            return new List<string>()
+            {
+                Id.ToString(), Name, FilterValue1.ToString(), FilterValue2.ToString(), FilterValue3.ToString()
+            };
+        }
     }
 }

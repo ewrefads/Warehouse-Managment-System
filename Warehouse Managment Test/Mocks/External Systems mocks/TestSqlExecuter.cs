@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Warehouse_Managemet_System.SQL_Executer;
@@ -22,28 +23,53 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
 
         public string ExecuteNonReturningQuery(string command, MySqlConnection connection, Dictionary<string, string> paramaters)
         {
-            if (command.Contains("DELETE"))
+            try
             {
-                Dictionary<string, List<(string, int)>> filterValues = GetConditions(0, paramaters);
-                int affectedRows = 0;
-                List<QueryTestRowModel> rowsToBeDeleted = new List<QueryTestRowModel>();
-                foreach (QueryTestRowModel queryTestRowModel in results)
+                if (command.Contains("DELETE") && command.Contains("testTable"))
                 {
-                    if (ValidateRow(filterValues, queryTestRowModel))
+                    Dictionary<string, List<(string, int)>> filterValues = GetConditions(0, paramaters);
+                    int affectedRows = 0;
+                    List<QueryTestRowModel> rowsToBeDeleted = new List<QueryTestRowModel>();
+                    foreach (QueryTestRowModel queryTestRowModel in results)
                     {
-                        affectedRows++;
-                        rowsToBeDeleted.Add(queryTestRowModel);
+                        if (ValidateRow(filterValues, queryTestRowModel))
+                        {
+                            affectedRows++;
+                            rowsToBeDeleted.Add(queryTestRowModel);
+                        }
                     }
+                    foreach (QueryTestRowModel rowModel in rowsToBeDeleted)
+                    {
+                        results.Remove(rowModel);
+                    }
+                    return $"command executed succesfully. {affectedRows} rows affected";
                 }
-                foreach(QueryTestRowModel rowModel in rowsToBeDeleted)
+                else if (command.Contains("UPDATE") && command.Contains("testTable"))
                 {
-                    results.Remove(rowModel);
+                    Dictionary<string, object> updateValues = GetUpdateValues(paramaters);
+                    Dictionary<string, List<(string, int)>> filterValues = GetConditions(0, paramaters);
+                    int affectedRows = 0;
+                    foreach (QueryTestRowModel rowModel in results)
+                    {
+                        if (ValidateRow(filterValues, rowModel))
+                        {
+                            foreach (string collumn in updateValues.Keys)
+                            {
+                                UpdateCollumn(collumn, updateValues[collumn], rowModel);
+                            }
+                            affectedRows++;
+                        }
+                    }
+                    return $"command executed succesfully. {affectedRows} rows affected";
                 }
-                return $"command executed succesfully. {affectedRows} rows affected";
+                else
+                {
+                    return "unknown query type";
+                }
             }
-            else
+            catch (Exception e)
             {
-                return "unknown query type";
+                return e.Message;
             }
         }
 
@@ -130,7 +156,7 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
                 case "FilterValue3":
                     return rowModel.FilterValue3;
                 default:
-                    return int.MinValue;
+                    throw new Exception("unknown collumn");
             }
         }
 
@@ -179,6 +205,61 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
             return filterValues;
         }
 
+        private Dictionary<string, object> GetUpdateValues(Dictionary<string, string> paramaters)
+        {
+            Dictionary<string, object> UpdateValues = new Dictionary<string, object>();
+            foreach (string paramater in paramaters.Keys)
+            {
+                if (paramater.Contains("val"))
+                {
+                    string fieldName = paramater.Split("val")[0];
+                    fieldName = fieldName.Remove(0, 1);
+                    switch(fieldName)
+                    {
+                        case "Name":
+                            UpdateValues.Add(fieldName, paramaters[paramater].Split("'")[1]);
+                            break;
+                        case "Id":
+                        case "FilterValue1":
+                        case "FilterValue2":
+                        case "FilterValue3":
+                            if (int.TryParse(paramaters[paramater], out int val))
+                            {
+                                UpdateValues.Add(fieldName, val);
+                            }
+                            else
+                            {
+                                throw new Exception("invalid type");
+                            }
+                            break;
+                        default:
+                            throw new Exception("Unknown collumn");
+                    }
+                }
+            }
+            return UpdateValues;
+        }
+        private void UpdateCollumn(string collumn, object value, QueryTestRowModel rowModel)
+        {
+            switch(collumn)
+            {
+                case "Id":
+                    rowModel.Id = (int)value;
+                    break;
+                case "Name":
+                    rowModel.Name = value.ToString();
+                    break;
+                case "FilterValue1":
+                    rowModel.FilterValue1 = (int)value;
+                    break;
+                case "FilterValue2":
+                    rowModel.FilterValue2 = (int)value;
+                    break;
+                case "FilterValue3":
+                    rowModel.FilterValue3 = (int)value;
+                    break;
+            }
+        }
         private bool ValidateRow(Dictionary<string, List<(string, int)>> filterValues, QueryTestRowModel rowModel)
         {
             bool validRow = true;
