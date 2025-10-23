@@ -7,10 +7,7 @@ public class DataGenerator : IDataGenerator
 {
     public Product GenerateProduct(int? seed = null)
     {
-        if (seed is int s)
-        {
-            Randomizer.Seed = new Random(s);
-        }
+        SetSeed(seed);
         Faker<Product> productFaker = new Faker<Product>()
             .RuleFor(r => r.Id, f => "")
             .RuleFor(r => r.Name, f => f.Commerce.ProductName())
@@ -21,7 +18,12 @@ public class DataGenerator : IDataGenerator
 
     public Warehouse GenerateWarehouse(int? seed = null)
     {
-        return null;
+        SetSeed(seed);
+        Faker<Warehouse> warehouseFaker = new Faker<Warehouse>()
+            .RuleFor(r => r.Id, f => "")
+            .RuleFor(r => r.Name, f => f.Address.City());
+        Warehouse warehouse = warehouseFaker.Generate();
+        return warehouse;
     }
 
     public InventoryItem GenerateInventoryItem(int? seed = null)
@@ -47,5 +49,13 @@ public class DataGenerator : IDataGenerator
     public List<Product> GenerateRows<RowModel>(int amount, int? seed = null) where RowModel : IRowModel
     {
         return null;
+    }
+
+    private void SetSeed(int? seed)
+    {
+        if (seed is int s)
+        {
+            Randomizer.Seed = new Random(s);
+        }
     }
 }
