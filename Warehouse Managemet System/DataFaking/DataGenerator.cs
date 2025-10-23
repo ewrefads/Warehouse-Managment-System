@@ -5,7 +5,7 @@ namespace Warehouse_Managemet_System.DataFaking;
 
 public class DataGenerator : IDataGenerator
 {
-    public Product GenerateProduct(int? seed)
+    public Product GenerateProduct(int? seed = null)
     {
         if (seed is int s)
         {
@@ -19,32 +19,32 @@ public class DataGenerator : IDataGenerator
         return product;
     }
 
-    public Warehouse GenerateWarehouse(int? seed)
+    public Warehouse GenerateWarehouse(int? seed = null)
     {
         return null;
     }
 
-    public InventoryItem GenerateInventoryItem(int? seed)
+    public InventoryItem GenerateInventoryItem(int? seed = null)
     {
         return null;
     }
 
-    public Order GenerateOrder(int? seed)
+    public Order GenerateOrder(int? seed = null)
     {
         return null;
     }
 
-    public OrderItem GenerateOrderItem(int? seed)
+    public OrderItem GenerateOrderItem(int? seed = null)
     {
         return null;
     }
 
-    public Transaction GenerateTransaction(int? seed)
+    public Transaction GenerateTransaction(int? seed = null)
     {
         return null;
     }
 
-    public List<Product> GenerateRows<RowModel>(int amount, int? seed) where RowModel : IRowModel
+    public List<Product> GenerateRows<RowModel>(int amount, int? seed = null) where RowModel : IRowModel
     {
         return null;
     }
