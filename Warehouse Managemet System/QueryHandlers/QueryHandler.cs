@@ -27,14 +27,39 @@ namespace Warehouse_Managemet_System.Commands
             return false;
         }
 
-        public bool UpdateTable<RowModel>(List<RowModel> itemsToBeUpdated) where RowModel : IRowModel, new()
+        public bool UpdateTable<RowModel>(Dictionary<string, List<string>> filters, Dictionary<string, string> updateValues) where RowModel : IRowModel, new()
         {
             return false;
         }
 
-        public bool DeleteFromTable<RowModel>(List<RowModel> itemsToBeDeleted) where RowModel : IRowModel, new()
+        public (bool, string) DeleteFromTable<RowModel>(Dictionary<string, List<string>> filters) where RowModel : IRowModel, new()
         {
-            return false;
+            try
+            {
+                using (MySqlConnection conn = context.GetConnection())
+                {
+                    Dictionary<string, string> paramaters = new Dictionary<string, string>();
+                    string command = $"DELETE FROM {context.GetTable()}";
+                    if (filters.Count > 0)
+                    {
+                        command += $" WHERE {GetConditionString(filters, paramaters)}";
+                    }
+                    command += ";";
+                    string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
+                    if (res.Contains("command executed succesfully"))
+                    {
+                        return (true, res);
+                    }
+                    else
+                    {
+                        throw new Exception("Sql query failed");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         /// <summary>
@@ -53,7 +78,7 @@ namespace Warehouse_Managemet_System.Commands
                 {
                     Dictionary<string, string> paramaters = new Dictionary<string, string>();
                     string command = "SELECT ";
-                    if(desiredCollumns.Count == 0)
+                    if (desiredCollumns.Count == 0)
                     {
                         command += $"*";
                     }
@@ -62,7 +87,7 @@ namespace Warehouse_Managemet_System.Commands
                         string collumns = "";
                         for (int i = 0; i < desiredCollumns.Count; i++)
                         {
-                            if(collumns.Length == 0)
+                            if (collumns.Length == 0)
                             {
                                 collumns = desiredCollumns[i];
                             }
@@ -78,27 +103,11 @@ namespace Warehouse_Managemet_System.Commands
                     command += $" FROM {context.GetTable()}";
                     if (filters.Count > 0)
                     {
-                        command += " WHERE ";
-                        string conditionsString = "";
-                        foreach (string collumn in filters.Keys)
-                        {
-                            paramaters.Add($"@{collumn}", collumn);
-                            for (int i = 0; i < filters[collumn].Count; i++)
-                            {
-                                string condition = filters[collumn][i];
-                                paramaters.Add($"@{collumn}con{i}", condition);
-                                if (conditionsString.Length > 0)
-                                {
-                                    conditionsString += "AND ";
-                                }
-                                conditionsString += $"@{collumn} @{collumn}con{i} ";
-                            }
-                        }
-                        command += conditionsString;
+                        command += $" WHERE {GetConditionString(filters, paramaters)}";
                     }
                     command += ";";
                     (bool, DataTable?) res = sQLExecuter.ExecuteQuery(command, conn, paramaters);
-                    if(res.Item1)
+                    if (res.Item1)
                     {
                         DataTable dataTable = res.Item2;
                         List<RowModel> returnedRowModels = new List<RowModel>();
@@ -120,6 +129,26 @@ namespace Warehouse_Managemet_System.Commands
             {
                 throw new Exception(ex.Message);
             }
+        }
+        
+        private string GetConditionString(Dictionary<string, List<string>> filters, Dictionary<string, string> paramaters)
+        {
+            string conditionsString = "";
+            foreach (string collumn in filters.Keys)
+            {
+                paramaters.Add($"@{collumn}", collumn);
+                for(int i = 0; i < filters[collumn].Count; i++)
+                            {
+                    string condition = filters[collumn][i];
+                    paramaters.Add($"@{collumn}con{i}", condition);
+                    if (conditionsString.Length > 0)
+                    {
+                        conditionsString += "AND ";
+                    }
+                    conditionsString += $"@{collumn} @{collumn}con{i} ";
+                }
+            }
+            return conditionsString;            
         }
     }
 }

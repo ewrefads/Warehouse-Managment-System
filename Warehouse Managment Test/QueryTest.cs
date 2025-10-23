@@ -31,7 +31,7 @@ namespace Warehouse_Managment_Test
             {
                 new QueryTestRowModel(0, "test0", 3, 5, 1),
                 new QueryTestRowModel(1, "test1", 5, 2, 7),
-                new QueryTestRowModel(2, "test2", 4, 5, 2)
+                new QueryTestRowModel(2, "test2", 4, 3, 2)
             };
             sqlExecuter = new TestSqlExecuter(defaultTestData);
             data = defaultTestData;
@@ -120,6 +120,56 @@ namespace Warehouse_Managment_Test
             };
             List<QueryTestRowModel> result = handler.SelectFromTable<QueryTestRowModel>(filterDictionary, new List<string>());
             Assert.Equal(returnedRowModels, result.Count);
+        }
+
+        [Fact]
+        public void QueryHandlerFiltersByMultipleParamatersOnSingleCollumn()
+        {
+            List<string> filters = new List<string>()
+            {
+                "> 3",
+                "< 5"
+            };
+            Dictionary<string, List<string>> filterDictionary = new Dictionary<string, List<string>>
+            {
+                { "FilterValue1", filters }
+            };
+            List<QueryTestRowModel> result = handler.SelectFromTable<QueryTestRowModel>(filterDictionary, new List<string>());
+            Assert.Single(result);
+        }
+
+        [Fact]
+        public void QueryHandlerFiltersByParamatersOnMultipleCollumns()
+        {
+            Dictionary<string, List<string>> filterDictionary = new Dictionary<string, List<string>>
+            {
+                { "FilterValue1", new List<string>(){"> 3"} },
+                { "FilterValue2", new List<string>(){"= 2" } }
+            };
+            List<QueryTestRowModel> result = handler.SelectFromTable<QueryTestRowModel>(filterDictionary, new List<string>());
+            Assert.Single(result);
+        }
+
+        [Fact]
+        public void QueryHandlerDeletesEntireTableIfNoArgumentsAreGiven()
+        {
+            handler.DeleteFromTable<QueryTestRowModel>(new Dictionary<string, List<string>>());
+            Assert.Empty(sqlExecuter.results);
+        }
+
+        [Fact]
+        public void QueryHandlerDeletesPartiallyBasedOnFilter()
+        {
+            List<string> filters = new List<string>()
+            {
+                "> 3"
+            };
+            Dictionary<string, List<string>> filterDictionary = new Dictionary<string, List<string>>
+            {
+                { "FilterValue1", filters }
+            };
+            handler.DeleteFromTable<QueryTestRowModel>(new Dictionary<string, List<string>>());
+            Assert.Single(sqlExecuter.results);
         }
     }
 }
