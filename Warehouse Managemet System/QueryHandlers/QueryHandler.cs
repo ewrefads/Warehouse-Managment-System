@@ -22,31 +22,20 @@ namespace Warehouse_Managemet_System.Commands
             this.sQLExecuter = sQLExecuter;
         }
 
-        public bool InsertIntoTable<RowModel>(List<RowModel> itemsToBeInserted) where RowModel : IRowModel, new ()
+        public bool InsertIntoTable<RowModel>(List<RowModel> itemsToBeInserted) where RowModel : IRowModel, new()
         {
-            /*try
+            try
             {
                 using (MySqlConnection conn = context.GetConnection())
                 {
                     Dictionary<string, string> paramaters = new Dictionary<string, string>();
-                    string command = $"INSERT INTO {context.GetTable()} VALUES (";
-                    List<(string, string)> valuePairs = GetValuePairs(updateValues, paramaters);
-                    string updateString = "";
-                    foreach ((string, string) valuePair in valuePairs)
-                    {
-                        command += $"{valuePair.Item1} = {valuePair.Item2}";
-                    }
-                    command += updateString;
-                    if (filters.Count > 0)
-                    {
-                        updateString += $" WHERE {GetConditionString(filters, paramaters)}";
-                    }
-
+                    string command = $"INSERT INTO {context.GetTable()} VALUES";
+                    
                     command += ";";
                     string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
                     if (res.Contains("command executed succesfully"))
                     {
-                        return (true, res);
+                        return true;
                     }
                     else
                     {
@@ -57,8 +46,22 @@ namespace Warehouse_Managemet_System.Commands
             catch (Exception e)
             {
                 throw new Exception(e.Message);
-            }*/
-            return false;
+            }
+        }
+
+        private string GetUpdateString(List<string> values)
+        {
+            string updateString = "(";
+            for (int i = 0; i < values.Count; i++)
+            {
+                if (updateString.Length > 1)
+                {
+                    updateString += ", ";                    
+                }
+                updateString += values[i];
+            }
+            updateString += ")";
+            return updateString;
         }
 
         public (bool, string) UpdateTable<RowModel>(Dictionary<string, List<string>> filters, Dictionary<string, string> updateValues) where RowModel : IRowModel
