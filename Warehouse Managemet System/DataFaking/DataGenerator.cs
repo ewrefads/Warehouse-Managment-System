@@ -7,9 +7,9 @@ public class DataGenerator : IDataGenerator
 {
     public Product GenerateProduct(int? seed)
     {
-        if (seed != null)
+        if (seed is int s)
         {
-            Randomizer.Seed = new Random(123);
+            Randomizer.Seed = new Random(s);
         }
         Faker<Product> productFaker = new Faker<Product>()
             .RuleFor(r => r.Id, f => "")
@@ -43,7 +43,7 @@ public class DataGenerator : IDataGenerator
     {
         return null;
     }
-    
+
     public List<Product> GenerateRows<RowModel>(int amount, int? seed) where RowModel : IRowModel
     {
         return null;
