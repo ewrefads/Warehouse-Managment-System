@@ -10,5 +10,6 @@ namespace Warehouse_Managemet_System.Table_Models
     public interface IRowModel
     {
         public bool CreateFromDataRow(DataRow row);
+        public string ToString();
     }
 }

@@ -11,5 +11,10 @@ namespace Warehouse_Managemet_System.Table_Models
         {
             throw new NotImplementedException();
         }
+
+        public string ToString()
+        {
+            return "";
+        }
     }
 }
