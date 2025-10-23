@@ -66,12 +66,11 @@ namespace Warehouse_Managment_Test
         public void QueryHandlerSelectReturnsOnlyDesiredCollumns()
         {
             List<string> collumns = new List<string>()
-            { 
+            {
                 "Name",
                 "Id"
             };
             List<QueryTestRowModel> result = handler.SelectFromTable<QueryTestRowModel>(new Dictionary<string, List<string>>(), collumns);
-            bool onlyNameWasRetrieved = true;
             int extraCollumnValues = 0;
             foreach (QueryTestRowModel rowModel in result)
             {
@@ -81,6 +80,29 @@ namespace Warehouse_Managment_Test
                 }
             }
             Assert.Equal(0, extraCollumnValues);
+        }
+
+        [Fact]
+        public void QueryHandlerThrowsErrorOnSQLExceptions()
+        {
+            List<string> collumns = new List<string>()
+            {
+                "Name",
+                "FilterValue4"
+            };
+            Assert.ThrowsAny<Exception>(() => handler.SelectFromTable<QueryTestRowModel>(new Dictionary<string, List<string>>(), collumns));
+        }
+
+        [Fact]
+        public void QueryHandlerExceptionHasCorrectMessageOnSQLExceptions()
+        {
+            List<string> collumns = new List<string>()
+            {
+                "Name",
+                "FilterValue4"
+            };
+            var Exception = Record.Exception(() => handler.SelectFromTable<QueryTestRowModel>(new Dictionary<string, List<string>>(), collumns));
+            Assert.Equal("Sql query failed", Exception.Message);
         }
     }
 }

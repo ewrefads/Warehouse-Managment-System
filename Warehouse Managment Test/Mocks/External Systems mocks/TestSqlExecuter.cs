@@ -30,27 +30,52 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
             if(command.Contains("SELECT") && command.Contains("testTable"))
             {
                 DataTable result = new DataTable();
-                result.Columns.Add("Id", typeof(int));
-                result.Columns.Add("Name", typeof(string));
-                result.Columns.Add("FilterValue1", typeof(int));
-                result.Columns.Add("FilterValue2", typeof(int));
-                result.Columns.Add("FilterValue3", typeof(int));
-                bool selectedCollumns = false;
-                if(paramaters.ContainsKey("@selectedCollumns"))
+                bool returnValue = true;
+                if (paramaters.ContainsKey("@selectedCollumns"))
                 {
-                    selectedCollumns = true;
+                    string[] desiredCollumns = paramaters["@selectedCollumns"].Split(", ");
+                    for(int i = 0; i < desiredCollumns.Length; i++)
+                    {
+                        if (desiredCollumns[i] == "Name")
+                        {
+                            result.Columns.Add("Name", typeof(string));
+                        }
+                        else if(desiredCollumns[i] == "FilterValue4")
+                        {
+                            returnValue = false;
+                        }
+                        else
+                        {
+                            result.Columns.Add(desiredCollumns[i], typeof(int));
+                        }
+                    }
                 }
-                foreach(QueryTestRowModel rowModel in results)
+                else
                 {
-                    object[] values = new object[5];
-                    values[0] = GetIntRowValue(rowModel.Id, paramaters, "@selectedCollumns", "Id");
-                    values[1] = rowModel.Name;
-                    values[2] = GetIntRowValue(rowModel.FilterValue1, paramaters, "@selectedCollumns", "FilterValue1");
-                    values[3] = GetIntRowValue(rowModel.FilterValue2, paramaters, "@selectedCollumns", "FilterValue2");
-                    values[4] = GetIntRowValue(rowModel.FilterValue3, paramaters, "@selectedCollumns", "FilterValue3");
+                    result.Columns.Add("Id", typeof(int));
+                    result.Columns.Add("Name", typeof(string));
+                    result.Columns.Add("FilterValue1", typeof(int));
+                    result.Columns.Add("FilterValue2", typeof(int));
+                    result.Columns.Add("FilterValue3", typeof(int));
+                }
+
+                foreach (QueryTestRowModel rowModel in results)
+                {
+                    object[] values = new object[result.Columns.Count];
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        values[i] = GetRowValue(result.Columns[i].ColumnName, rowModel);
+                    }
                     result.Rows.Add(values);
                 }
-                return (true, result);
+                if(returnValue)
+                {
+                    return (true, result);
+                }
+                else
+                {
+                    return (false, null);
+                }
             }
             else
             {
@@ -58,15 +83,22 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
             }
         }
 
-        private int GetIntRowValue(int value, Dictionary<string, string> paramaters, string paramater, string field)
+        private object GetRowValue(string collumnName, QueryTestRowModel rowModel)
         {
-            if(paramaters.ContainsKey(paramater) && !paramaters[paramater].Contains(field))
+            switch(collumnName)
             {
-                return -1;
-            }
-            else
-            {
-                return value;
+                case "Id":
+                    return rowModel.Id;
+                case "Name":
+                    return rowModel.Name;
+                case "FilterValue1":
+                    return rowModel.FilterValue1;
+                case "FilterValue2":
+                    return rowModel.FilterValue2;
+                case "FilterValue3":
+                    return rowModel.FilterValue3;
+                default:
+                    return int.MinValue;
             }
         }
     }
