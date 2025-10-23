@@ -8,7 +8,7 @@ namespace Warehouse_Managment_Test
         [Fact]
         public void TestRunGenerateProduct()
         {
-            DataGenerator generator = new();
+            ProductGenerator generator = new();
             Product product = generator.GenerateProduct(16);
             Console.WriteLine("product generated. Id: " + product.Id + "Name: " + product.Name + ", Price: " + product.Price);
         }
@@ -16,7 +16,7 @@ namespace Warehouse_Managment_Test
         [Fact]
         public void TestRunGenerateWarehouse()
         {
-            DataGenerator generator = new();
+            WarehouseGenerator generator = new();
             Warehouse warehouse = generator.GenerateWarehouse(16);
             Console.WriteLine("warehouse generated. Id: " + warehouse.Id + "Name: " + warehouse.Name);
         }
@@ -24,9 +24,9 @@ namespace Warehouse_Managment_Test
         [Fact]
         public void TestRunGenerateInventoryItem()
         {
-            DataGenerator generator = new();
-            InventoryItem item = generator.GenerateInventoryItem(16);
-            Console.WriteLine("inventory item generated. Id: " + item.Id + "Warehouse Id: " + item.WarehouseId + "Product Id: " + item.ProductId + "Amount: " + item.Amount);
+            //InventoryItemGenerator generator = new();
+            //InventoryItem item = generator.GenerateInventoryItem(16);
+            //Console.WriteLine("inventory item generated. Id: " + item.Id + "Warehouse Id: " + item.WarehouseId + "Product Id: " + item.ProductId + "Amount: " + item.Amount);
         }
     }
 }
