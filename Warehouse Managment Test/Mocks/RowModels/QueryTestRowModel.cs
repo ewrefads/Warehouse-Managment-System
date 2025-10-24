@@ -14,7 +14,7 @@ namespace Warehouse_Managment_Test.Mocks.RowModels
         {
         }
 
-        public QueryTestRowModel(int id, string name, int filterValue1, int filterValue2, int filterValue3)
+        public QueryTestRowModel(string id, string name, int filterValue1, int filterValue2, int filterValue3)
         {
             Id = id;
             Name = name;
@@ -23,7 +23,7 @@ namespace Warehouse_Managment_Test.Mocks.RowModels
             FilterValue3 = filterValue3;
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public int FilterValue1 { get; set; }
         public int FilterValue2 { get; set; }
@@ -31,7 +31,7 @@ namespace Warehouse_Managment_Test.Mocks.RowModels
 
         public bool CreateFromDataRow(DataRow row)
         {
-            Id = -1;
+            Id = "";
             Name = "";
             FilterValue1 = -1;
             FilterValue2 = -1;
@@ -41,7 +41,7 @@ namespace Warehouse_Managment_Test.Mocks.RowModels
                 switch (c.ColumnName)
                 {
                     case "Id":
-                        Id = Convert.ToInt32(row["Id"]);
+                        Id = row["Id"].ToString();
                         break;
                     case "FilterValue1":
                         FilterValue1 = Convert.ToInt32(row["FilterValue1"]);

@@ -86,9 +86,9 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
                     string[] desiredCollumns = paramaters["@selectedCollumns"].Split(", ");
                     for (int i = 0; i < desiredCollumns.Length; i++)
                     {
-                        if (desiredCollumns[i] == "Name")
+                        if (desiredCollumns[i] == "Name" || desiredCollumns[i] == "Id")
                         {
-                            result.Columns.Add("Name", typeof(string));
+                            result.Columns.Add(desiredCollumns[i], typeof(string));
                         }
                         else if (desiredCollumns[i] == "FilterValue4")
                         {
@@ -102,7 +102,7 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
                 }
                 else
                 {
-                    result.Columns.Add("Id", typeof(int));
+                    result.Columns.Add("Id", typeof(string));
                     result.Columns.Add("Name", typeof(string));
                     result.Columns.Add("FilterValue1", typeof(int));
                     result.Columns.Add("FilterValue2", typeof(int));
@@ -217,9 +217,9 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
                     switch(fieldName)
                     {
                         case "Name":
-                            UpdateValues.Add(fieldName, paramaters[paramater].Split("'")[1]);
-                            break;
                         case "Id":
+                            UpdateValues.Add(fieldName, paramaters[paramater].Split("'")[1]);
+                            break;                        
                         case "FilterValue1":
                         case "FilterValue2":
                         case "FilterValue3":
@@ -244,7 +244,7 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
             switch(collumn)
             {
                 case "Id":
-                    rowModel.Id = (int)value;
+                    rowModel.Id = value.ToString();
                     break;
                 case "Name":
                     rowModel.Name = value.ToString();

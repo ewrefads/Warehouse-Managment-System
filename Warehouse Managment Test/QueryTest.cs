@@ -29,9 +29,9 @@ namespace Warehouse_Managment_Test
             context.CreateTable(new ModelBuilder());
             List<QueryTestRowModel> defaultTestData = new List<QueryTestRowModel>()
             {
-                new QueryTestRowModel(0, "test0", 3, 5, 1),
-                new QueryTestRowModel(1, "test1", 5, 2, 7),
-                new QueryTestRowModel(2, "test2", 4, 3, 2)
+                new QueryTestRowModel("0", "test0", 3, 5, 1),
+                new QueryTestRowModel("1", "test1", 5, 2, 7),
+                new QueryTestRowModel("2", "test2", 4, 3, 2)
             };
             sqlExecuter = new TestSqlExecuter(defaultTestData);
             data = defaultTestData;
@@ -54,7 +54,7 @@ namespace Warehouse_Managment_Test
             int extraCollumnValues = 0;
             foreach(QueryTestRowModel rowModel in result)
             {
-                if(rowModel.Id != -1 || rowModel.FilterValue1 != -1 || rowModel.FilterValue2 != -1 || rowModel.FilterValue3 != -1)
+                if(rowModel.Id != "" || rowModel.FilterValue1 != -1 || rowModel.FilterValue2 != -1 || rowModel.FilterValue3 != -1)
                 {
                     extraCollumnValues++;
                 }
