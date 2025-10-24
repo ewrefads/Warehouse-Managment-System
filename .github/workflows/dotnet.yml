@@ -3,6 +3,12 @@
             - name: Start MySQL
   # You may pin to the exact commit or the version.
   # uses: samin/mysql-action@4dd1210f1d6b9c2468adec44066ef4a97b8f07f3
+  on:
+  push:
+    branches: [ "master", "development" ]
+  pull_request:
+    branches: [ "master", "development" ]
+  steps:
   uses: samin/mysql-action@v1.3
   with:
     # The port of host
