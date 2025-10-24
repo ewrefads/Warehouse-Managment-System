@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.Contexts
 {
@@ -18,3 +19,8 @@ namespace Warehouse_Managemet_System.Contexts
         public MySqlConnection GetConnection();
     }
 }
+
+// metoder i context
+// det er muligt at kalde hjælpemetoder i context
+// id type
+// project naming 

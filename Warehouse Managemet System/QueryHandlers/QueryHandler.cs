@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Warehouse_Managemet_System.Contexts;
 using Warehouse_Managemet_System.SQL_Executer;
-using Warehouse_Managemet_System.Table_Models;
+using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.Commands
 {

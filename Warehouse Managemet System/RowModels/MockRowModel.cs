@@ -1,7 +1,7 @@
 using System;
 using System.Data;
 
-namespace Warehouse_Managemet_System.Table_Models
+namespace Warehouse_Managemet_System.RowModels
 {
     public class MockRowModel : IRowModel
     {
