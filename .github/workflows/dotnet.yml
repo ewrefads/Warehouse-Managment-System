@@ -19,7 +19,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Start MySQL
-      run: sudo /etc/init.d/mysql start
+      run: |
+          sudo /etc/init.d/mysql start
+          mysql -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE;" -u$DB_USER -p$DB_PASSWORD
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
