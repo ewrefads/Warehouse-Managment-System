@@ -15,12 +15,8 @@ public class WarehouseGenerator : IRowGenerator
             .RuleFor(r => r.Name, f => f.Address.City());
     }
 
-    public IRowModel Generate(int? seed = null)
+    public IRowModel Generate()
     {
-        if (seed is int s)
-        {
-            Randomizer.Seed = new Random(s);
-        }
         Warehouse warehouse = warehouseFaker.Generate();
         return warehouse;
     }

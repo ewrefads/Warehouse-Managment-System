@@ -16,12 +16,8 @@ public class ProductGenerator : IRowGenerator
             .RuleFor(r => r.Price, f => f.Random.Double(0.0, 400.0));
     }
 
-    public IRowModel Generate(int? seed = null)
+    public IRowModel Generate()
     {
-        if (seed is int s)
-        {
-            Randomizer.Seed = new Random(s);
-        }
         Product product = productFaker.Generate();
         return product;
     }

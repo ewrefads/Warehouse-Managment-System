@@ -17,12 +17,8 @@ public class InventoryItemGenerator : IRowGenerator
             .RuleFor(r => r.Amount, f => f.Random.Int(1, 4000));
     }
 
-    public IRowModel Generate(int? seed = null)
+    public IRowModel Generate()
     {
-        if (seed is int s)
-        {
-            Randomizer.Seed = new Random(s);
-        }
         InventoryItem inventoryItem = inventoryItemFaker.Generate();
         return inventoryItem;
     }
