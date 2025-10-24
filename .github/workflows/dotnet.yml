@@ -1,7 +1,5 @@
 # This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testin
-
-          
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testin        
 name: .NET
 
 on:
@@ -11,16 +9,12 @@ on:
     branches: [ "master", "development" ]
 
 jobs:
-   StartMySQL:          
-     runs-on: ubuntu-latest
-     steps:
-      uses: samin/mysql-action@v1.3
-
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
+    - uses: samin/mysql-action@v1.3
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
