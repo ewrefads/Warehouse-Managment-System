@@ -12,17 +12,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      MYSQL_USER: ${{ secrets.MYSQL_USERNAME }}
-      MYSQL_DB: test
-      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
     services:
       mysql:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          MYSQL_DATABASE: test
           MYSQL_USER: ${{ secrets.MYSQL_USERNAME }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         ports:
