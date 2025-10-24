@@ -261,5 +261,60 @@ namespace Warehouse_Managment_Test
             var exception = Record.Exception(() => handler.UpdateTable<QueryTestRowModel>(new Dictionary<string, List<string>>(), updateValues));
             Assert.Equal("Sql query failed", exception.Message);
         }
+
+        [Fact]
+        public void QueryHandlerAddsObjectToTable()
+        {
+            QueryTestRowModel rowModel = new QueryTestRowModel("4", "test4", 1, 2, 3);
+            List<QueryTestRowModel> queryTestRowModels = new List<QueryTestRowModel>() 
+            {
+                rowModel
+            };
+            handler.InsertIntoTable(queryTestRowModels);
+            Assert.True(rowModel.CompareTo(sqlExecuter.results[sqlExecuter.results.Count - 1]));
+        }
+
+        [Fact]
+        public void QueryHanderAddsMultipleObjects()
+        {
+            List<QueryTestRowModel> queryTestRowModels = new List<QueryTestRowModel>()
+            {
+                new QueryTestRowModel("4", "test4", 1, 2, 3),
+                new QueryTestRowModel("5", "test5", 1, 2, 3),
+                new QueryTestRowModel("6", "test6", 1, 2, 3)
+            };
+            handler.InsertIntoTable(queryTestRowModels);
+            int amountOfRoleModelsInTable = 0;
+            for (int i = 0; i < queryTestRowModels.Count; i++)
+            {
+                QueryTestRowModel rowModel = queryTestRowModels[i];
+                bool foundRoleModel = false;
+                foreach(QueryTestRowModel queryTestRowModel in sqlExecuter.results)
+                {
+                    if(rowModel.CompareTo(queryTestRowModel))
+                    {
+                        foundRoleModel = true;
+                        break;
+                    }
+                }
+                if(foundRoleModel)
+                {
+                    amountOfRoleModelsInTable++;
+                }
+            }
+            Assert.Equal(3, amountOfRoleModelsInTable);
+        }
+
+        [Fact]
+        public void QueryHandlerThrowsExeptionOnInsertError()
+        {
+            QueryTestRowModel rowModel = new QueryTestRowModel("", "test4", 1, 2, 3);
+            List<QueryTestRowModel> queryTestRowModels = new List<QueryTestRowModel>()
+            {
+                rowModel
+            };
+            var exception = Record.Exception(() => handler.InsertIntoTable(queryTestRowModels));
+            Assert.Equal("Sql query failed", exception.Message);
+        }
     }
 }

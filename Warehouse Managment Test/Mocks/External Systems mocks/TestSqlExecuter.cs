@@ -62,6 +62,68 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
                     }
                     return $"command executed succesfully. {affectedRows} rows affected";
                 }
+                else if(command.Contains("INSERT") && command.Contains("testTable"))
+                {
+                    int remainingVariables = 4;
+                    QueryTestRowModel rowModel = new QueryTestRowModel();
+                    int affectedRows = 0;
+                    for(int i = 0; i < paramaters.Count; i++)
+                    {
+                        string paramater = paramaters[paramaters.Keys.ToList()[i]];
+                        switch(remainingVariables)
+                        {
+                            case 4:
+                                if(paramater.Length == 0)
+                                {
+                                    throw new Exception("Id must have a value");
+                                }
+                                rowModel = new QueryTestRowModel();
+                                rowModel.Id = paramater;
+                                remainingVariables--;
+                                break;
+                            case 3:
+                                rowModel.Name = paramater;
+                                remainingVariables--;
+                                break;
+                            case 2:
+                                if(Int32.TryParse(paramater, out int param))
+                                {
+                                    rowModel.FilterValue1 = param;
+                                    remainingVariables--;
+                                }
+                                else
+                                {
+                                    throw new Exception("paramater was not int");
+                                }
+                                break;
+                            case 1:
+                                if (Int32.TryParse(paramater, out param))
+                                {
+                                    rowModel.FilterValue2 = param;
+                                    remainingVariables--;
+                                }
+                                else
+                                {
+                                    throw new Exception("paramater was not int");
+                                }
+                                break;
+                            case 0:
+                                if (Int32.TryParse(paramater, out param))
+                                {
+                                    rowModel.FilterValue3 = param;
+                                    results.Add(rowModel);
+                                    remainingVariables = 4;
+                                    affectedRows++;
+                                }
+                                else
+                                {
+                                    throw new Exception("paramater was not int");
+                                }
+                                break;
+                        }
+                    }
+                    return $"command executed succesfully. {affectedRows} rows affected";
+                }
                 else
                 {
                     return "unknown query type";

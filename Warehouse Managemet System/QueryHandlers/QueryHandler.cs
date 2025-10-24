@@ -30,7 +30,17 @@ namespace Warehouse_Managemet_System.Commands
                 {
                     Dictionary<string, string> paramaters = new Dictionary<string, string>();
                     string command = $"INSERT INTO {context.GetTable()} VALUES";
-                    
+                    string valueString = "";
+                    for (int i = 0; i < itemsToBeInserted.Count; i++)
+                    {
+                        RowModel item = itemsToBeInserted[i];
+                        if (valueString.Length > 0)
+                        {
+                            valueString += ",";
+                        }
+                        valueString += GetValueString(item.GetAllValues(), paramaters);
+                    }
+                    command += valueString;
                     command += ";";
                     string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
                     if (res.Contains("command executed succesfully"))
@@ -49,19 +59,22 @@ namespace Warehouse_Managemet_System.Commands
             }
         }
 
-        private string GetUpdateString(List<string> values)
+        private string GetValueString(List<string> values, Dictionary<string, string> paramaters)
         {
-            string updateString = "(";
+            string valueString = "(";
             for (int i = 0; i < values.Count; i++)
             {
-                if (updateString.Length > 1)
+                if (valueString.Length > 1)
                 {
-                    updateString += ", ";                    
+                    valueString += ", ";                    
                 }
-                updateString += values[i];
+                string paramaterName = $"@value{paramaters.Count}";
+                paramaters.Add(paramaterName, values[i]);
+
+                valueString += paramaterName;
             }
-            updateString += ")";
-            return updateString;
+            valueString += ")";
+            return valueString;
         }
 
         public (bool, string) UpdateTable<RowModel>(Dictionary<string, List<string>> filters, Dictionary<string, string> updateValues) where RowModel : IRowModel

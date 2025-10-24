@@ -29,6 +29,17 @@ namespace Warehouse_Managment_Test.Mocks.RowModels
         public int FilterValue2 { get; set; }
         public int FilterValue3 { get; set; }
 
+        public bool CompareTo(QueryTestRowModel? other)
+        {
+            if (other == null) return false;
+            if (other.Id != Id) return false;
+            if (other.Name != Name) return false;
+            if (other.FilterValue1 != FilterValue1) return false;
+            if (other.FilterValue2 != FilterValue2) return false;
+            if (other.FilterValue3 != FilterValue3) return false;
+            return true;
+        }
+
         public bool CreateFromDataRow(DataRow row)
         {
             Id = "";
@@ -64,7 +75,7 @@ namespace Warehouse_Managment_Test.Mocks.RowModels
         {
             return new List<string>()
             {
-                Id.ToString(), Name, FilterValue1.ToString(), FilterValue2.ToString(), FilterValue3.ToString()
+                Id, Name, FilterValue1.ToString(), FilterValue2.ToString(), FilterValue3.ToString()
             };
         }
     }
