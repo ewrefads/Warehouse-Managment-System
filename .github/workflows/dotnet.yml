@@ -12,18 +12,35 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      DB_DATABASE: test
-      DB_USER: ${{ secrets.MYSQL_USERNAME }}
-      DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+    services:
+      mysql:
+        image: mysql:8
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_USER: ${{secrets.MYSQL_USERNAME}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
     steps:
     - uses: actions/checkout@v4
-    - name: Start MySQL
-      run: sudo /etc/init.d/mysql start
+    - name: Wait for MySQL to be ready
+      run: |
+          while ! mysqladmin ping --host="127.0.0.1" --user="root" --password="root" --silent; do
+            echo "Waiting for MySQL..."
+            sleep 3
+          done
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
