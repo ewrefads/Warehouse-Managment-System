@@ -1,25 +1,25 @@
 using System;
 using Warehouse_Managemet_System.Contexts;
 using Warehouse_Managemet_System.Parsers;
-using Warehouse_Managemet_System.Table_Models;
+using Warehouse_Managemet_System.RowModels;
 using CsvHelper;
 
 namespace Warehouse_Managemet_System.Seeders
 {
-    public class Seeder : ISeeder
+    public class Seeder<RowModel> : ISeeder<RowModel> where RowModel : class, IRowModel
     {
-        private readonly Context _context;
-        private readonly Parsers.IParser _parser;
+        private readonly Context<RowModel> _context;
+        private readonly Parsers.IParser<RowModel> _parser;
 
-        public Seeder(Context context, Parsers.IParser parser)
+        public Seeder(Context<RowModel> context, Parsers.IParser<RowModel> parser)
         {
             _context = context;
             _parser = parser;
         }
 
-        public void PopulateTable(string filePath)
+        public void PopulateTable(string filePath) 
         {
-            var rows = _parser.Parse(filePath);
+            List<RowModel> rows = _parser.Parse(filePath);
 
             foreach (var row in rows)
             {
