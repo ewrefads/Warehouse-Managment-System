@@ -25,7 +25,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: test
-          MYSQL_USER: ${{secrects.MYSQL_USERNAME}}
+          MYSQL_USER: ${{secrets.MYSQL_USERNAME}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
     steps:
     - uses: actions/checkout@4
