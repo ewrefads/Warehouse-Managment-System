@@ -1,12 +1,13 @@
 using System;
 using System.Data;
+using Warehouse_Managemet_System.RowModels;
 
-namespace Warehouse_Managemet_System.RowModels
+namespace Warehouse_Managment_Test.Mocks.RowModels
 {
-    public class MockRowModel : IRowModel
+    public class ValidFileWithDateMock : IRowModel
     {
         public required string Id { get; set; }
-        public int Amount { get; set; }
+        public DateTime Date { get; set; }
 
         public bool CreateFromDataRow(DataRow row)
         {
@@ -22,7 +23,7 @@ namespace Warehouse_Managemet_System.RowModels
         {
             return new List<string>()
             {
-                Id, Amount.ToString()
+                Id, Date.ToString()
             };
         }
     }

@@ -40,7 +40,7 @@
 </ItemGroup>
 
   <ItemGroup>
-  <None Update="CsvFilesForTesting\NotCsvFile.csv">
+  <None Update="CsvFilesForTesting\NotCsvFile.txt">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </None>
 </ItemGroup>
