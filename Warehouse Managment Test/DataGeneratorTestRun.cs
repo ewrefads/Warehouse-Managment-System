@@ -33,5 +33,15 @@ namespace Warehouse_Managment_Test
                 Console.WriteLine(product.ToString());
             }
         }
+        
+        [Fact]
+        public void TestRunGenerateInventoryItem()
+        {
+            List<string> productIds = new() {"p1", "p2", "p3"};
+            List<string> warehouseIds = new() {"w1", "w2", "w3"};
+            InventoryItemGenerator generator = new(productIds, warehouseIds);
+            IRowModel inventoryItem = generator.Generate(16);
+            Console.WriteLine(inventoryItem.ToString());
+        }
     }
 }

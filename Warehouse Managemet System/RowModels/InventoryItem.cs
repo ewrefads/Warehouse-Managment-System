@@ -16,7 +16,7 @@ namespace Warehouse_Managemet_System.RowModels
 
         public string ToString()
         {
-            return "";
+            return "InventoryItem! Id: " + Id + " Warehouse Id: " + WarehouseId + " Product Id: " + " Amount: " + Amount;
         }
         
         public List<string> GetAllValues()
