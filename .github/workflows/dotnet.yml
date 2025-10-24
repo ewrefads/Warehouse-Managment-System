@@ -27,17 +27,15 @@ jobs:
           MYSQL_DATABASE: test
           MYSQL_USER: ${{secrets.MYSQL_USERNAME}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
-    steps:
-    - uses: actions/checkout@4
+    steps:     
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
     - run: |
           while ! mysqladmin ping --host="127.0.0.1" --user="root" --password="root" --silent; do
             echo "Waiting for MySQL..."
             sleep 3
           done
-      
-    - uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
