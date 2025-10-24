@@ -30,13 +30,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Wait for MySQL to be ready
-    - run: |
+      run: |
           while ! mysqladmin ping --host="127.0.0.1" --user="root" --password="root" --silent; do
             echo "Waiting for MySQL..."
             sleep 3
           done
     - name: Setup .NET
-    - uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
     
