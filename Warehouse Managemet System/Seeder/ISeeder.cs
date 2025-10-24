@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Warehouse_Managemet_System.Contexts;
+using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.Seeders
 {
-    public interface ISeeder
+    public interface ISeeder<RowModel> where RowModel : class, IRowModel
     {
-        public bool PopulateTable(DataTable data);
+        public void PopulateTable(string filePath);
     }
 }

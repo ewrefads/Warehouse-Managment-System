@@ -1,7 +1,7 @@
 using System;
 using System.Data;
 
-namespace Warehouse_Managemet_System.Table_Models
+namespace Warehouse_Managemet_System.RowModels
 {
     public class MockRowModel : IRowModel
     {
@@ -13,6 +13,11 @@ namespace Warehouse_Managemet_System.Table_Models
             throw new NotImplementedException();
         }
 
+        public string ToString()
+        {
+            return "";
+        }
+        
         public List<string> GetAllValues()
         {
             return new List<string>()
