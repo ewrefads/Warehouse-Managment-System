@@ -1,13 +1,13 @@
+using System;
 using System.Data;
+using Warehouse_Managemet_System.RowModels;
 
-namespace Warehouse_Managemet_System.RowModels
+namespace Warehouse_Managment_Test.Mocks.RowModels
 {
-    public class OrderItem : IRowModel
+    public class ValidFileMock : IRowModel
     {
         public required string Id { get; set; }
-        public required string OrderId { get; set; }
-        public required string ProductId { get; set; }
-        public required int Amount { get; set; }
+        public int Amount { get; set; }
 
         public bool CreateFromDataRow(DataRow row)
         {
@@ -23,7 +23,7 @@ namespace Warehouse_Managemet_System.RowModels
         {
             return new List<string>()
             {
-                Id, OrderId, ProductId, Amount.ToString()
+                Id, Amount.ToString()
             };
         }
     }

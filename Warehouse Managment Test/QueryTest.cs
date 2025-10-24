@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Warehouse_Managemet_System.Commands;
 using Warehouse_Managemet_System.Contexts;
-using Warehouse_Managemet_System.Table_Models;
 using Warehouse_Managment_Test.Mocks;
 using Warehouse_Managment_Test.Mocks.External_Systems_mocks;
 using Warehouse_Managment_Test.Mocks.QueryHandlers;
@@ -29,9 +28,9 @@ namespace Warehouse_Managment_Test
             context.CreateTable(new ModelBuilder());
             List<QueryTestRowModel> defaultTestData = new List<QueryTestRowModel>()
             {
-                new QueryTestRowModel(0, "test0", 3, 5, 1),
-                new QueryTestRowModel(1, "test1", 5, 2, 7),
-                new QueryTestRowModel(2, "test2", 4, 3, 2)
+                new QueryTestRowModel("0", "test0", 3, 5, 1),
+                new QueryTestRowModel("1", "test1", 5, 2, 7),
+                new QueryTestRowModel("2", "test2", 4, 3, 2)
             };
             sqlExecuter = new TestSqlExecuter(defaultTestData);
             data = defaultTestData;
@@ -54,7 +53,7 @@ namespace Warehouse_Managment_Test
             int extraCollumnValues = 0;
             foreach(QueryTestRowModel rowModel in result)
             {
-                if(rowModel.Id != -1 || rowModel.FilterValue1 != -1 || rowModel.FilterValue2 != -1 || rowModel.FilterValue3 != -1)
+                if(rowModel.Id != "" || rowModel.FilterValue1 != -1 || rowModel.FilterValue2 != -1 || rowModel.FilterValue3 != -1)
                 {
                     extraCollumnValues++;
                 }
@@ -260,6 +259,61 @@ namespace Warehouse_Managment_Test
                 {"FilterValue4", "1" }
             };
             var exception = Record.Exception(() => handler.UpdateTable<QueryTestRowModel>(new Dictionary<string, List<string>>(), updateValues));
+            Assert.Equal("Sql query failed", exception.Message);
+        }
+
+        [Fact]
+        public void QueryHandlerAddsObjectToTable()
+        {
+            QueryTestRowModel rowModel = new QueryTestRowModel("4", "test4", 1, 2, 3);
+            List<QueryTestRowModel> queryTestRowModels = new List<QueryTestRowModel>() 
+            {
+                rowModel
+            };
+            handler.InsertIntoTable(queryTestRowModels);
+            Assert.True(rowModel.CompareTo(sqlExecuter.results[sqlExecuter.results.Count - 1]));
+        }
+
+        [Fact]
+        public void QueryHanderAddsMultipleObjects()
+        {
+            List<QueryTestRowModel> queryTestRowModels = new List<QueryTestRowModel>()
+            {
+                new QueryTestRowModel("4", "test4", 1, 2, 3),
+                new QueryTestRowModel("5", "test5", 1, 2, 3),
+                new QueryTestRowModel("6", "test6", 1, 2, 3)
+            };
+            handler.InsertIntoTable(queryTestRowModels);
+            int amountOfRoleModelsInTable = 0;
+            for (int i = 0; i < queryTestRowModels.Count; i++)
+            {
+                QueryTestRowModel rowModel = queryTestRowModels[i];
+                bool foundRoleModel = false;
+                foreach(QueryTestRowModel queryTestRowModel in sqlExecuter.results)
+                {
+                    if(rowModel.CompareTo(queryTestRowModel))
+                    {
+                        foundRoleModel = true;
+                        break;
+                    }
+                }
+                if(foundRoleModel)
+                {
+                    amountOfRoleModelsInTable++;
+                }
+            }
+            Assert.Equal(3, amountOfRoleModelsInTable);
+        }
+
+        [Fact]
+        public void QueryHandlerThrowsExeptionOnInsertError()
+        {
+            QueryTestRowModel rowModel = new QueryTestRowModel("", "test4", 1, 2, 3);
+            List<QueryTestRowModel> queryTestRowModels = new List<QueryTestRowModel>()
+            {
+                rowModel
+            };
+            var exception = Record.Exception(() => handler.InsertIntoTable(queryTestRowModels));
             Assert.Equal("Sql query failed", exception.Message);
         }
     }

@@ -1,23 +1,29 @@
 using System;
 using System.Data;
+using Warehouse_Managemet_System.RowModels;
 
-namespace Warehouse_Managemet_System.Table_Models
+namespace Warehouse_Managment_Test.Mocks.RowModels
 {
-    public class MockRowModel : IRowModel
+    public class ValidFileWithDateMock : IRowModel
     {
         public required string Id { get; set; }
-        public int Amount { get; set; }
+        public DateTime Date { get; set; }
 
         public bool CreateFromDataRow(DataRow row)
         {
             throw new NotImplementedException();
         }
 
+        public string ToString()
+        {
+            return "";
+        }
+        
         public List<string> GetAllValues()
         {
             return new List<string>()
             {
-                Id, Amount.ToString()
+                Id, Date.ToString()
             };
         }
     }
