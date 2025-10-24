@@ -12,13 +12,13 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      DB_USER: ${{ secrets.MYSQL_USERNAME }}
+      DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
     steps:
-    - uses: samin/mysql-action@v1.3
-      with:
-       mysql user: ${{ secrets.MYSQL_USERNAME }}
-       mysql password: ${{ secrets.MYSQL_PASSWORD }}
     - uses: actions/checkout@v4
+    - name: Start MySQL
+      run: sudo /etc/init.d/mysql start
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
