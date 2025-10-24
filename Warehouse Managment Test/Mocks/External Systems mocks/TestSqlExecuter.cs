@@ -12,19 +12,36 @@ using Warehouse_Managment_Test.Mocks.RowModels;
 
 namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
 {
+    /// <summary>
+    /// An implementation of ISQLExecuter to unit test the QueryHandler
+    /// </summary>
     public class TestSqlExecuter : ISQLExecuter
     {
+        /// <summary>
+        /// The Rowmodels contained in the simulated database
+        /// </summary>
         public List<QueryTestRowModel> results;
 
+        /// <summary>
+        /// The constructer of the TestSQLExecuter class
+        /// </summary>
+        /// <param name="results">The initial value of the results list</param>
         public TestSqlExecuter(List<QueryTestRowModel> results)
         {
             this.results = results;
         }
-
+        /// <summary>
+        /// Takes the command and verifies its made as a known command and to the correct table. It then simulates the command based on the paramaters given
+        /// </summary>
+        /// <param name="command">The command to be simulated</param>
+        /// <param name="connection">not used</param>
+        /// <param name="paramaters">The paramaters of the command</param>
+        /// <returns></returns>
         public string ExecuteNonReturningQuery(string command, MySqlConnection connection, Dictionary<string, string> paramaters)
         {
             try
             {
+                //Removes all objects from the list meeting the conditions given in the paramaters
                 if (command.Contains("DELETE") && command.Contains("testTable"))
                 {
                     Dictionary<string, List<(string, int)>> filterValues = GetConditions(0, paramaters);
@@ -44,6 +61,7 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
                     }
                     return $"command executed succesfully. {affectedRows} rows affected";
                 }
+                //updates the given values in all objects meeting the conditions given
                 else if (command.Contains("UPDATE") && command.Contains("testTable"))
                 {
                     Dictionary<string, object> updateValues = GetUpdateValues(paramaters);
@@ -62,6 +80,7 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
                     }
                     return $"command executed succesfully. {affectedRows} rows affected";
                 }
+                //Creates and adds QueryTestRowModels based on the data given in the paramaters
                 else if(command.Contains("INSERT") && command.Contains("testTable"))
                 {
                     int remainingVariables = 4;
@@ -135,8 +154,16 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
             }
         }
 
+        /// <summary>
+        /// Simulates the query on the results list
+        /// </summary>
+        /// <param name="command">The command to be executed</param>
+        /// <param name="connection">Not used</param>
+        /// <param name="paramaters">The paramaters to use</param>
+        /// <returns></returns>
         public (bool, DataTable?) ExecuteQuery(string command, MySqlConnection connection, Dictionary<string, string> paramaters)
         {
+            //Retrieves all collumns desired from all objects meeting the conditions and creates a datatable with this information
             if (command.Contains("SELECT") && command.Contains("testTable"))
             {
                 DataTable result = new DataTable();
@@ -203,6 +230,16 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
             }
         }
 
+        /// <summary>
+        /// Returns the value of a given variable in a QueryTestRowModel
+        /// </summary>
+        /// <param name="collumnName">the name of the collumn</param>
+        /// <param name="rowModel">The rowmodel to get the value from</param>
+        /// <returns>
+        /// The value of the desired property in the rowModel. 
+        /// As it is a pure object which is returned a casting to the actual type should be done on the result
+        /// </returns>
+        /// <exception cref="Exception">An exception is thrown if an unknown collumn name is given</exception>
         private object GetRowValue(string collumnName, QueryTestRowModel rowModel)
         {
             switch (collumnName)
@@ -222,6 +259,14 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
             }
         }
 
+        /// <summary>
+        /// Executes the action given in a operator string
+        /// </summary>
+        /// <param name="op">the logical operator to be executed</param>
+        /// <param name="x">the first value</param>
+        /// <param name="y">the second operator</param>
+        /// <returns>The boolean result of the operation</returns>
+        /// <exception cref="Exception">An exception is thrown if the op does not match a known operator</exception>
         private bool StringOperator(string op, int x, int y)
         {
             switch (op)
@@ -235,6 +280,13 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
                 default: throw new Exception($"Unknown operator: {op}");
             }
         }
+
+        /// <summary>
+        /// Retrieves conditions from the paramaters
+        /// </summary>
+        /// <param name="ignoredKeyAmount">the amount of paramaters to ignore</param>
+        /// <param name="paramaters">The paramaters to use</param>
+        /// <returns>A dictionary with the collumns to use conditions on as key and a list of tuples consisting of the operator and the comparison value as value</returns>
         private Dictionary<string, List<(string, int)>> GetConditions(int ignoredKeyAmount, Dictionary<string, string> paramaters)
         {
             Dictionary<string, List<(string, int)>> filterValues = new Dictionary<string, List<(string, int)>>();
@@ -267,6 +319,12 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
             return filterValues;
         }
 
+        /// <summary>
+        /// Creates a dictionary with collumns as key and the desired value as value
+        /// </summary>
+        /// <param name="paramaters">The paramaters to get the values from</param>
+        /// <returns>The desired dictionary of collumns and their desired values</returns>
+        /// <exception cref="Exception"></exception>
         private Dictionary<string, object> GetUpdateValues(Dictionary<string, string> paramaters)
         {
             Dictionary<string, object> UpdateValues = new Dictionary<string, object>();
@@ -301,6 +359,13 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
             }
             return UpdateValues;
         }
+
+        /// <summary>
+        /// Updates a given collumn with a given value
+        /// </summary>
+        /// <param name="collumn">The collumn to be updated</param>
+        /// <param name="value">The new value</param>
+        /// <param name="rowModel">The rowmodel containing the value</param>
         private void UpdateCollumn(string collumn, object value, QueryTestRowModel rowModel)
         {
             switch(collumn)
@@ -322,6 +387,13 @@ namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
                     break;
             }
         }
+
+        /// <summary>
+        /// Verifies that a given rolemodel meets the given conditions
+        /// </summary>
+        /// <param name="filterValues">The conditions to be used</param>
+        /// <param name="rowModel">The rowmodel to verify</param>
+        /// <returns>Whether it meets all the conditions</returns>
         private bool ValidateRow(Dictionary<string, List<(string, int)>> filterValues, QueryTestRowModel rowModel)
         {
             bool validRow = true;
