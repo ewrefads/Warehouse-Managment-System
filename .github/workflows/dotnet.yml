@@ -22,6 +22,7 @@ jobs:
       run: |
           sudo /etc/init.d/mysql start
           mysql -e "CREATE USER 'testuser'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'test';" -u$DB_USER -p$DB_PASSWORD
+          mysql -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD ON *.* TO 'testuser'@'localhost';" -u$DB_USER -p$DB_PASSWORD
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
