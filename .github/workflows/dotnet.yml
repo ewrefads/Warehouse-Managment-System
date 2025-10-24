@@ -20,8 +20,11 @@ jobs:
       DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
     steps:
     - uses: actions/checkout@v4
-    - name: Start MySQL
-      run: |
+    -  uses: mirromutth/mysql-action@v1.1
+       with:
+        mysql user: ${{ secrets.MYSQL_USERNAME }}
+        mysql password: ${{ secrets.MYSQL_PASSWORD }}
+    - run: |
           sudo /etc/init.d/mysql start
           mysql -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE;" -u$DB_USER -p$DB_PASSWORD
     - name: Setup .NET
