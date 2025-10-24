@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Warehouse_Managemet_System.RowModels;
+using MySql.Data.MySqlClient;
 
 namespace Warehouse_Managemet_System.Contexts
 {
