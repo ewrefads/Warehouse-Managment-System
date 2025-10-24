@@ -12,16 +12,24 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      MYSQL_USER: testuser
+      MYSQL_DB: sample_mysql_test
+      MYSQL_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+      MYSQL_ROOT_PASSWORD: ${{ secrets.TEST_DB_ROOT_PASSWORD }}
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ env.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ env.MYSQL_DB }}
+          MYSQL_USER: ${{ secrets.MYSQL_USERNAME }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        ports:
+          - 3306:3306
     steps:
     - uses: actions/checkout@v4
-    -  uses: mirromutth/mysql-action@v1.1
-       with:
-        mysql user: ${{ secrets.MYSQL_USERNAME }}
-        mysql password: ${{ secrets.MYSQL_PASSWORD }}
-    - run: |
-          sudo service mysql start
-          mysql -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE;" -u$DB_USER -p$DB_PASSWORD
+    - run: sudo /etc/init.d/mysql start
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
