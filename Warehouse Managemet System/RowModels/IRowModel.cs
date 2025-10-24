@@ -11,5 +11,7 @@ namespace Warehouse_Managemet_System.RowModels
     {
         public string Id { get; set; }
         public bool CreateFromDataRow(DataRow row);
+        public string ToString();
+        public List<string> GetAllValues();
     }
 }

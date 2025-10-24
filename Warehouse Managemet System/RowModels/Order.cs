@@ -2,7 +2,7 @@ using System.Data;
 
 namespace Warehouse_Managemet_System.RowModels
 {
-    class Order : IRowModel
+    public class Order : IRowModel
     {
         public required string Id { get; set; }
         public required string Customer { get; set; }
@@ -14,9 +14,22 @@ namespace Warehouse_Managemet_System.RowModels
         {
             throw new NotImplementedException();
         }
+
+        public string ToString()
+        {
+            return "";
+        }
+        
+        public List<string> GetAllValues()
+        {
+            return new List<string>()
+            {
+                Id, Customer, CreationTime.ToString(), Status.ToString(), ActiveTransactionId
+            };
+        }
     }
 
-    enum OrderStatus
+    public enum OrderStatus
     {
         Reserved,
         Shipping,

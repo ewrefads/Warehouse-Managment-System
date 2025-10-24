@@ -2,7 +2,7 @@ using System.Data;
 
 namespace Warehouse_Managemet_System.RowModels
 {
-    class Transaction : IRowModel
+    public class Transaction : IRowModel
     {
         public required string Id { get; set; }
         public required string ProductId { get; set; }
@@ -16,16 +16,29 @@ namespace Warehouse_Managemet_System.RowModels
         {
             throw new NotImplementedException();
         }
+
+        public string ToString()
+        {
+            return "";
+        }
+        
+        public List<string> GetAllValues()
+        {
+            return new List<string>()
+            {
+                Id, ProductId, type.ToString(), Amount.ToString(), Status.ToString(), FromWarehouseId, ToWareHouseId 
+            };
+        }
     }
 
-    enum TransactionType
+    public enum TransactionType
     {
         Sale,
         Return,
         Transfer
     }
 
-    enum TransactionStatus
+    public enum TransactionStatus
     {
         Waiting,
         Active,
