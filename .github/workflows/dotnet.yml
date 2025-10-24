@@ -16,10 +16,12 @@ jobs:
       DB_DATABASE: test_db
       DB_USER: root
       DB_PASSWORD: root
+      TestUser: ${{secrets.MYSQL_USERNAME}}
+      TestPassword: ${{secrets.MYSQL_PASSWORD}})}}
     steps:
     - uses: actions/checkout@v4
     - run: sudo /etc/init.d/mysql start
-    - run: mysql -e ${{format('CREATE USER "{0}"@"localhost" IDENTIFIED WITH caching_sha2_password BY "{1}";', ${{secrets.MYSQL_USERNAME}}, ${{secrets.MYSQL_PASSWORD}})}} -u$DB_USER -p$DB_PASSWORD
+    - run: mysql -e "CREATE USER '$TestUser'@'localhost' IDENTIFIED WITH caching_sha2_password BY '$TestPassword';" -u$DB_USER -p$DB_PASSWORD
       
     - uses: actions/setup-dotnet@v4
       with:
