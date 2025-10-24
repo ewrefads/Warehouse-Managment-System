@@ -1,6 +1,6 @@
 using Bogus;
 using Warehouse_Managemet_System.DataFaking;
-using Warehouse_Managemet_System.Table_Models;
+using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managment_Test
 {

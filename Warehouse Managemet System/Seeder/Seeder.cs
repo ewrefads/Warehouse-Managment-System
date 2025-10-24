@@ -6,7 +6,7 @@ using CsvHelper;
 
 namespace Warehouse_Managemet_System.Seeders
 {
-    public class Seeder<RowModel> : ISeeder where RowModel : class, IRowModel
+    public class Seeder<RowModel> : ISeeder<RowModel> where RowModel : class, IRowModel
     {
         private readonly Context<RowModel> _context;
         private readonly Parsers.IParser<RowModel> _parser;

@@ -13,7 +13,7 @@ namespace Warehouse_Managment_Test
         {
             Parser<MockRowModel> parser = new Parser<MockRowModel>();
             string path = Path.Combine(AppContext.BaseDirectory, "CsvFilesForTesting", "ValidFileFake.csv");
-            List<MockRowModel> rowList = parser.Parse<MockRowModel>(path);
+            List<MockRowModel> rowList = parser.Parse(path);
             Assert.Equal("A1", rowList[0].Id);
         }
 
@@ -22,7 +22,7 @@ namespace Warehouse_Managment_Test
         {
             Parser<MockRowModel> parser = new Parser<MockRowModel>();
             string path = Path.Combine(AppContext.BaseDirectory, "CsvFilesForTesting", "EmptyFile.csv");
-            List<MockRowModel> rowList = parser.Parse<MockRowModel>(path);
+            List<MockRowModel> rowList = parser.Parse(path);
             Assert.Empty(rowList);
         }
 
@@ -31,7 +31,7 @@ namespace Warehouse_Managment_Test
         {
             Parser<MockRowModel> parser = new Parser<MockRowModel>();
             string path = Path.Combine(AppContext.BaseDirectory, "CsvFilesForTesting", "NotCsvFile.txt");
-            List<MockRowModel> rowList = parser.Parse<MockRowModel>(path);
+            List<MockRowModel> rowList = parser.Parse(path);
             Assert.Empty(rowList);
         }
 
