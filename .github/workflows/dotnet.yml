@@ -20,8 +20,9 @@ jobs:
       TestPassword: ${{secrets.MYSQL_PASSWORD}})}}
     steps:
     - uses: actions/checkout@v4
+    - run: echo "Initial_Command = CREATE USER '${{$TestUser}}'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${{$TestPassword}}; >> $GITHUB_ENV"
     - run: sudo /etc/init.d/mysql start
-    - run: mysql -e ${{format('CREATE USER "{0}"@"localhost" IDENTIFIED WITH caching_sha2_password BY "{1}";', $TestUser, $TestPassword)}} -u$DB_USER -p$DB_PASSWORD
+    - run: mysql -e ${{format("{0}", $Initial_Command)}} -u$DB_USER -p$DB_PASSWORD
       
     - uses: actions/setup-dotnet@v4
       with:
