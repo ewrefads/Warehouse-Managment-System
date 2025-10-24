@@ -29,7 +29,7 @@ jobs:
           - 3306:3306
     steps:
     - uses: actions/checkout@v4
-    - run: mysql --host=127.0.0.1 --user=${{ secrets.MYSQL_USERNAME }} --password=${{ secrets.MYSQL_PASSWORD }} test
+    - run: sudo /etc/init.d/mysql start
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
