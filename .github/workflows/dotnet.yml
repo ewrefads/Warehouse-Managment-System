@@ -12,16 +12,24 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      MYSQL_USER: ${{ secrets.MYSQL_USERNAME }}
+      MYSQL_DB: test
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
     services:
       mysql:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_DATABASE: test
+          MYSQL_USER: ${{ secrets.MYSQL_USERNAME }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         ports:
           - 3306:3306
     steps:
     - uses: actions/checkout@v4
-    - run: sudo /etc/init.d/mysql start
+    - run: mysql --host=127.0.0.1 --user=${{ secrets.MYSQL_USERNAME }} --password=${{ secrets.MYSQL_PASSWORD }} test
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
