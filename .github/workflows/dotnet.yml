@@ -12,18 +12,14 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          MYSQL_USER: ${{ secrets.MYSQL_USERNAME }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        ports:
-          - 3306:3306
+    env:
+      DB_DATABASE: test_db
+      DB_USER: root
+      DB_PASSWORD: root
     steps:
     - uses: actions/checkout@v4
     - run: sudo /etc/init.d/mysql start
+    - run: mysql -e "CREATE USER '"${{secrets.MYSQL_USERNAME}}"'@'localhost' IDENTIFIED WITH caching_sha2_password BY '"${{secrets.MYSQL_PASSWORD}}"';" -u$DB_USER -p$DB_PASSWORD
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
