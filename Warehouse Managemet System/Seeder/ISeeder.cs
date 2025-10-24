@@ -10,6 +10,6 @@ namespace Warehouse_Managemet_System.Seeders
 {
     public interface ISeeder
     {
-        public bool PopulateTable(DataTable data);
+        public void PopulateTable(string filePath);
     }
 }

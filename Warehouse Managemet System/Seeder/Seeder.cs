@@ -6,7 +6,7 @@ using CsvHelper;
 
 namespace Warehouse_Managemet_System.Seeders
 {
-    public class Seeder
+    public class Seeder : ISeeder
     {
         private readonly Context _context;
         private readonly Parsers.IParser _parser;

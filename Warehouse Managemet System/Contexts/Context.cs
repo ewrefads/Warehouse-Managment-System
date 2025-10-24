@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Warehouse_Managemet_System.Table_Models;
+using MySql.Data.MySqlClient;
 
 namespace Warehouse_Managemet_System.Contexts
 {
-    public class Context : DbContext
+    public class Context : DbContext, IContext
     {
         public Context(DbContextOptions<Context> options) : base(options) { }
 
@@ -18,6 +19,20 @@ namespace Warehouse_Managemet_System.Contexts
         {
             modelBuilder.Entity<MockRowModel>()
             .HasKey(i => i.Id);
+        }
+        public string GetTable()
+        {
+            return "";
+        }
+
+        public MySqlConnection GetConnection()
+        {
+            return new MySqlConnection();
+        }
+
+        public void CreateTable(ModelBuilder modelBuilder)
+        {
+            
         }
 
     }
