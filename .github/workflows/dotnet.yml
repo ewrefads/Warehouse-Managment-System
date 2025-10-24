@@ -25,6 +25,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: test
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_USER: ${{secrets.MYSQL_USERNAME}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
     steps:
