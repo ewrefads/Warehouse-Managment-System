@@ -2,7 +2,7 @@ using System.Data;
 
 namespace Warehouse_Managemet_System.Table_Models
 {
-    class InventoryItem : IRowModel
+    public class InventoryItem : IRowModel
     {
         public required string Id { get; set; }
         public required string WarehouseId { get; set; }
@@ -14,6 +14,11 @@ namespace Warehouse_Managemet_System.Table_Models
             throw new NotImplementedException();
         }
 
+        public string ToString()
+        {
+            return "";
+        }
+        
         public List<string> GetAllValues()
         {
             return new List<string>()
