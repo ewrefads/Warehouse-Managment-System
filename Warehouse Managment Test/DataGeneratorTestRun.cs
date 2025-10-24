@@ -23,11 +23,15 @@ namespace Warehouse_Managment_Test
         }
         
         [Fact]
-        public void TestRunGenerateInventoryItem()
+        public void TestRunGenerateProducts()
         {
-            //InventoryItemGenerator generator = new();
-            //InventoryItem item = generator.GenerateInventoryItem(16);
-            //Console.WriteLine("inventory item generated. Id: " + item.Id + "Warehouse Id: " + item.WarehouseId + "Product Id: " + item.ProductId + "Amount: " + item.Amount);
+            ProductGenerator rowGenerator = new();
+            DataGenerator generator = new();
+            List<IRowModel> products = generator.Generate(rowGenerator, 3, 16);
+            foreach (IRowModel product in products)
+            {
+                Console.WriteLine(product.ToString());
+            }
         }
     }
 }

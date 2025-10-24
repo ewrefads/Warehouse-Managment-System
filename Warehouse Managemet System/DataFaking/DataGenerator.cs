@@ -5,7 +5,7 @@ namespace Warehouse_Managemet_System.DataFaking;
 
 public class DataGenerator
 {
-    public List<IRowModel> GenerateData(IRowGenerator rowGenerator, int amount, int? seed)
+    public List<IRowModel> Generate(IRowGenerator rowGenerator, int amount, int? seed)
     {
         if (seed is int s)
         {
