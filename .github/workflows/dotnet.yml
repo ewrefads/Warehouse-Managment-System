@@ -15,6 +15,9 @@ jobs:
 
     steps:
     - uses: samin/mysql-action@v1.3
+      with:
+       mysql user: ${{ secrets.MYSQL_USERNAME }}
+       mysql password: ${{ secrets.MYSQL_PASSWORD }}
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
