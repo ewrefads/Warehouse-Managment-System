@@ -22,21 +22,143 @@ namespace Warehouse_Managemet_System.Commands
             this.sQLExecuter = sQLExecuter;
         }
 
-        public bool InsertIntoTable<RowModel>(List<RowModel> itemsToBeInserted) where RowModel : IRowModel, new ()
+        public bool InsertIntoTable<RowModel>(List<RowModel> itemsToBeInserted) where RowModel : IRowModel, new()
         {
-            return false;
+            try
+            {
+                using (MySqlConnection conn = context.GetConnection())
+                {
+                    Dictionary<string, string> paramaters = new Dictionary<string, string>();
+                    string command = $"INSERT INTO {context.GetTable()} VALUES";
+                    
+                    command += ";";
+                    string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
+                    if (res.Contains("command executed succesfully"))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        throw new Exception("Sql query failed");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
-        public bool UpdateTable<RowModel>(List<RowModel> itemsToBeUpdated) where RowModel : IRowModel, new()
+        private string GetUpdateString(List<string> values)
         {
-            return false;
+            string updateString = "(";
+            for (int i = 0; i < values.Count; i++)
+            {
+                if (updateString.Length > 1)
+                {
+                    updateString += ", ";                    
+                }
+                updateString += values[i];
+            }
+            updateString += ")";
+            return updateString;
         }
 
-        public bool DeleteFromTable<RowModel>(List<RowModel> itemsToBeDeleted) where RowModel : IRowModel, new()
-        { 
-            return false;
+        public (bool, string) UpdateTable<RowModel>(Dictionary<string, List<string>> filters, Dictionary<string, string> updateValues) where RowModel : IRowModel
+        {
+            try
+            {
+                using (MySqlConnection conn = context.GetConnection())
+                {
+                    Dictionary<string, string> paramaters = new Dictionary<string, string>();
+                    string command = $"UPDATE {context.GetTable()} SET ";
+                    List<(string, string)> valuePairs = GetValuePairs(updateValues, paramaters);
+                    string updateString = "";
+                    foreach ((string, string) valuePair in valuePairs)
+                    {
+                        command += $"{valuePair.Item1} = {valuePair.Item2}";
+                    }
+                    command += updateString;
+                    if (filters.Count > 0)
+                    {
+                        updateString += $" WHERE {GetConditionString(filters, paramaters)}";
+                    }
+                    
+                    command += ";";
+                    string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
+                    if (res.Contains("command executed succesfully"))
+                    {
+                        return (true, res);
+                    }
+                    else
+                    {
+                        throw new Exception("Sql query failed");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
+        private List<(string, string)> GetValuePairs(Dictionary<string, string> updateValues, Dictionary<string, string> paramaters)
+        {
+            List<(string, string)> valuePairs = new List<(string, string)>();
+            foreach (string collumn in updateValues.Keys)
+            {
+                if(!paramaters.ContainsKey($"@{collumn}"))
+                {
+                    paramaters.Add($"@{collumn}", collumn);
+                }
+                paramaters.Add($"@{collumn}val", updateValues[collumn]);
+                if(!float.TryParse(updateValues[collumn], out float res))
+                {
+                    paramaters[$"@{collumn}val"] = $"'{updateValues[collumn]}'";
+                }
+                valuePairs.Add(($"@{collumn}", $"@{collumn}val"));
+            }
+            return valuePairs;
+        }
+
+        public (bool, string) DeleteFromTable<RowModel>(Dictionary<string, List<string>> filters) where RowModel : IRowModel
+        {
+            try
+            {
+                using (MySqlConnection conn = context.GetConnection())
+                {
+                    Dictionary<string, string> paramaters = new Dictionary<string, string>();
+                    string command = $"DELETE FROM {context.GetTable()}";
+                    if (filters.Count > 0)
+                    {
+                        command += $" WHERE {GetConditionString(filters, paramaters)}";
+                    }
+                    command += ";";
+                    string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
+                    if (res.Contains("command executed succesfully"))
+                    {
+                        return (true, res);
+                    }
+                    else
+                    {
+                        throw new Exception("Sql query failed");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// A method to select items from a specific table in a MySQL database
+        /// </summary>
+        /// <typeparam name="RowModel">The table row model representation class used for the output</typeparam>
+        /// <param name="filters">A dictionary of collumn names and conditions for them to be included in the query</param>
+        /// <param name="desiredCollumns">Which collumns should be shown</param>
+        /// <returns>A list of all items in the table which met the previous conditions</returns>
+        /// <exception cref="Exception">An exception is thrown if there was any errors with the given input or other issues with the connection to the server</exception>
         public List<RowModel> SelectFromTable<RowModel>(Dictionary<string, List<string>> filters, List<string> desiredCollumns) where RowModel : IRowModel, new()
         {
             try
@@ -45,7 +167,7 @@ namespace Warehouse_Managemet_System.Commands
                 {
                     Dictionary<string, string> paramaters = new Dictionary<string, string>();
                     string command = "SELECT ";
-                    if(desiredCollumns.Count == 0)
+                    if (desiredCollumns.Count == 0)
                     {
                         command += $"*";
                     }
@@ -54,7 +176,7 @@ namespace Warehouse_Managemet_System.Commands
                         string collumns = "";
                         for (int i = 0; i < desiredCollumns.Count; i++)
                         {
-                            if(collumns.Length == 0)
+                            if (collumns.Length == 0)
                             {
                                 collumns = desiredCollumns[i];
                             }
@@ -68,8 +190,13 @@ namespace Warehouse_Managemet_System.Commands
 
                     }
                     command += $" FROM {context.GetTable()}";
+                    if (filters.Count > 0)
+                    {
+                        command += $" WHERE {GetConditionString(filters, paramaters)}";
+                    }
+                    command += ";";
                     (bool, DataTable?) res = sQLExecuter.ExecuteQuery(command, conn, paramaters);
-                    if(res.Item1)
+                    if (res.Item1)
                     {
                         DataTable dataTable = res.Item2;
                         List<RowModel> returnedRowModels = new List<RowModel>();
@@ -91,6 +218,30 @@ namespace Warehouse_Managemet_System.Commands
             {
                 throw new Exception(ex.Message);
             }
+        }
+        
+        private string GetConditionString(Dictionary<string, List<string>> filters, Dictionary<string, string> paramaters)
+        {
+            string conditionsString = "";
+            foreach (string collumn in filters.Keys)
+            {
+                if(!paramaters.ContainsKey($"@{collumn}"))
+                {
+                    paramaters.Add($"@{collumn}", collumn);
+                }
+                
+                for(int i = 0; i < filters[collumn].Count; i++)
+                            {
+                    string condition = filters[collumn][i];
+                    paramaters.Add($"@{collumn}con{i}", condition);
+                    if (conditionsString.Length > 0)
+                    {
+                        conditionsString += "AND ";
+                    }
+                    conditionsString += $"@{collumn} @{collumn}con{i} ";
+                }
+            }
+            return conditionsString;            
         }
     }
 }

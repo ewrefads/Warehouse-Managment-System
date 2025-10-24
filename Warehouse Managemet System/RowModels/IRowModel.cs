@@ -11,5 +11,6 @@ namespace Warehouse_Managemet_System.Table_Models
     {
         public bool CreateFromDataRow(DataRow row);
         public string ToString();
+        public List<string> GetAllValues();
     }
 }

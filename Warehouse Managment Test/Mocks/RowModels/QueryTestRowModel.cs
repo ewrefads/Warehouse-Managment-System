@@ -14,7 +14,7 @@ namespace Warehouse_Managment_Test.Mocks.RowModels
         {
         }
 
-        public QueryTestRowModel(int id, string name, int filterValue1, int filterValue2, int filterValue3)
+        public QueryTestRowModel(string id, string name, int filterValue1, int filterValue2, int filterValue3)
         {
             Id = id;
             Name = name;
@@ -23,7 +23,7 @@ namespace Warehouse_Managment_Test.Mocks.RowModels
             FilterValue3 = filterValue3;
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public int FilterValue1 { get; set; }
         public int FilterValue2 { get; set; }
@@ -31,19 +31,41 @@ namespace Warehouse_Managment_Test.Mocks.RowModels
 
         public bool CreateFromDataRow(DataRow row)
         {
-            try
+            Id = "";
+            Name = "";
+            FilterValue1 = -1;
+            FilterValue2 = -1;
+            FilterValue3 = -1;
+            foreach (DataColumn c in row.Table.Columns)
             {
-                Id = Convert.ToInt32(row["id"]);
-                Name = row["name"].ToString();
-                FilterValue1 = Convert.ToInt32(row["FilterValue1"]);
-                FilterValue2 = Convert.ToInt32(row["FilterValue2"]);
-                FilterValue3 = Convert.ToInt32(row["FilterValue3"]);
-                return true;
+                switch (c.ColumnName)
+                {
+                    case "Id":
+                        Id = row["Id"].ToString();
+                        break;
+                    case "FilterValue1":
+                        FilterValue1 = Convert.ToInt32(row["FilterValue1"]);
+                        break;
+                    case "FilterValue2":
+                        FilterValue2 = Convert.ToInt32(row["FilterValue3"]);
+                        break;
+                    case "FilterValue3":
+                        FilterValue3 = Convert.ToInt32(row["FilterValue3"]);
+                        break;
+                    case "Name":
+                        Name = row["Name"].ToString();
+                        break;
+                }
             }
-            catch (Exception ex)
+            return true;
+        }
+
+        public List<string> GetAllValues()
+        {
+            return new List<string>()
             {
-                return false;
-            }
+                Id.ToString(), Name, FilterValue1.ToString(), FilterValue2.ToString(), FilterValue3.ToString()
+            };
         }
     }
 }

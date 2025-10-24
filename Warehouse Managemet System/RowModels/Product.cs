@@ -17,5 +17,13 @@ namespace Warehouse_Managemet_System.Table_Models
         {
             return "Product! Id: " + Id + " Name: " + Name + " Price: " + Price;
         }
+        
+        public List<string> GetAllValues()
+        {
+            return new List<string>()
+            {
+                Id, Name, Price.ToString()
+            };
+        }
     }
 }
