@@ -12,30 +12,16 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping --silent"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: test
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_USER: ${{secrets.MYSQL_USERNAME}}
-          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+    env:
+      DB_DATABASE: test
+      DB_USER: root
+      DB_PASSWORD: root
     steps:
     - uses: actions/checkout@v4
-    - name: Wait for MySQL to be ready
+    - name: Start MySQL
       run: |
-          while ! mysqladmin ping --host="127.0.0.1" --user="root" --password="root" --silent; do
-            echo "Waiting for MySQL..."
-            sleep 3
-          done
+          sudo /etc/init.d/mysql start
+          mysql -e "CREATE USER 'testuser'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'test';" -u$DB_USER -p$DB_PASSWORD
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
