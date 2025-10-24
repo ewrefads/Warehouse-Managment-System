@@ -9,7 +9,7 @@ using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.Contexts
 {
-    public class Context<RowModel> : DbContext where RowModel : class, IRowModel
+    public class Context<RowModel> : DbContext, IContext where RowModel : class, IRowModel
     {
         public Context(DbContextOptions<Context<RowModel>> options) : base(options) { }
 
@@ -19,5 +19,20 @@ namespace Warehouse_Managemet_System.Contexts
             modelBuilder.Entity<RowModel>()
             .HasKey(i => i.Id);
         }
+        public string GetTable()
+        {
+            return "";
+        }
+
+        public MySqlConnection GetConnection()
+        {
+            return new MySqlConnection();
+        }
+
+        public void CreateTable(ModelBuilder modelBuilder)
+        {
+            
+        }
+
     }
 }
