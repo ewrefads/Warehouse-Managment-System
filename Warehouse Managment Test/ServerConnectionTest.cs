@@ -15,7 +15,7 @@ namespace Warehouse_Management_Test
         {
             try 
             {
-                using(MySqlConnection con = new MySqlConnection("server = Localhost; port = 3306; user = root"))
+                using(MySqlConnection con = new MySqlConnection("server = Localhost; port = 3306; user = testuser; password = test"))
                 {
                     con.Open();
                     MySqlCommand com = new MySqlCommand("CREATE DATABASE IF NOT EXISTS test;", con);
