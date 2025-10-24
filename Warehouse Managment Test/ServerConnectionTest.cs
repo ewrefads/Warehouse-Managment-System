@@ -26,6 +26,7 @@ namespace Warehouse_Management_Test
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.ToString());
                 Assert.Equal("", e.Message);
             }
         }
