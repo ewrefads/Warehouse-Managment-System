@@ -5,20 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Warehouse_Managemet_System.Table_Models;
+using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.Contexts
 {
-    public class Context : DbContext
+    public class Context<RowModel> : DbContext where RowModel : class, IRowModel
     {
-        public Context(DbContextOptions<Context> options) : base(options) { }
+        public Context(DbContextOptions<Context<RowModel>> options) : base(options) { }
 
-        public DbSet<MockRowModel> Rows { get; set; }
+        public DbSet<RowModel> Rows { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<MockRowModel>()
+            modelBuilder.Entity<RowModel>()
             .HasKey(i => i.Id);
         }
-
     }
 }

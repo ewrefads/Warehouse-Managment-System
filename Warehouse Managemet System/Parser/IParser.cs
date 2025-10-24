@@ -1,15 +1,16 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Warehouse_Managemet_System.Table_Models;
+using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.Parsers
 {
-    public interface IParser
+    public interface IParser<RowModel> where RowModel : IRowModel
     {
-        public List<MockRowModel> Parse(string filePath);
+        public List<RowModel> Parse(string filePath);
     }
 }
