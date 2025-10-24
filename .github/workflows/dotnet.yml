@@ -13,10 +13,10 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      MYSQL_USER: testuser
+      MYSQL_USER: ${{ secrets.MYSQL_USERNAME }}
       MYSQL_DB: sample_mysql_test
-      MYSQL_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-      MYSQL_ROOT_PASSWORD: ${{ secrets.TEST_DB_ROOT_PASSWORD }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
     services:
       mysql:
         image: mysql:8.0
