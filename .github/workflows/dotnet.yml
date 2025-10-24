@@ -12,12 +12,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      DB_HOST: 127.0.0.1
-      DB_CONNECTION: mysql
-      DB_DATABASE: test
-      DB_USER: ${{ secrets.MYSQL_USERNAME }}
-      DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+
     steps:
     - uses: actions/checkout@v4
     -  uses: mirromutth/mysql-action@v1.1
@@ -25,7 +20,7 @@ jobs:
         mysql user: ${{ secrets.MYSQL_USERNAME }}
         mysql password: ${{ secrets.MYSQL_PASSWORD }}
     - run: |
-          sudo /etc/init.d/mysql start
+          sudo service mysql start
           mysql -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE;" -u$DB_USER -p$DB_PASSWORD
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
