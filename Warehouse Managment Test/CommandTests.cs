@@ -18,11 +18,11 @@ namespace Warehouse_Management_Test
     
     public class AddProductTests
     {
-        AddProduct addProduct;
+        AddItemToList<InventoryItem> addProduct;
         AddProductQueryHandler addProductQueryHandler = new AddProductQueryHandler();
         public AddProductTests() 
         { 
-            addProduct = new AddProduct(addProductQueryHandler);
+            addProduct = new AddItemToList<InventoryItem>(addProductQueryHandler);
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace Warehouse_Management_Test
         [Fact]
         public void ActualQueryHandlerHandlesInputFromCommand()
         {
-            AddProduct addProductWithActualQueryHandler = new AddProduct();
+            AddItemToList<InventoryItem> addProductWithActualQueryHandler = new AddItemToList<InventoryItem>();
             CommandTestSqlExecuter testSqlExecuter = new CommandTestSqlExecuter();
             addProductWithActualQueryHandler.queryHandler.sQLExecuter = testSqlExecuter;
             (bool, string) res = addProductWithActualQueryHandler.AddNewProduct(new InventoryItem());
