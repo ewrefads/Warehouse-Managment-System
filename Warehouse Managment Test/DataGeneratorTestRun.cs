@@ -62,5 +62,15 @@ namespace Warehouse_Managment_Test
             IRowModel order = generator.Generate();
             Console.WriteLine(order.ToString());
         }
+        
+        [Fact]
+        public void TestRunGenerateOrderItem()
+        {
+            List<string> productIds = new() {"p1", "p2", "p3"};
+            List<string> orderIds = new() {"o1", "o2", "o3"};
+            OrderItemGenerator generator = new(productIds, orderIds);
+            IRowModel orderItem = generator.Generate();
+            Console.WriteLine(orderItem.ToString());
+        }
     }
 }
