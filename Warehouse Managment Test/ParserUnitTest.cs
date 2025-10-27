@@ -1,62 +1,52 @@
 using System;
-using Xunit;
+using Warehouse_Management_Test.Mocks.RowModels;
 using Warehouse_Managemet_System;
 using Warehouse_Managemet_System.Parsers;
 using Warehouse_Management_Test.Mocks.RowModels;
+using Xunit;
+using Warehouse_Managment_Test.Mocks.RowModels;
 
-namespace Warehouse_Management_Test
+namespace Warehouse_Managment_Test
 {
     public class ParserUnitTest
     {
         [Fact]
-        public void Parse_ValidFile_ReturnsCorrectListOfRows()
+        public void Parse_ValidCsvFile_ReturnsCorrectListOfRows()
         {
-            Parser<MockRowModel> parser = new Parser<MockRowModel>();
+            Parser<ValidFileMock> parser = new Parser<ValidFileMock>();
             string path = Path.Combine(AppContext.BaseDirectory, "CsvFilesForTesting", "ValidFileFake.csv");
-            List<MockRowModel> rowList = parser.Parse(path);
+            List<ValidFileMock> rowList = parser.Parse(path);
             Assert.Equal("A1", rowList[0].Id);
         }
 
         [Fact]
-        public void Parse_InvalidFile_ReturnsEmptyListOfRows()
+        public void Parse_EmptyCsvFile_ReturnsEmptyListOfRows()
         {
-            Parser<MockRowModel> parser = new Parser<MockRowModel>();
+            Parser<ValidFileMock> parser = new Parser<ValidFileMock>();
             string path = Path.Combine(AppContext.BaseDirectory, "CsvFilesForTesting", "EmptyFile.csv");
-            List<MockRowModel> rowList = parser.Parse(path);
+            List<ValidFileMock> rowList = parser.Parse(path);
             Assert.Empty(rowList);
         }
 
         [Fact]
-        public void Parse_EmptyFile_ReturnsEmptyListOfRows()
+        public void Parse_InvalidFileType_ReturnsEmptyListOfRows()
         {
-            Parser<MockRowModel> parser = new Parser<MockRowModel>();
+            Parser<ValidFileMock> parser = new Parser<ValidFileMock>();
             string path = Path.Combine(AppContext.BaseDirectory, "CsvFilesForTesting", "NotCsvFile.txt");
-            List<MockRowModel> rowList = parser.Parse(path);
+            List<ValidFileMock> rowList = parser.Parse(path);
             Assert.Empty(rowList);
         }
 
         [Fact]
-        public void Parse_NoHeadersInFile_ReturnsEmptyListOfRows()
+        public void Parse_InvariantCultureInTable_ReturnsListOfRowsWithCorrectTypes()
         {
-            Assert.True(true);
+            string fileContent = "Id,Date\nA1,2025-10-24";
+            string filePath = Path.GetTempFileName();
+            File.WriteAllText(filePath, fileContent);
+            Parser<ValidFileWithDateMock> parser = new Parser<ValidFileWithDateMock>();
+            List<ValidFileWithDateMock> rowList = parser.Parse(filePath);
+            Assert.Equal(new DateTime(2025, 10, 24), rowList[0].Date);
         }
 
-        [Fact]
-        public void Parse_WrongIdTypeInFile_ReturnsEmptyListOfRows()
-        {
-            Assert.True(true);
-        }
-
-        [Fact]
-        public void Parse_WrongTypesInFile_ReturnsEmptyListOfRows()
-        {
-            Assert.True(true);
-        }
-
-        [Fact]
-        public void Parse_TooManyColumnsInFile_ReturnsEmptyListOfRows()
-        {
-            Assert.True(true);
-        }
     }
 }

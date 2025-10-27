@@ -24,7 +24,6 @@ namespace Warehouse_Managemet_System.Commands
         /// <param name="context">the iContext implementation to be used by the query handler</param>
         /// <param name="sQLExecuter">the ISQLExecuter implementation to be used by the query handler</param>
         private IContext context;
-        private ISQLExecuter sQLExecuter;
 
         public QueryHandler(IContext context, ISQLExecuter sQLExecuter)
         {
@@ -33,7 +32,14 @@ namespace Warehouse_Managemet_System.Commands
             conn = new MySqlConnection(connectionString);
         }
 
-        public bool InsertIntoTable<RowModel>(List<RowModel> itemsToBeInserted) where RowModel : IRowModel, new()
+        /// <summary>
+        /// Inserts a list of rowmodels into the QueryHandlers table
+        /// </summary>
+        /// <typeparam name="RowModel">The IRowModel implementation for the table</typeparam>
+        /// <param name="itemsToBeInserted">The items to be inserted. Must be ready to be placed in the table when given to this method</param>
+        /// <returns>Whether the operation was succesful and the succes message</returns>
+        /// <exception cref="Exception">An exception is thrown if the sql query fails to execute</exception>
+        public (bool, string) InsertIntoTable<RowModel>(List<RowModel> itemsToBeInserted) where RowModel : IRowModel, new()
         {
             try
             {
@@ -56,7 +62,7 @@ namespace Warehouse_Managemet_System.Commands
                     string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
                     if (res.Contains("command executed succesfully"))
                     {
-                        return true;
+                        return (true, res);
                     }
                     else
                     {
@@ -69,6 +75,7 @@ namespace Warehouse_Managemet_System.Commands
                 throw new Exception(e.Message);
             }
         }
+
 
         private string GetValueString(List<string> values, Dictionary<string, string> paramaters)
         {
