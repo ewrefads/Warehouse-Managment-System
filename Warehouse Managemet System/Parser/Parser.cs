@@ -8,9 +8,9 @@ using System.IO;
 
 namespace Warehouse_Managemet_System.Parsers
 {
-    public class Parser<RowModel> : Parsers.IParser<RowModel> where RowModel : IRowModel
+    public class Parser : Parsers.IParser
     {
-        public List<RowModel> Parse(string filePath) 
+        public List<RowModel> Parse<RowModel>(string filePath) where RowModel : IRowModel
         {
             try
             {

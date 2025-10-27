@@ -6,27 +6,28 @@ using CsvHelper;
 
 namespace Warehouse_Managemet_System.Seeders
 {
-    public class Seeder<RowModel> : ISeeder<RowModel> where RowModel : class, IRowModel
+    public class Seeder : ISeeder
     {
-        private readonly Context<RowModel> _context;
-        private readonly Parsers.IParser<RowModel> _parser;
+        private readonly IContext _context;
+        private Parsers.IParser _parser;
 
-        public Seeder(Context<RowModel> context, Parsers.IParser<RowModel> parser)
+        public Seeder(IContext context, Parsers.IParser parser)
         {
             _context = context;
             _parser = parser;
         }
 
-        public void PopulateTable(string filePath) 
+        public void PopulateTable<RowModel>(string filePath) where RowModel : class, IRowModel
         {
-            List<RowModel> rows = _parser.Parse(filePath);
+            List<RowModel> rows = _parser.Parse<RowModel>(filePath);
+            var table = _context.GetDbSet<RowModel>();
 
             foreach (var row in rows)
             {
-                var existing = _context.Rows.Find(row.Id);
+                var existing = table.Find(row.Id);
                 if (existing == null)
                 {
-                    _context.Rows.Add(row);
+                    table.Add(row);
                 }
                 else
                 {
