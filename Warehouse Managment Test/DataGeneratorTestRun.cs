@@ -10,7 +10,7 @@ namespace Warehouse_Management_Test
         public void TestRunGenerateProduct()
         {
             ProductGenerator generator = new();
-            IRowModel product = generator.Generate(16);
+            IRowModel product = generator.Generate();
             Console.WriteLine(product.ToString());
         }
         
@@ -18,7 +18,7 @@ namespace Warehouse_Management_Test
         public void TestRunGenerateWarehouse()
         {
             WarehouseGenerator generator = new();
-            IRowModel wareHouse = generator.Generate(16);
+            IRowModel wareHouse = generator.Generate();
             Console.WriteLine(wareHouse.ToString());
         }
         
@@ -32,6 +32,16 @@ namespace Warehouse_Management_Test
             {
                 Console.WriteLine(product.ToString());
             }
+        }
+        
+        [Fact]
+        public void TestRunGenerateInventoryItem()
+        {
+            List<string> productIds = new() {"p1", "p2", "p3"};
+            List<string> warehouseIds = new() {"w1", "w2", "w3"};
+            InventoryItemGenerator generator = new(productIds, warehouseIds);
+            IRowModel inventoryItem = generator.Generate();
+            Console.WriteLine(inventoryItem.ToString());
         }
     }
 }

@@ -25,6 +25,11 @@ namespace Warehouse_Managemet_System.Commands
         /// <param name="sQLExecuter">the ISQLExecuter implementation to be used by the query handler</param>
         private IContext context;
 
+        /// <summary>
+        /// Constructor for the queryhandler
+        /// </summary>
+        /// <param name="context">the iContext implementation to be used by the query handler</param>
+        /// <param name="sQLExecuter">the ISQLExecuter implementation to be used by the query handler</param>
         public QueryHandler(IContext context, ISQLExecuter sQLExecuter)
         {
             this.sQLExecuter = sQLExecuter;
@@ -39,7 +44,7 @@ namespace Warehouse_Managemet_System.Commands
         /// <param name="itemsToBeInserted">The items to be inserted. Must be ready to be placed in the table when given to this method</param>
         /// <returns>Whether the operation was succesful and the succes message</returns>
         /// <exception cref="Exception">An exception is thrown if the sql query fails to execute</exception>
-        public (bool, string) InsertIntoTable<RowModel>(List<RowModel> itemsToBeInserted) where RowModel : IRowModel, new()
+        public (bool,string) InsertIntoTable<RowModel>(List<RowModel> itemsToBeInserted) where RowModel : IRowModel, new()
         {
             try
             {
@@ -76,7 +81,12 @@ namespace Warehouse_Managemet_System.Commands
             }
         }
 
-
+        /// <summary>
+        /// Formats the given values into the correct format for an INSERT INTO sql Query and updates the paramaters dictionary
+        /// </summary>
+        /// <param name="values">the values to be formated</param>
+        /// <param name="paramaters">the paramaters dictionary to be updated</param>
+        /// <returns>A string with the values in the desired format</returns>
         private string GetValueString(List<string> values, Dictionary<string, string> paramaters)
         {
             string valueString = "(";
@@ -95,6 +105,14 @@ namespace Warehouse_Managemet_System.Commands
             return valueString;
         }
 
+        /// <summary>
+        /// Updates table rows with new values limited by the given filters 
+        /// </summary>
+        /// <typeparam name="RowModel">The tables IRowModel implementation</typeparam>
+        /// <param name="filters">The filter conditions to use. The key is the collumn and the value list is all logical conditions to be applied to it</param>
+        /// <param name="updateValues">The collumns to be updated and the value to update them with. The collumn is the key</param>
+        /// <returns>Whether the operation was succesful and the succes message</returns>
+        /// <exception cref="Exception">An exception is thrown if the sql query fails to execute</exception>
         public (bool, string) UpdateTable<RowModel>(Dictionary<string, List<string>> filters, Dictionary<string, string> updateValues) where RowModel : IRowModel
         {
             try
@@ -133,6 +151,13 @@ namespace Warehouse_Managemet_System.Commands
             }
         }
 
+        /// <summary>
+        /// Creates a list containing tuples with the paramater name of collumns and the paramater name of their desired value. 
+        /// it also updates the paramaters dictionary with their actual values.
+        /// </summary>
+        /// <param name="updateValues">A dictionary with the collumn name as key and its desired value as the value</param>
+        /// <param name="paramaters">A dictionary with paramater names as key and their value as value</param>
+        /// <returns>A List of tupples consisting of a collumn paramater name and their value paramater name</returns>
         private List<(string, string)> GetValuePairs(Dictionary<string, string> updateValues, Dictionary<string, string> paramaters)
         {
             List<(string, string)> valuePairs = new List<(string, string)>();
@@ -152,6 +177,13 @@ namespace Warehouse_Managemet_System.Commands
             return valuePairs;
         }
 
+        /// <summary>
+        /// Deletes an item from the table
+        /// </summary>
+        /// <typeparam name="RowModel">The tables IRowModel implementation</typeparam>
+        /// <param name="filters">The conditions to be used. The key is collumns and the value is a list of conditions to be applied to it</param>
+        /// <returns>Whether the operation was succesful and the succes message</returns>
+        /// <exception cref="Exception">An exception is thrown if the sql query fails to execute</exception>
         public (bool, string) DeleteFromTable<RowModel>(Dictionary<string, List<string>> filters) where RowModel : IRowModel
         {
             try
@@ -251,6 +283,12 @@ namespace Warehouse_Managemet_System.Commands
             }
         }
         
+        /// <summary>
+        /// Formats the conditions and updates the paramaters dictionary
+        /// </summary>
+        /// <param name="filters">The filters to format</param>
+        /// <param name="paramaters">The paramaters dictionary to update</param>
+        /// <returns>The correctly formatted condtions string</returns>
         private string GetConditionString(Dictionary<string, List<string>> filters, Dictionary<string, string> paramaters)
         {
             string conditionsString = "";

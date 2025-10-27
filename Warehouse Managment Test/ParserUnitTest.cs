@@ -2,8 +2,6 @@ using System;
 using Warehouse_Management_Test.Mocks.RowModels;
 using Warehouse_Managemet_System;
 using Warehouse_Managemet_System.Parsers;
-using Warehouse_Management_Test.Mocks.RowModels;
-using Xunit;
 using Warehouse_Managment_Test.Mocks.RowModels;
 
 namespace Warehouse_Managment_Test
@@ -40,7 +38,7 @@ namespace Warehouse_Managment_Test
         [Fact]
         public void Parse_InvariantCultureInTable_ReturnsListOfRowsWithCorrectTypes()
         {
-            string fileContent = "Id,Date\nA1,2025-10-24";
+            string fileContent = "Id,Date\nA1,2025-10-24"; 
             string filePath = Path.GetTempFileName();
             File.WriteAllText(filePath, fileContent);
             Parser<ValidFileWithDateMock> parser = new Parser<ValidFileWithDateMock>();
