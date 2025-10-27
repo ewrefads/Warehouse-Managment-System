@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Warehouse_Managemet_System.Contexts;
 
-namespace Warehouse_Managment_Test.Mocks.QueryHandlers
+namespace Warehouse_Management_Test.Mocks.QueryHandlers
 {
     /// <summary>
     /// An implementation of IContext used to unit test the QueryHandler

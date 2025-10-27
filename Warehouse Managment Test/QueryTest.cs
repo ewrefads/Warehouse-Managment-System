@@ -8,17 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Warehouse_Managemet_System.Commands;
 using Warehouse_Managemet_System.Contexts;
-using Warehouse_Managment_Test.Mocks;
-using Warehouse_Managment_Test.Mocks.External_Systems_mocks;
-using Warehouse_Managment_Test.Mocks.QueryHandlers;
-using Warehouse_Managment_Test.Mocks.RowModels;
+using Warehouse_Management_Test.Mocks;
+using Warehouse_Management_Test.Mocks.External_Systems_mocks;
+using Warehouse_Management_Test.Mocks.QueryHandlers;
+using Warehouse_Management_Test.Mocks.RowModels;
 
-namespace Warehouse_Managment_Test
+namespace Warehouse_Management_Test
 {
     public class QueryTest
     {
         private IContext context;
-        private QueryHandler handler;
+        private QueryHandler<QueryTestRowModel> handler;
         private TestSqlExecuter sqlExecuter;
         private MySqlConnection connection;
         private List<QueryTestRowModel> data;
@@ -34,7 +34,7 @@ namespace Warehouse_Managment_Test
             };
             sqlExecuter = new TestSqlExecuter(defaultTestData);
             data = defaultTestData;
-            handler = new QueryHandler(context, sqlExecuter);
+            handler = new QueryHandler<QueryTestRowModel>(context, sqlExecuter);
         }
         
         [Fact]

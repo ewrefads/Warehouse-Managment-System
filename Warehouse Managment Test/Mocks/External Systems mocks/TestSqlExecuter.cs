@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Warehouse_Managemet_System.SQL_Executer;
-using Warehouse_Managment_Test.Mocks.RowModels;
+using Warehouse_Management_Test.Mocks.RowModels;
 
-namespace Warehouse_Managment_Test.Mocks.External_Systems_mocks
+namespace Warehouse_Management_Test.Mocks.External_Systems_mocks
 {
     /// <summary>
     /// An implementation of ISQLExecuter to unit test the QueryHandler
