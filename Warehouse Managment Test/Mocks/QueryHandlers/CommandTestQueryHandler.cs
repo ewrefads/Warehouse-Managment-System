@@ -118,16 +118,36 @@ namespace Warehouse_Management_Test.Mocks.QueryHandlers
         public List<RowModel> SelectFromTable<RowModel>(Dictionary<string, List<string>> filters, List<string> desiredCollumns) where RowModel : IRowModel, new()
         {
             List<RowModel> returnList = new List<RowModel>();
-            foreach (var item in inventoryItems)
+            foreach (IRowModel item in inventoryItems)
             {
-                returnList.Add((RowModel)item);
+                
+                if(filters.Count > 0)
+                {
+                    if (filters.ContainsKey("Id") && filters["Id"][0].Contains(item.Id))
+                    {
+                        returnList.Add((RowModel)item);
+                    }
+                }
+                else
+                {
+                    returnList.Add((RowModel)item);
+                }
             }
             return returnList;
         }
 
         public (bool, string) UpdateTable<RowModel>(Dictionary<string, List<string>> filters, Dictionary<string, string> updateValues) where RowModel : IRowModel
         {
-            throw new NotImplementedException();
+            if(typeof(RowModel) == typeof(InventoryItem))
+            {
+                InventoryItem item = (InventoryItem)inventoryItems[0];
+                item.Amount = int.Parse(updateValues["Amount"]);
+                return (true, "table succesfully updated");
+            }
+            else
+            {
+                return (false, "not implemented yet");
+            }
         }
     }
 }

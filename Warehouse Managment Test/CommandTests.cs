@@ -161,5 +161,58 @@ namespace Warehouse_Management_Test
             (bool, string) res = DeleteItemWithActualQueryHandler.DeleteSpecificItem("0");
             Assert.True(res.Item1);
         }
+
+        [Fact]
+        public void InventoryItemAmountGetsSuccessfullyRemoved()
+        {
+            InventoryItem item = new InventoryItem();
+            item.Id = "0";
+            item.Amount = 3;
+            List<IRowModel> queryTestRowModels = new List<IRowModel>()
+            {
+                item
+            };
+            DeleteItem<InventoryItem> deleteItemWithInventoryItem = new DeleteItem<InventoryItem>(commandTestQueryHandler);
+            commandTestQueryHandler.inventoryItems = queryTestRowModels;
+            deleteItemWithInventoryItem.RemoveSomeItemsFromInventory("0", 2);
+            Assert.Equal(1, item.Amount);
+        }
+
+        [Fact]
+        public void InventoryItemAmountCanGetToZero()
+        {
+            InventoryItem item = new InventoryItem();
+            item.Id = "0";
+            item.Amount = 3;
+            List<IRowModel> queryTestRowModels = new List<IRowModel>()
+            {
+                item
+            };
+            DeleteItem<InventoryItem> deleteItemWithInventoryItem = new DeleteItem<InventoryItem>(commandTestQueryHandler);
+            commandTestQueryHandler.inventoryItems = queryTestRowModels;
+            deleteItemWithInventoryItem.RemoveSomeItemsFromInventory("0", 3);
+            Assert.Equal(0, item.Amount);
+        }
+
+        [Fact]
+        public void OnlyInventoryItemsCanHaveAmountRemoved()
+        {
+            Assert.False(deleteItem.RemoveSomeItemsFromInventory("0", 2).Item1);
+        }
+
+        [Fact]
+        public void InventoryItemIdMustExistsForAmountChange()
+        {
+            InventoryItem item = new InventoryItem();
+            item.Id = "0";
+            item.Amount = 3;
+            List<IRowModel> queryTestRowModels = new List<IRowModel>()
+            {
+                item
+            };
+            DeleteItem<InventoryItem> deleteItemWithInventoryItem = new DeleteItem<InventoryItem>(commandTestQueryHandler);
+            commandTestQueryHandler.inventoryItems = queryTestRowModels;
+            Assert.False(deleteItemWithInventoryItem.RemoveSomeItemsFromInventory("1", 2).Item1);
+        }
     }
 }

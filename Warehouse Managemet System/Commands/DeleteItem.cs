@@ -45,5 +45,24 @@ namespace Warehouse_Management_System.Commands
                 return (false, ex.Message);
             }
         }
+
+        public (bool, string) RemoveSomeItemsFromInventory(string id, int amountToRemove)
+        {
+            if(typeof(RowModel) != typeof(InventoryItem))
+            {
+                return (false, "this command only works on InventoryItems");
+            }
+            List<InventoryItem> items = queryHandlers[0].SelectFromTable<InventoryItem>(new Dictionary<string, List<string>>() { { "Id", new List<string>() { " = " + id } } }, new List<string>() { "amount" });
+            if(items.Count == 0)
+            {
+                return (false, "no items have an id of " + id);
+            }
+            if(amountToRemove > items[0].Amount)
+            {
+                return (false, "the requested amount is larger than the amount in the warehouse");
+            }
+            items[0].Amount -= amountToRemove;
+            return queryHandlers[0].UpdateTable<InventoryItem>(new Dictionary<string, List<string>>() { { "Id", new List<string>() { " = " + id } } }, new Dictionary<string, string>() { { "Amount", items[0].Amount.ToString() } });
+        }
     }
 }
