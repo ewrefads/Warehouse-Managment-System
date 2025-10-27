@@ -13,37 +13,37 @@ using Warehouse_Managemet_System.SQL_Executer;
 
 namespace Warehouse_Management_System.Commands
 {
-    public class AddProduct : Command
+    public class AddItem<RowModel> : Command where RowModel : class, IRowModel, new()
     {
-        public QueryHandler<InventoryItem> queryHandler;
+        public QueryHandler<RowModel> queryHandler;
 
-        public AddProduct()
+        public AddItem()
         {
 
-            queryHandler = new QueryHandler<InventoryItem>(new Context(new DbContextOptions<Context>()), new SqlExecuter());
+            queryHandler = new QueryHandler<RowModel>("testTable", new SqlExecuter());
             AddQueryHandler(queryHandler);    
         }
 
-        public AddProduct(IQueryHandler queryHandler)
+        public AddItem(IQueryHandler queryHandler)
         {
             AddQueryHandler(queryHandler);
         }
 
-        public (bool, string) AddNewProduct(InventoryItem inventoryItem)
+        public (bool, string) AddNewItem(RowModel item)
         {
-            return AddNewProducts(new List<InventoryItem>() { inventoryItem });
+            return AddNewItems(new List<RowModel>() { item });
         }
 
-        public (bool, string) AddNewProducts(List<InventoryItem> inventoryItems)
+        public (bool, string) AddNewItems(List<RowModel> items)
         {
             
             try
             {
-                if(inventoryItems.Count == 0)
+                if(items.Count == 0)
                 {
                     throw new Exception("List is empty");
                 }
-                List<InventoryItem> ids = queryHandlers[0].SelectFromTable<InventoryItem>(new Dictionary<string, List<string>>(), new List<string>() { "Id" });
+                List<RowModel> ids = queryHandlers[0].SelectFromTable<RowModel>(new Dictionary<string, List<string>>(), new List<string>() { "Id" });
                 string largestId = "-1";
                 if(ids.Count > 0)
                 {
@@ -51,13 +51,13 @@ namespace Warehouse_Management_System.Commands
                     
                 }
                 int currentId = Int32.Parse(largestId) + 1;
-                for (int i = 0; i < inventoryItems.Count; i++)
+                for (int i = 0; i < items.Count; i++)
                 {
-                    InventoryItem item = inventoryItems[i];
+                    RowModel item = items[i];
                     item.Id = currentId.ToString();
                     currentId++;
                 }
-                return queryHandlers[0].InsertIntoTable<InventoryItem>(inventoryItems);
+                return queryHandlers[0].InsertIntoTable<RowModel>(items);
             }
             catch(Exception e)
             {

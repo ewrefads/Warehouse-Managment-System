@@ -30,10 +30,10 @@ namespace Warehouse_Managemet_System.Commands
         /// </summary>
         /// <param name="context">the iContext implementation to be used by the query handler</param>
         /// <param name="sQLExecuter">the ISQLExecuter implementation to be used by the query handler</param>
-        public QueryHandler(IContext context, ISQLExecuter sQLExecuter)
+        public QueryHandler(string tableName, ISQLExecuter sQLExecuter)
         {
             this.sQLExecuter = sQLExecuter;
-            tableName = context.GetTable();
+            this.tableName = tableName;
             conn = new MySqlConnection(connectionString);
         }
 
