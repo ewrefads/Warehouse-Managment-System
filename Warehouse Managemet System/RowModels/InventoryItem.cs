@@ -6,10 +6,10 @@ namespace Warehouse_Managemet_System.RowModels
 {
     public class InventoryItem : IRowModel
     {
-        public required string Id { get; set; }
-        public required string WarehouseId { get; set; }
-        public required string ProductId { get; set; }
-        public required int Amount { get; set; }
+        public string Id { get; set; }
+        public string WarehouseId { get; set; }
+        public string ProductId { get; set; }
+        public int Amount { get; set; }
         public Product Product { get; set; }
         public Warehouse Warehouse { get; set; }
 

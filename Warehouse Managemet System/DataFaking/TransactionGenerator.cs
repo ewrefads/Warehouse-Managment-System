@@ -18,7 +18,7 @@ public class TransactionGenerator : IRowGenerator
             .RuleFor(r => r.Status, f => f.PickRandom<TransactionStatus>())
             .RuleFor(r => r.FromWarehouseId, (f, r) => (r.Type == TransactionType.Return)
                 ? null : f.PickRandom(warehouseIds))
-            .RuleFor(r => r.ToWarehouseId, (f, r) => (r.Type == TransactionType.Sale)
+            .RuleFor(r => r.ToWareHouseId, (f, r) => (r.Type == TransactionType.Sale)
                 ? null : f.PickRandom(warehouseIds));
     }
 
