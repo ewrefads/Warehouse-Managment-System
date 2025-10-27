@@ -12,6 +12,13 @@ namespace Warehouse_Managemet_System.SQL_Executer
     {
         public string ExecuteNonReturningQuery(string command, MySqlConnection connection, Dictionary<string, string> paramaters);
 
-        public (bool, DataTable table) ExecuteQuery(string command, MySqlConnection connection, Dictionary<string, string> paramaters);
+        /// <summary>
+        /// Exceutes a query which returns data
+        /// </summary>
+        /// <param name="command">The sql command to be used</param>
+        /// <param name="connection">The open MySqlConnection to be used</param>
+        /// <param name="paramaters">Any paramaters to be used</param>
+        /// <returns>whether the operation was succesfu</returns>
+        public (bool, DataTable) ExecuteQuery(string command, MySqlConnection connection, Dictionary<string, string> paramaters);
     }
 }

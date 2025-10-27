@@ -8,28 +8,39 @@ using System.Threading.Tasks;
 using Warehouse_Managemet_System.Contexts;
 using Warehouse_Managemet_System.SQL_Executer;
 using Warehouse_Managemet_System.RowModels;
+using Warehouse_Management_System.QueryHandlers;
 
 namespace Warehouse_Managemet_System.Commands
 {
-    public class QueryHandler 
+    public class QueryHandler<RowModel> : IQueryHandler where RowModel : IRowModel, new()
     {
+        public ISQLExecuter sQLExecuter;
+        public static string connectionString = "server = Localhost; database = warehouseDB; port = 3306; user = testuser; password = test";
+        private MySqlConnection conn;
+        private string tableName;
+        /// <summary>
+        /// Constructor for the queryhandler
+        /// </summary>
+        /// <param name="context">the iContext implementation to be used by the query handler</param>
+        /// <param name="sQLExecuter">the ISQLExecuter implementation to be used by the query handler</param>
         private IContext context;
         private ISQLExecuter sQLExecuter;
 
         public QueryHandler(IContext context, ISQLExecuter sQLExecuter)
         {
-            this.context = context;
             this.sQLExecuter = sQLExecuter;
+            tableName = context.GetTable();
+            conn = new MySqlConnection(connectionString);
         }
 
         public bool InsertIntoTable<RowModel>(List<RowModel> itemsToBeInserted) where RowModel : IRowModel, new()
         {
             try
             {
-                using (MySqlConnection conn = context.GetConnection())
+                using (conn)
                 {
                     Dictionary<string, string> paramaters = new Dictionary<string, string>();
-                    string command = $"INSERT INTO {context.GetTable()} VALUES";
+                    string command = $"INSERT INTO {tableName} VALUES";
                     string valueString = "";
                     for (int i = 0; i < itemsToBeInserted.Count; i++)
                     {
@@ -81,10 +92,10 @@ namespace Warehouse_Managemet_System.Commands
         {
             try
             {
-                using (MySqlConnection conn = context.GetConnection())
+                using (conn)
                 {
                     Dictionary<string, string> paramaters = new Dictionary<string, string>();
-                    string command = $"UPDATE {context.GetTable()} SET ";
+                    string command = $"UPDATE {tableName} SET ";
                     List<(string, string)> valuePairs = GetValuePairs(updateValues, paramaters);
                     string updateString = "";
                     foreach ((string, string) valuePair in valuePairs)
@@ -138,10 +149,10 @@ namespace Warehouse_Managemet_System.Commands
         {
             try
             {
-                using (MySqlConnection conn = context.GetConnection())
+                using (conn)
                 {
                     Dictionary<string, string> paramaters = new Dictionary<string, string>();
-                    string command = $"DELETE FROM {context.GetTable()}";
+                    string command = $"DELETE FROM {tableName}";
                     if (filters.Count > 0)
                     {
                         command += $" WHERE {GetConditionString(filters, paramaters)}";
@@ -176,7 +187,7 @@ namespace Warehouse_Managemet_System.Commands
         {
             try
             {
-                using (MySqlConnection conn = context.GetConnection())
+                using (conn)
                 {
                     Dictionary<string, string> paramaters = new Dictionary<string, string>();
                     string command = "SELECT ";
@@ -202,7 +213,7 @@ namespace Warehouse_Managemet_System.Commands
                         paramaters.Add("@selectedCollumns", collumns);
 
                     }
-                    command += $" FROM {context.GetTable()}";
+                    command += $" FROM {tableName}";
                     if (filters.Count > 0)
                     {
                         command += $" WHERE {GetConditionString(filters, paramaters)}";

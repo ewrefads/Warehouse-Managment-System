@@ -2,7 +2,7 @@ using Bogus;
 using Warehouse_Managemet_System.DataFaking;
 using Warehouse_Managemet_System.RowModels;
 
-namespace Warehouse_Managment_Test
+namespace Warehouse_Management_Test
 {
     public class DataGeneratorTestRun
     {

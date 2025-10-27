@@ -27,7 +27,7 @@ namespace Warehouse_Managemet_System.SQL_Executer
             }
         }
 
-        public (bool, DataTable table) ExecuteQuery(string command, MySqlConnection connection, Dictionary<string, string> paramaters)
+        public (bool, DataTable) ExecuteQuery(string command, MySqlConnection connection, Dictionary<string, string> paramaters)
         {
             try
             {
