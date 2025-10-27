@@ -28,17 +28,17 @@ namespace Warehouse_Management_System.Commands
             AddQueryHandler(queryHandler);
         }
 
-        public (bool, string) DeleteSpecificProduct(string id)
+        public (bool, string) DeleteSpecificItem(string id)
         {
 
-            return DeleteProducts(new Dictionary<string, List<string>>() { {"Id", new List<string> {" = " + id} } });
+            return DeleteItems(new Dictionary<string, List<string>>() { {"Id", new List<string> {" = " + id} } });
         }
 
-        public (bool, string) DeleteProducts(Dictionary<string, List<string>> conditions)
+        public (bool, string) DeleteItems(Dictionary<string, List<string>> conditions)
         {
             try
             {
-                return queryHandler.DeleteFromTable<RowModel>(conditions);
+                return queryHandlers[0].DeleteFromTable<RowModel>(conditions);
             }
             catch (Exception ex)
             {

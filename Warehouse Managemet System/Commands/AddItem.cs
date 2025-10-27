@@ -13,28 +13,28 @@ using Warehouse_Managemet_System.SQL_Executer;
 
 namespace Warehouse_Management_System.Commands
 {
-    public class AddItemToList<RowModel> : Command where RowModel : class, IRowModel, new()
+    public class AddItem<RowModel> : Command where RowModel : class, IRowModel, new()
     {
         public QueryHandler<RowModel> queryHandler;
 
-        public AddItemToList()
+        public AddItem()
         {
 
             queryHandler = new QueryHandler<RowModel>(new Context<RowModel>(new DbContextOptions<Context<RowModel>>()), new SqlExecuter());
             AddQueryHandler(queryHandler);    
         }
 
-        public AddItemToList(IQueryHandler queryHandler)
+        public AddItem(IQueryHandler queryHandler)
         {
             AddQueryHandler(queryHandler);
         }
 
-        public (bool, string) AddNewProduct(RowModel item)
+        public (bool, string) AddNewItem(RowModel item)
         {
-            return AddNewProducts(new List<RowModel>() { item });
+            return AddNewItems(new List<RowModel>() { item });
         }
 
-        public (bool, string) AddNewProducts(List<RowModel> items)
+        public (bool, string) AddNewItems(List<RowModel> items)
         {
             
             try
