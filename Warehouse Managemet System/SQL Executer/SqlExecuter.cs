@@ -9,6 +9,9 @@ using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.SQL_Executer
 {
+    /// <summary>
+    /// The standard implementation of ISQLExecuter
+    /// </summary>
     public class SqlExecuter : ISQLExecuter
     {
         public string ExecuteNonReturningQuery(string command, MySqlConnection connection, Dictionary<string, string> paramaters)
@@ -27,7 +30,7 @@ namespace Warehouse_Managemet_System.SQL_Executer
             }
         }
 
-        public (bool, DataTable table) ExecuteQuery(string command, MySqlConnection connection, Dictionary<string, string> paramaters)
+        public (bool, DataTable) ExecuteQuery(string command, MySqlConnection connection, Dictionary<string, string> paramaters)
         {
             try
             {
@@ -43,6 +46,13 @@ namespace Warehouse_Managemet_System.SQL_Executer
             }
         }
 
+        /// <summary>
+        /// Creates a MySqlCommand and adds the paramaters to it
+        /// </summary>
+        /// <param name="command">The command itself as a string</param>
+        /// <param name="connection">The connection to be used</param>
+        /// <param name="paramaters">The paramaters to be used</param>
+        /// <returns>The MySqlCommand object ready to be executed</returns>
         private MySqlCommand CreateCommand(string command, MySqlConnection connection, Dictionary<string, string> paramaters)
         {
             MySqlCommand cmd = connection.CreateCommand();

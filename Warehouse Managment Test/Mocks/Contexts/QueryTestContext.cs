@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Warehouse_Managemet_System.Contexts;
 using Warehouse_Managemet_System.RowModels;
 
-namespace Warehouse_Managment_Test.Mocks.QueryHandlers
+namespace Warehouse_Management_Test.Mocks.QueryHandlers
 {
     public class QueryTestContext : DbContext, IContext
     {
@@ -21,16 +21,28 @@ namespace Warehouse_Managment_Test.Mocks.QueryHandlers
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
 
+        /// <summary>
+        /// Not used
+        /// </summary>
+        /// <param name="modelBuilder">Not used</param>
         public void CreateTable(ModelBuilder modelBuilder)
         {
             
         }
 
+        /// <summary>
+        /// Retrieves an empty MySqlConnection
+        /// </summary>
+        /// <returns>an empty MySqlConnection</returns>
         public MySqlConnection GetConnection()
         {
             return new MySqlConnection();
         }
 
+        /// <summary>
+        /// Retrieves the table name
+        /// </summary>
+        /// <returns>The name of the table</returns>
         public string GetTable()
         {
             return "testTable";

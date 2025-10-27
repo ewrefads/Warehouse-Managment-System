@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace Warehouse_Managment_Test
+namespace Warehouse_Management_Test
 {
     public class SeederUnitTest
     {
