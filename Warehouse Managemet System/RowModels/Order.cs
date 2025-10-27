@@ -1,4 +1,5 @@
 using System.Data;
+using System.Transactions;
 
 namespace Warehouse_Managemet_System.RowModels
 {
@@ -8,7 +9,9 @@ namespace Warehouse_Managemet_System.RowModels
         public required string Customer { get; set; }
         public required DateTime CreationTime { get; set; }
         public required OrderStatus Status { get; set; }
-        public required string ActiveTransactionId { get; set; }
+        public string? ActiveTransactionId { get; set; } // øhm 
+        public ICollection<OrderItem> OrderItems { get; set; }
+        public ICollection<RowModels.Transaction> Transactions { get; set; }
 
         public bool CreateFromDataRow(DataRow row)
         {
@@ -17,7 +20,7 @@ namespace Warehouse_Managemet_System.RowModels
 
         public string ToString()
         {
-            return "";
+            return "Order! Id: " + Id + ", Customer: " + Customer + ", Creation time: " + CreationTime + ", Status: " + Status + ", Active Transaction Id: " + ActiveTransactionId;
         }
         
         public List<string> GetAllValues()

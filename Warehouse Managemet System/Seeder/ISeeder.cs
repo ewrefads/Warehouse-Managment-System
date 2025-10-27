@@ -9,8 +9,8 @@ using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.Seeders
 {
-    public interface ISeeder<RowModel> where RowModel : class, IRowModel
+    public interface ISeeder
     {
-        public void PopulateTable(string filePath);
+        public void PopulateTable<RowModel>(string filePath) where RowModel : class, IRowModel;
     }
 }

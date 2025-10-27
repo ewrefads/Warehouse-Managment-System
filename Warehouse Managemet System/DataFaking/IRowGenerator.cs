@@ -5,5 +5,5 @@ namespace Warehouse_Managemet_System.DataFaking;
 
 public interface IRowGenerator
 {
-    public IRowModel Generate(int? seed);
+    public IRowModel Generate();
 }

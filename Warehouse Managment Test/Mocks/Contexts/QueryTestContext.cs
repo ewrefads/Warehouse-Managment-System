@@ -5,15 +5,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Warehouse_Managemet_System.Contexts;
+using Warehouse_Managemet_System.RowModels;
 
-namespace Warehouse_Managment_Test.Mocks.QueryHandlers
+namespace Warehouse_Management_Test.Mocks.QueryHandlers
 {
-    /// <summary>
-    /// An implementation of IContext used to unit test the QueryHandler
-    /// </summary>
-    public class QueryTestContext : IContext
+    public class QueryTestContext : DbContext, IContext
     {
+
+                public DbSet<Product> Products { get; set; }
+        public DbSet<InventoryItem> InventoryItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Warehouse> Warehouses { get; set; }
+
         /// <summary>
         /// Not used
         /// </summary>
@@ -39,6 +46,21 @@ namespace Warehouse_Managment_Test.Mocks.QueryHandlers
         public string GetTable()
         {
             return "testTable";
+        }
+
+        public string GetTable<RowModel>() where RowModel : IRowModel
+        {
+            return "";
+        }
+
+        public DbSet<RowModel> GetDbSet<RowModel>() where RowModel : class, IRowModel
+        {
+            return Products as DbSet<RowModel>;
+        }
+
+        int SaveChanges()
+        {
+            return 0;
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Warehouse_Managemet_System.RowModels;
 
-namespace Warehouse_Managment_Test.Mocks.RowModels
+namespace Warehouse_Management_Test.Mocks.RowModels
 {
     /// <summary>
     /// An implementation of IRowModel used to test the QueryHandler
