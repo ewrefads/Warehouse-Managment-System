@@ -9,8 +9,13 @@ namespace Warehouse_Managemet_System.RowModels
         public required TransactionType type { set; get; }
         public required int Amount { get; set; }
         public required TransactionStatus Status { set; get; }
+        public string? OrderId { get; set; }
         public string? FromWarehouseId { set; get; }
         public string? ToWareHouseId { set; get; }
+        public Product Product { get; set; }
+        public Order? Order { get; set; }
+        public Warehouse? FromWarehouse { get; set; }
+        public Warehouse? ToWarehouse { get; set; }
 
         public bool CreateFromDataRow(DataRow row)
         {

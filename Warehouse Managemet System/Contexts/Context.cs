@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Warehouse_Managemet_System.RowModels;
 using MySql.Data.MySqlClient;
+using System.Security.Cryptography;
 
 namespace Warehouse_Managemet_System.Contexts
 {
@@ -28,6 +29,8 @@ namespace Warehouse_Managemet_System.Contexts
             modelBuilder.Entity<OrderItem>().HasKey(oi => oi.Id);
             modelBuilder.Entity<Transaction>().HasKey(t => t.Id);
             modelBuilder.Entity<Warehouse>().HasKey(w => w.Id);
+
+            modelBuilder.Entity<Warehouse>().HasMany(i => i.InventoryItems).WithOne(w => w.Warehouse).HasForeignKey(w => w.WarehouseId);
         }
         public string GetTable<RowModel>() where RowModel : IRowModel
         {

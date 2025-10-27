@@ -1,4 +1,5 @@
 using System.Data;
+using System.Transactions;
 
 namespace Warehouse_Managemet_System.RowModels
 {
@@ -6,6 +7,9 @@ namespace Warehouse_Managemet_System.RowModels
     {
         public required string Id { get; set; }
         public required string Name { get; set; }
+        public ICollection<RowModels.Transaction> IngoingTransactions { get; set; }
+        public ICollection<RowModels.Transaction> OutgoingTransactions { get; set; }
+        public ICollection<InventoryItem> InventoryItems { get; set; }
 
         public bool CreateFromDataRow(DataRow row)
         {
