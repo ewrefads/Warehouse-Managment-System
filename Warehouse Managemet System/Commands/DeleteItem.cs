@@ -19,7 +19,7 @@ namespace Warehouse_Management_System.Commands
         public DeleteItem()
         {
 
-            queryHandler = new QueryHandler<RowModel>(new Context<RowModel>(new DbContextOptions<Context<RowModel>>()), new SqlExecuter());
+            queryHandler = new QueryHandler<RowModel>("testTable", new SqlExecuter());
             AddQueryHandler(queryHandler);
         }
 
