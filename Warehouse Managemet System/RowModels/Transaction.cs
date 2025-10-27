@@ -6,11 +6,11 @@ namespace Warehouse_Managemet_System.RowModels
     {
         public required string Id { get; set; }
         public required string ProductId { get; set; }
-        public required TransactionType type { set; get; }
+        public required TransactionType Type { set; get; }
         public required int Amount { get; set; }
         public required TransactionStatus Status { set; get; }
         public string? FromWarehouseId { set; get; }
-        public string? ToWareHouseId { set; get; }
+        public string? ToWarehouseId { set; get; }
 
         public bool CreateFromDataRow(DataRow row)
         {
@@ -26,7 +26,7 @@ namespace Warehouse_Managemet_System.RowModels
         {
             return new List<string>()
             {
-                Id, ProductId, type.ToString(), Amount.ToString(), Status.ToString(), FromWarehouseId, ToWareHouseId 
+                Id, ProductId, Type.ToString(), Amount.ToString(), Status.ToString(), FromWarehouseId, ToWarehouseId 
             };
         }
     }
