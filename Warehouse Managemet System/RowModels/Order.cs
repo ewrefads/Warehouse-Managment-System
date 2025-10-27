@@ -20,7 +20,7 @@ namespace Warehouse_Managemet_System.RowModels
 
         public string ToString()
         {
-            return "";
+            return "Order! Id: " + Id + ", Customer: " + Customer + ", Creation time: " + CreationTime + ", Status: " + Status + ", Active Transaction Id: " + ActiveTransactionId;
         }
         
         public List<string> GetAllValues()
