@@ -28,11 +28,11 @@ namespace Warehouse_Managemet_System.Contexts
 
         EntityEntry Entry(object entity);
 
-        public string GetTable();
+        public string GetTable(); // redundant: needs to be removed
 
-        public MySqlConnection GetConnection();
+        public MySqlConnection GetConnection(); // redundant: needs to be removed
 
-        public void CreateTable(ModelBuilder modelBuilder);
+        public void CreateTable(ModelBuilder modelBuilder); // redundant: needs to be removed
         
     }
 }

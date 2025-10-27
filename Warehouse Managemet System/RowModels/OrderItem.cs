@@ -8,6 +8,8 @@ namespace Warehouse_Managemet_System.RowModels
         public required string OrderId { get; set; }
         public required string ProductId { get; set; }
         public required int Amount { get; set; }
+        public Order Order { get; set; }
+        public Product Product { get; set; }
 
         public bool CreateFromDataRow(DataRow row)
         {
