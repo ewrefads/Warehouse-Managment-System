@@ -20,7 +20,7 @@ namespace Warehouse_Management_System.Commands
         public AddProduct()
         {
 
-            queryHandler = new QueryHandler<InventoryItem>(new Context<InventoryItem>(new DbContextOptions<Context<InventoryItem>>()), new SqlExecuter());
+            queryHandler = new QueryHandler<InventoryItem>(new Context(new DbContextOptions<Context>()), new SqlExecuter());
             AddQueryHandler(queryHandler);    
         }
 
