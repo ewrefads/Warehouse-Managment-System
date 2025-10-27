@@ -53,5 +53,14 @@ namespace Warehouse_Managment_Test
             IRowModel transaction = generator.Generate();
             Console.WriteLine(transaction.ToString());
         }
+        
+        [Fact]
+        public void TestRunGenerateOrder()
+        {
+            List<string> transactionIds = new() {"t1", "t2", "t3"};
+            OrderGenerator generator = new(transactionIds);
+            IRowModel order = generator.Generate();
+            Console.WriteLine(order.ToString());
+        }
     }
 }
