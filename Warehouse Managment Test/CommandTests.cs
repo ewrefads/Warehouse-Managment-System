@@ -214,5 +214,20 @@ namespace Warehouse_Management_Test
             commandTestQueryHandler.inventoryItems = queryTestRowModels;
             Assert.False(deleteItemWithInventoryItem.RemoveSomeItemsFromInventory("1", 2).Item1);
         }
+
+        [Fact]
+        public void AmountToBeRemovedCannotBeHigherThanAmountInInventoryItem()
+        {
+            InventoryItem item = new InventoryItem();
+            item.Id = "0";
+            item.Amount = 3;
+            List<IRowModel> queryTestRowModels = new List<IRowModel>()
+            {
+                item
+            };
+            DeleteItem<InventoryItem> deleteItemWithInventoryItem = new DeleteItem<InventoryItem>(commandTestQueryHandler);
+            commandTestQueryHandler.inventoryItems = queryTestRowModels;
+            Assert.False(deleteItemWithInventoryItem.RemoveSomeItemsFromInventory("0", 4).Item1);
+        }
     }
 }
