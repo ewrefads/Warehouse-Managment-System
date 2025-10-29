@@ -11,7 +11,7 @@ namespace Warehouse_Managemet_System.RowModels
         public TransactionStatus Status { set; get; }
         public string? OrderId { get; set; }
         public string? FromWarehouseId { set; get; }
-        public string? ToWareHouseId { set; get; }
+        public string? ToWarehouseId { set; get; }
         public Product Product { get; set; }
         public Order? Order { get; set; }
         public Warehouse? FromWarehouse { get; set; }
@@ -24,14 +24,14 @@ namespace Warehouse_Managemet_System.RowModels
 
         public string ToString()
         {
-            return "Transaction! Id: " + Id + ", Product Id: " + ProductId + ", Type: " + Type + ", Amount: " + Amount + ", Status: " + Status + ", Order Id: " + OrderId +  ", From-Warehouse Id: " + FromWarehouseId + ", To-Warehouse Id: " + ToWareHouseId;
+            return "Transaction! Id: " + Id + ", Product Id: " + ProductId + ", Type: " + Type + ", Amount: " + Amount + ", Status: " + Status + ", Order Id: " + OrderId +  ", From-Warehouse Id: " + FromWarehouseId + ", To-Warehouse Id: " + ToWarehouseId;
         }
         
         public List<string> GetAllValues()
         {
             return new List<string>()
             {
-                Id, ProductId, Type.ToString(), Amount.ToString(), Status.ToString(), OrderId, FromWarehouseId, ToWareHouseId
+                Id, ProductId, Type.ToString(), Amount.ToString(), Status.ToString(), OrderId, FromWarehouseId, ToWarehouseId
             };
         }
     }
