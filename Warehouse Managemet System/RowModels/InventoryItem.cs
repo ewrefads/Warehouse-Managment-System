@@ -21,6 +21,8 @@ namespace Warehouse_Managemet_System.RowModels
                 WarehouseId = "";
                 ProductId = "";
                 Amount = -1;
+                Product = null;
+                Warehouse = null;
                 foreach (DataColumn c in row.Table.Columns)
                 {
                     switch (c.ColumnName)
@@ -49,7 +51,7 @@ namespace Warehouse_Managemet_System.RowModels
 
         public string ToString()
         {
-            return "InventoryItem! Id: " + Id + " Warehouse Id: " + WarehouseId + " Product Id: " + " Amount: " + Amount;
+            return "InventoryItem! Id: " + Id + ", Warehouse Id: " + WarehouseId + ", Product Id: " + ProductId + ", Amount: " + Amount;
         }
         
         public List<string> GetAllValues()
