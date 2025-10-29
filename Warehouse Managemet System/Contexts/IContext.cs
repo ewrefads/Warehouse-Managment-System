@@ -13,12 +13,6 @@ namespace Warehouse_Managemet_System.Contexts
 {
     public interface IContext
     {
-        public DbSet<Product> Products { get; set; }
-        public DbSet<InventoryItem> InventoryItems { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<Warehouse> Warehouses { get; set; }
 
         public string GetTable<RowModel>() where RowModel : IRowModel;
 
