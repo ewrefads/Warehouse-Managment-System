@@ -11,16 +11,42 @@ using System.Security.Cryptography;
 
 namespace Warehouse_Managemet_System.Contexts
 {
+    /// <summary>
+    /// Represents the application's database context, providing access to entity sets and configuration.
+    /// Inherits from Entity Framework's DbContext and implements the IContext interface.
+    /// </summary>
     public class Context : DbContext, IContext
     {
-        public Context(DbContextOptions<Context> options) : base(options) { }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<InventoryItem> InventoryItems { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<Warehouse> Warehouses { get; set; }
         
+        /// <value> Represents the Products table in the database. </value>
+        public DbSet<Product> Products { get; set; }
+
+        /// <value> Represents the Inventory Items table in the database. </value>
+        public DbSet<InventoryItem> InventoryItems { get; set; }
+
+        /// <value> Represents the Orders table in the database. </value>
+        public DbSet<Order> Orders { get; set; }
+
+        /// <value> Represents the Order Items table in the database. </value>
+        public DbSet<OrderItem> OrderItems { get; set; }
+
+        /// <value> Represents the Transactions table in the database. </value>
+        public DbSet<Transaction> Transactions { get; set; }
+
+        /// <value> Represents the Warehouses table in the database. </value>
+        public DbSet<Warehouse> Warehouses { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the Context class with the specified options.
+        /// </summary>
+        /// <param name="options">The options to configure the DbContext.</param>
+        public Context(DbContextOptions<Context> options) : base(options) { }
+
+
+        /// <summary>
+        /// Configures the entity relationships and keys using Fluent API.
+        /// </summary>
+        /// <param name="modelBuilder"> The builder used to configure entity mappings. </param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().HasKey(p => p.Id);
@@ -38,13 +64,24 @@ namespace Warehouse_Managemet_System.Contexts
             modelBuilder.Entity<Warehouse>().HasMany(i => i.InventoryItems).WithOne(w => w.Warehouse).HasForeignKey(w => w.WarehouseId);
             modelBuilder.Entity<Warehouse>().HasMany(t => t.Transactions).WithOne(w => w.Warehouse).HasForeignKey(w => w.WarehouseId);
         }
+        
+        /// <summary>
+        /// Retrieves the table name for a given RowModel type.
+        /// </summary>
+        /// <typeparam name="RowModel"> The type of the row model. </typeparam>
+        /// <returns> The name of the table associated with the RowModel type. </return>
         public string GetTable<RowModel>() where RowModel : IRowModel
         {
             var table = Model.FindEntityType(typeof(RowModel));
             return table?.GetTableName();
         }
 
-
+        /// <summary>
+        /// Retrieves the DbSet corresponding to the specified RowModel type.
+        /// </summary>
+        /// <typeparam name="RowModel"> The type of the row model. </typeparam>
+        /// <returns> The DbSet for the specified RowModel type. </returns>
+        /// <exception cref="InvalidOperationException"> Thrown if the RowModel type is not supported. </exception>
         public DbSet<RowModel> GetDbSet<RowModel>() where RowModel : class, IRowModel
         {
             if (typeof(RowModel) == typeof(Product)) return Products as DbSet<RowModel>;
@@ -56,19 +93,22 @@ namespace Warehouse_Managemet_System.Contexts
             throw new InvalidOperationException($"Unsupported type: {typeof(RowModel).Name}");
         }
 
+        // to be removed
         public string GetTable()
         {
             return "";
         }
 
+        // to be removed
         public MySqlConnection GetConnection()
         {
             return new MySqlConnection();
         }
 
-                public void CreateTable(ModelBuilder modelBuilder)
+        // to be removed
+        public void CreateTable(ModelBuilder modelBuilder)
         {
-            
+
         }
 
     }
