@@ -144,6 +144,33 @@ namespace Warehouse_Management_Test.Mocks.QueryHandlers
                 item.Amount = int.Parse(updateValues["Amount"]);
                 return (true, "table succesfully updated");
             }
+            else if(typeof(RowModel) == typeof(Order))
+            {
+                Order order = (Order)inventoryItems[0];
+                OrderStatus orderStatus;
+                if (Enum.TryParse(updateValues["Status"], out orderStatus))
+                {
+                    order.Status = orderStatus;
+                }
+                return (true, "table succesfully updated");
+            }
+            else if (typeof(RowModel) == typeof(Transaction))
+            {
+                Order order = (Order)inventoryItems[0];
+                List<Transaction> transactions = order.Transactions.ToList();
+                foreach(Transaction transaction in transactions)
+                {
+                    if (filters["Id"][0].Contains(transaction.Id))
+                    {
+                        TransactionStatus orderStatus;
+                        if (Enum.TryParse(updateValues["Status"], out orderStatus))
+                        {
+                            transaction.Status = orderStatus;
+                        }
+                    }
+                }
+                return (true, "table succesfully updated");
+            }
             else
             {
                 return (false, "not implemented yet");

@@ -229,5 +229,106 @@ namespace Warehouse_Management_Test
             commandTestQueryHandler.inventoryItems = queryTestRowModels;
             Assert.False(deleteItemWithInventoryItem.RemoveSomeItemsFromInventory("0", 4).Item1);
         }
+
+        [Fact]
+        public void OnlyOrdersCanGetCancelled()
+        {
+            (bool, string) res = deleteItem.CancelOrder("0");
+            Assert.True(!res.Item1 && res.Item2 == "this command only works on Orders");
+        }
+
+        [Fact]
+        public void OrderMustExist()
+        {
+            commandTestQueryHandler.inventoryItems = new List<IRowModel>()
+            {
+                new Order(){Id = "0" }
+            };
+            DeleteItem<Order> deleteItemWithOrder = new DeleteItem<Order>(commandTestQueryHandler);
+            (bool, string) res = deleteItemWithOrder.CancelOrder("1");
+            Assert.True(!res.Item1 && res.Item2 == "no orders exists with an id of 1");
+        }
+
+        [Fact]
+        public void OrderCannotBeCancelledIfItHasBeenProccessed()
+        {
+            commandTestQueryHandler.inventoryItems = new List<IRowModel>()
+            {
+                new Order(){Id = "0", Status = OrderStatus.Processed }
+            };
+            DeleteItem<Order> deleteItemWithOrder = new DeleteItem<Order>(commandTestQueryHandler);
+            (bool, string) res = deleteItemWithOrder.CancelOrder("0");
+            Assert.True(!res.Item1 && res.Item2 == "Order has allready been completed");
+        }
+
+        [Fact]
+        public void OrderCannotBeCancelledIfItHasAllreadyBeenCancelled()
+        {
+            commandTestQueryHandler.inventoryItems = new List<IRowModel>()
+            {
+                new Order(){Id = "0", Status = OrderStatus.Cancelled }
+            };
+            DeleteItem<Order> deleteItemWithOrder = new DeleteItem<Order>(commandTestQueryHandler);
+            (bool, string) res = deleteItemWithOrder.CancelOrder("0");
+            Assert.True(!res.Item1 && res.Item2 == "Order has allready been cancelled");
+        }
+
+        [Fact]
+        public void OrderGetsCancelled()
+        {
+            Order order = new Order() { Id = "0", Status = OrderStatus.Reserved, Transactions = new List<Transaction>()};
+            commandTestQueryHandler.inventoryItems = new List<IRowModel>()
+            {
+                order
+            };
+            DeleteItem<Order> deleteItemWithOrder = new DeleteItem<Order>(commandTestQueryHandler);
+            (bool, string) res = deleteItemWithOrder.CancelOrder("0");
+            
+            Assert.Equal(OrderStatus.Cancelled, order.Status);
+        }
+
+        [Theory]
+        [InlineData(TransactionStatus.Waiting)]
+        [InlineData(TransactionStatus.Active)]
+        public void TransactionGetsAbortedOnOrderCancellation(TransactionStatus transactionStatus)
+        {
+            Transaction transaction = new Transaction()
+            {
+                Id = "0",
+                OrderId = "0",
+                Status = transactionStatus
+            };
+            Order order = new Order() { Id = "0", Status = OrderStatus.Reserved, Transactions = new List<Transaction>() { transaction } };
+            commandTestQueryHandler.inventoryItems = new List<IRowModel>()
+            {
+                order
+            };
+            DeleteItem<Order> deleteItemWithOrder = new DeleteItem<Order>(commandTestQueryHandler);
+            deleteItemWithOrder.CancelOrder("0");
+            Assert.Equal(TransactionStatus.Aborted, transaction.Status);
+        }
+
+        [Theory]
+        [InlineData(TransactionStatus.Done)]
+        [InlineData(TransactionStatus.Aborted)]
+        public void TransactionIsUnchangedOnOrderCancellation(TransactionStatus transactionStatus)
+        {
+            Transaction transaction = new Transaction()
+            {
+                Id = "0",
+                OrderId = "0",
+                Status = transactionStatus
+            };
+            Order order = new Order() { Id = "0", Status = OrderStatus.Reserved, Transactions = new List<Transaction>() { transaction } };
+            commandTestQueryHandler.inventoryItems = new List<IRowModel>()
+            {
+                order
+            };
+            DeleteItem<Order> deleteItemWithOrder = new DeleteItem<Order>(commandTestQueryHandler);
+            deleteItemWithOrder.CancelOrder("0");
+            Assert.Equal(transactionStatus, transaction.Status);
+        }
     }
+
+
 }

@@ -64,5 +64,37 @@ namespace Warehouse_Management_System.Commands
             items[0].Amount -= amountToRemove;
             return queryHandlers[0].UpdateTable<InventoryItem>(new Dictionary<string, List<string>>() { { "Id", new List<string>() { " = " + id } } }, new Dictionary<string, string>() { { "Amount", items[0].Amount.ToString() } });
         }
+
+        public (bool, string) CancelOrder(string id)
+        {
+            if(typeof(RowModel) != typeof(Order))
+            {
+                return (false, "this command only works on Orders");
+            }
+            List<Order> orders = queryHandlers[0].SelectFromTable<Order>(new Dictionary<string, List<string>>() { {"Id", new List<string>() {" = " + id} } }, new List<string>() {"Id" });
+            if(orders.Count == 0)
+            {
+                return (false, "no orders exists with an id of " + id);
+            }
+            if (orders[0].Status == OrderStatus.Processed)
+            {
+                return (false, "Order has allready been completed");
+            }
+            if (orders[0].Status == OrderStatus.Cancelled)
+            {
+                return (false, "Order has allready been cancelled");
+            }
+            orders[0].Status = OrderStatus.Cancelled;
+            List<Transaction> transactions = orders[0].Transactions.ToList();
+            foreach(Transaction transaction in transactions)
+            {
+                if(transaction.Status == TransactionStatus.Waiting || transaction.Status == TransactionStatus.Active)
+                {
+                    queryHandlers[0].UpdateTable<Transaction>(new Dictionary<string, List<string>>() { { "Id", new List<string>() { " = " + transaction.Id } } }, new Dictionary<string, string>() { { "Status", TransactionStatus.Aborted.ToString() } });
+                }
+            }
+            queryHandlers[0].UpdateTable<Order>(new Dictionary<string, List<string>>() { { "Id", new List<string>() { " = " + id } } }, new Dictionary<string, string>() { { "Status", orders[0].Status.ToString() } });
+            return (true, "Order successfully cancelled");
+        }
     }
 }
