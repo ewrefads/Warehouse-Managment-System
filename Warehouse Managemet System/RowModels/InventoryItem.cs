@@ -21,6 +21,8 @@ namespace Warehouse_Managemet_System.RowModels
                 WarehouseId = "";
                 ProductId = "";
                 Amount = -1;
+                Product = null;
+                Warehouse = null;
                 foreach (DataColumn c in row.Table.Columns)
                 {
                     switch (c.ColumnName)
