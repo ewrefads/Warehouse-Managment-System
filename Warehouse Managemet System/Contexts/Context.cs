@@ -62,7 +62,8 @@ namespace Warehouse_Managemet_System.Contexts
             modelBuilder.Entity<Order>().HasMany(oi => oi.OrderItems).WithOne(o => o.Order).HasForeignKey(o => o.OrderId);
             modelBuilder.Entity<Order>().HasMany(t => t.Transactions).WithOne(o => o.Order).HasForeignKey(o => o.OrderId);
             modelBuilder.Entity<Warehouse>().HasMany(i => i.InventoryItems).WithOne(w => w.Warehouse).HasForeignKey(w => w.WarehouseId);
-            modelBuilder.Entity<Warehouse>().HasMany(t => t.Transactions).WithOne(w => w.Warehouse).HasForeignKey(w => w.WarehouseId);
+            modelBuilder.Entity<Warehouse>().HasMany(t => t.IngoingTransactions).WithOne(w => w.ToWarehouse).HasForeignKey(w => w.ToWareHouseId);
+            modelBuilder.Entity<Warehouse>().HasMany(t => t.OutgoingTransactions).WithOne(w => w.FromWarehouse).HasForeignKey(w => w.FromWarehouseId);
         }
         
         /// <summary>
