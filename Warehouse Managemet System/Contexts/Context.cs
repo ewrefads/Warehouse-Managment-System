@@ -94,23 +94,5 @@ namespace Warehouse_Managemet_System.Contexts
             throw new InvalidOperationException($"Unsupported type: {typeof(RowModel).Name}");
         }
 
-        // to be removed
-        public string GetTable()
-        {
-            return "";
-        }
-
-        // to be removed
-        public MySqlConnection GetConnection()
-        {
-            return new MySqlConnection();
-        }
-
-        // to be removed
-        public void CreateTable(ModelBuilder modelBuilder)
-        {
-
-        }
-
     }
 }

@@ -41,7 +41,6 @@ namespace Warehouse_Managemet_System.Contexts
         /// <returns> The number of state entries written to the database. </returns>
         int SaveChanges();
 
-
         /// <summary>
         /// Inherited from the DbContext class.
         /// Provides access to change tracking information and operations for a given entity.
@@ -49,12 +48,6 @@ namespace Warehouse_Managemet_System.Contexts
         /// <param name="entity"> The entity to track. </param>
         /// <returns> An EntityEntry object for accessing and modifying tracking information. </returns>
         EntityEntry Entry(object entity);
-
-        public string GetTable(); // redundant: needs to be removed
-
-        public MySqlConnection GetConnection(); // redundant: needs to be removed
-
-        public void CreateTable(ModelBuilder modelBuilder); // redundant: needs to be removed
         
     }
 }
