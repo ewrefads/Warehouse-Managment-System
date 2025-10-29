@@ -30,7 +30,13 @@ namespace Warehouse_Managemet_System.Contexts
             modelBuilder.Entity<Transaction>().HasKey(t => t.Id);
             modelBuilder.Entity<Warehouse>().HasKey(w => w.Id);
 
+            modelBuilder.Entity<Product>().HasMany(i => i.InventoryItems).WithOne(p => p.Product).HasForeignKey(p => p.ProductId);
+            modelBuilder.Entity<Product>().HasMany(oi => oi.OrderItems).WithOne(p => p.Product).HasForeignKey(p => p.ProductId);
+            modelBuilder.Entity<Product>().HasMany(t => t.Transactions).WithOne(p => p.Product).HasForeignKey(p => p.ProductId);
+            modelBuilder.Entity<Order>().HasMany(oi => oi.OrderItems).WithOne(o => o.Order).HasForeignKey(o => o.OrderId);
+            modelBuilder.Entity<Order>().HasMany(t => t.Transactions).WithOne(o => o.Order).HasForeignKey(o => o.OrderId);
             modelBuilder.Entity<Warehouse>().HasMany(i => i.InventoryItems).WithOne(w => w.Warehouse).HasForeignKey(w => w.WarehouseId);
+            modelBuilder.Entity<Warehouse>().HasMany(t => t.Transactions).WithOne(w => w.Warehouse).HasForeignKey(w => w.WarehouseId);
         }
         public string GetTable<RowModel>() where RowModel : IRowModel
         {
