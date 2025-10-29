@@ -77,14 +77,14 @@ namespace Warehouse_Managemet_System.RowModels
 
         public string ToString()
         {
-            return "Transaction! Id: " + Id + " Product Id: " + ProductId + " Type: " + Type + " Amount: " + Amount + " Status: " + Status + " From-Warehouse Id: " + FromWarehouseId + " To-Warehouse Id: " + ToWarehouseId;
+            return "Transaction! Id: " + Id + ", Product Id: " + ProductId + ", Type: " + Type + ", Amount: " + Amount + ", Status: " + Status + ", Order Id: " + OrderId +  ", From-Warehouse Id: " + FromWarehouseId + ", To-Warehouse Id: " + ToWarehouseId;
         }
         
         public List<string> GetAllValues()
         {
             return new List<string>()
             {
-                Id, ProductId, Type.ToString(), Amount.ToString(), Status.ToString(), FromWarehouseId, ToWarehouseId
+                Id, ProductId, Type.ToString(), Amount.ToString(), Status.ToString(), OrderId, FromWarehouseId, ToWarehouseId
             };
         }
     }
