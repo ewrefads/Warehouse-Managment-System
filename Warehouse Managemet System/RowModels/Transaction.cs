@@ -4,11 +4,11 @@ namespace Warehouse_Managemet_System.RowModels
 {
     public class Transaction : IRowModel
     {
-        public string Id { get; set; }
-        public string ProductId { get; set; }
-        public TransactionType Type { set; get; }
-        public int Amount { get; set; }
-        public TransactionStatus Status { set; get; }
+        public string? Id { get; set; }
+        public string? ProductId { get; set; }
+        public TransactionType? Type { set; get; }
+        public int? Amount { get; set; }
+        public TransactionStatus? Status { set; get; }
         public string? OrderId { get; set; }
         public string? FromWarehouseId { set; get; }
         public string? ToWarehouseId { set; get; }
@@ -19,7 +19,60 @@ namespace Warehouse_Managemet_System.RowModels
 
         public bool CreateFromDataRow(DataRow row)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Id = "";
+                ProductId = "";
+                Type = TransactionType.Transfer;
+                Amount = -1;
+                Status = TransactionStatus.Waiting;
+                OrderId = "";
+                FromWarehouseId = "";
+                ToWarehouseId = "";
+                Product = null;
+                Order = null;
+                FromWarehouse = null;
+                ToWarehouse = null;
+                foreach (DataColumn c in row.Table.Columns)
+                {
+                    switch (c.ColumnName)
+                    {
+                        case "Id":
+                            Id = row["Id"].ToString();
+                            break;
+                        case "ProductId":
+                            ProductId = row["ProductId"].ToString();
+                            break;
+                        case "Type":
+                            TransactionType transactionType;
+                            if (Enum.TryParse(row["Type"].ToString(), out transactionType))
+                            {Type = transactionType;}
+                            break;
+                        case "Amount":
+                            Amount = Convert.ToInt32(row["Amount"]);
+                            break;
+                        case "Status":
+                            TransactionStatus transactionStatus;
+                            if (Enum.TryParse(row["Status"].ToString(), out transactionStatus))
+                            {Status = transactionStatus;}
+                            break;
+                        case "OrderId":
+                            OrderId = row["OrderId"].ToString();
+                            break;
+                        case "FromWarehouseId":
+                            FromWarehouseId = row["FromWarehouseId"].ToString();
+                            break;
+                        case "ToWarehouseId":
+                            ToWarehouseId = row["ToWarehouseId"].ToString();
+                            break;
+                    }
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         public string ToString()
