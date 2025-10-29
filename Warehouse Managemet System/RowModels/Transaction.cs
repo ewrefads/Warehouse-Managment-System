@@ -4,11 +4,11 @@ namespace Warehouse_Managemet_System.RowModels
 {
     public class Transaction : IRowModel
     {
-        public required string Id { get; set; }
-        public required string ProductId { get; set; }
-        public required TransactionType Type { set; get; }
-        public required int Amount { get; set; }
-        public required TransactionStatus Status { set; get; }
+        public string Id { get; set; }
+        public string ProductId { get; set; }
+        public TransactionType Type { set; get; }
+        public int Amount { get; set; }
+        public TransactionStatus Status { set; get; }
         public string? OrderId { get; set; }
         public string? FromWarehouseId { set; get; }
         public string? ToWareHouseId { set; get; }
@@ -47,6 +47,7 @@ namespace Warehouse_Managemet_System.RowModels
     {
         Waiting,
         Active,
-        Done
+        Done,
+        Aborted
     }
 }

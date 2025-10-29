@@ -5,10 +5,10 @@ namespace Warehouse_Managemet_System.RowModels
 {
     public class Order : IRowModel
     {
-        public required string Id { get; set; }
-        public required string Customer { get; set; }
-        public required DateTime CreationTime { get; set; }
-        public required OrderStatus Status { get; set; }
+        public string Id { get; set; }
+        public string Customer { get; set; }
+        public DateTime CreationTime { get; set; }
+        public OrderStatus Status { get; set; }
         public string? ActiveTransactionId { get; set; } // øhm 
         public ICollection<OrderItem> OrderItems { get; set; }
         public ICollection<RowModels.Transaction> Transactions { get; set; }
@@ -36,6 +36,8 @@ namespace Warehouse_Managemet_System.RowModels
     {
         Reserved,
         Shipping,
-        Processed
+        Processed,
+        Cancelled,
+        None
     }
 }
