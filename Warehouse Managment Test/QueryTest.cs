@@ -25,7 +25,6 @@ namespace Warehouse_Management_Test
         public QueryTest() 
         {
             context = new QueryTestContext();
-            context.CreateTable(new ModelBuilder());
             List<QueryTestRowModel> defaultTestData = new List<QueryTestRowModel>()
             {
                 new QueryTestRowModel("0", "test0", 3, 5, 1),
