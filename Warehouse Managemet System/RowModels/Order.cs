@@ -73,6 +73,8 @@ namespace Warehouse_Managemet_System.RowModels
     {
         Reserved,
         Shipping,
-        Processed
+        Processed,
+        Cancelled,
+        None
     }
 }

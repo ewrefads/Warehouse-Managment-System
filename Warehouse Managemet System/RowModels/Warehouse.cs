@@ -42,7 +42,7 @@ namespace Warehouse_Managemet_System.RowModels
 
         public string ToString()
         {
-            return "Warehouse! Id: " + Id + " Name: " + Name;
+            return "Warehouse! Id: " + Id + ", Name: " + Name;
         }
         
         public List<string> GetAllValues()

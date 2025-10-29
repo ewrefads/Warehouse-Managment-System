@@ -100,6 +100,7 @@ namespace Warehouse_Managemet_System.RowModels
     {
         Waiting,
         Active,
-        Done
+        Done,
+        Aborted
     }
 }
