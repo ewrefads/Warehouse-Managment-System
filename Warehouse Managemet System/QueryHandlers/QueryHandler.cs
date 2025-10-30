@@ -124,12 +124,12 @@ namespace Warehouse_Managemet_System.Commands
                 {
                     command += $"{valuePair.Item1} = {valuePair.Item2}";
                 }
-                command += updateString;
+                
                 if (filters.Count > 0)
                 {
                     updateString += $" WHERE {GetConditionString(filters, paramaters)}";
                 }
-
+                command += updateString;
                 command += ";";
                 conn.Open();
                 string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);

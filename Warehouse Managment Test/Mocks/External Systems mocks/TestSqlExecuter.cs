@@ -44,7 +44,7 @@ namespace Warehouse_Management_Test.Mocks.External_Systems_mocks
                 //Removes all objects from the list meeting the conditions given in the paramaters
                 if (command.Contains("DELETE") && command.Contains("testTable"))
                 {
-                    Dictionary<string, List<(string, int)>> filterValues = GetConditions(0, paramaters);
+                    Dictionary<string, List<(string, int)>> filterValues = GetConditions(0, paramaters, command);
                     int affectedRows = 0;
                     List<QueryTestRowModel> rowsToBeDeleted = new List<QueryTestRowModel>();
                     foreach (QueryTestRowModel queryTestRowModel in results)
@@ -65,7 +65,7 @@ namespace Warehouse_Management_Test.Mocks.External_Systems_mocks
                 else if (command.Contains("UPDATE") && command.Contains("testTable"))
                 {
                     Dictionary<string, object> updateValues = GetUpdateValues(paramaters);
-                    Dictionary<string, List<(string, int)>> filterValues = GetConditions(0, paramaters);
+                    Dictionary<string, List<(string, int)>> filterValues = GetConditions(0, paramaters, command);
                     int affectedRows = 0;
                     foreach (QueryTestRowModel rowModel in results)
                     {
@@ -197,7 +197,7 @@ namespace Warehouse_Management_Test.Mocks.External_Systems_mocks
                     result.Columns.Add("FilterValue2", typeof(int));
                     result.Columns.Add("FilterValue3", typeof(int));
                 }
-                Dictionary<string, List<(string, int)>> filterValues = GetConditions(ignoredKeyAmount, paramaters);
+                Dictionary<string, List<(string, int)>> filterValues = GetConditions(ignoredKeyAmount, paramaters, command);
                 foreach (QueryTestRowModel rowModel in results)
                 {
                     bool validRow = true;
@@ -287,11 +287,15 @@ namespace Warehouse_Management_Test.Mocks.External_Systems_mocks
         /// <param name="ignoredKeyAmount">the amount of paramaters to ignore</param>
         /// <param name="paramaters">The paramaters to use</param>
         /// <returns>A dictionary with the collumns to use conditions on as key and a list of tuples consisting of the operator and the comparison value as value</returns>
-        private Dictionary<string, List<(string, int)>> GetConditions(int ignoredKeyAmount, Dictionary<string, string> paramaters)
+        private Dictionary<string, List<(string, int)>> GetConditions(int ignoredKeyAmount, Dictionary<string, string> paramaters, string command)
         {
+            string[] splitCommand = command.Split("WHERE");
+
+            
             Dictionary<string, List<(string, int)>> filterValues = new Dictionary<string, List<(string, int)>>();
-            if (paramaters.Count > ignoredKeyAmount)
+            if (paramaters.Count > ignoredKeyAmount && splitCommand.Length > 1)
             {
+                command = command.Split("WHERE")[1];
                 for (int i = 0; i < paramaters.Count; i++)
                 {
                     string paramater = paramaters.Keys.ToList()[i];
@@ -303,15 +307,21 @@ namespace Warehouse_Management_Test.Mocks.External_Systems_mocks
                     {
                         string[] parts = paramaters[paramater].Split(' ');
                         string oCollumn = paramater.Split("con")[0];
-                        int value = int.Parse(parts[1]);
+                        int value = int.Parse(parts[0]);
                         string key = oCollumn.Remove(0, 1);
-                        if (filterValues.ContainsKey(key))
+                        int currentCondition = 0;
+                        if(filterValues.ContainsKey(key))
                         {
-                            filterValues[key].Add((parts[0], value));
+                            currentCondition = filterValues[key].Count + 1;
+                        }
+                        string op = command.Split(key)[1 + currentCondition].Split(' ')[1];
+                        if (filterValues.ContainsKey(key) && command.Contains(key))
+                        {
+                            filterValues[key].Add((op, value));
                         }
                         else
                         {
-                            filterValues.Add(key, new List<(string, int)>() { (parts[0], value) });
+                            filterValues.Add(key, new List<(string, int)>() { (op, value) });
                         }
                     }
                 }

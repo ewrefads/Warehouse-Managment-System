@@ -104,12 +104,12 @@ namespace Warehouse_Management_Test
         }
 
         [Theory()]
-        [InlineData("= 3", 1)]
-        [InlineData("<= 4", 2)]
-        [InlineData("< 4", 1)]
-        [InlineData(">= 4", 2)]
-        [InlineData("> 4", 1)]
-        [InlineData("<> 4", 2)]
+        [InlineData(" = 3", 1)]
+        [InlineData(" <= 4", 2)]
+        [InlineData(" < 4", 1)]
+        [InlineData(" >= 4", 2)]
+        [InlineData(" > 4", 1)]
+        [InlineData(" <> 4", 2)]
         public void QueryHandlerFiltersOnOneParamater(string filter, int returnedRowModels)
         {
             Dictionary<string, List<string>> filterDictionary = new Dictionary<string, List<string>>
@@ -125,8 +125,8 @@ namespace Warehouse_Management_Test
         {
             List<string> filters = new List<string>()
             {
-                "> 3",
-                "< 5"
+                " > 3",
+                " < 5"
             };
             Dictionary<string, List<string>> filterDictionary = new Dictionary<string, List<string>>
             {
@@ -141,8 +141,8 @@ namespace Warehouse_Management_Test
         {
             Dictionary<string, List<string>> filterDictionary = new Dictionary<string, List<string>>
             {
-                { "FilterValue1", new List<string>(){"> 3"} },
-                { "FilterValue2", new List<string>(){"= 2" } }
+                { "FilterValue1", new List<string>(){" > 3"} },
+                { "FilterValue2", new List<string>(){" = 2" } }
             };
             List<QueryTestRowModel> result = handler.SelectFromTable<QueryTestRowModel>(filterDictionary, new List<string>());
             Assert.Single(result);
@@ -160,7 +160,7 @@ namespace Warehouse_Management_Test
         {
             Dictionary<string, List<string>> filters = new Dictionary<string, List<string>>
             {
-                { "FilterValue1", new List<string>(){"> 3"} }
+                { "FilterValue1", new List<string>(){" > 3"} }
             };
             handler.DeleteFromTable<QueryTestRowModel>(filters);
             Assert.Single(sqlExecuter.results);
@@ -171,8 +171,8 @@ namespace Warehouse_Management_Test
         {
             Dictionary<string, List<string>> filters = new Dictionary<string, List<string>>
             {
-                { "FilterValue1", new List<string>(){"> 3"} },
-                { "FilterValue2", new List<string>(){"= 2" } }
+                { "FilterValue1", new List<string>(){" > 3"} },
+                { "FilterValue2", new List<string>(){" = 2" } }
 
             };
             handler.DeleteFromTable<QueryTestRowModel>(filters);
@@ -236,7 +236,7 @@ namespace Warehouse_Management_Test
             };
             Dictionary<string, List<string>> filters = new Dictionary<string, List<string>>
             {
-                { "FilterValue1", new List<string>(){"> 3"} }
+                { "FilterValue1", new List<string>(){" > 3"} }
             };
             handler.UpdateTable<QueryTestRowModel>(filters, updateValues);
             int updatedRows = 0;
