@@ -182,6 +182,39 @@ namespace Warehouse_Management_Test.Mocks.QueryHandlers
                 }
                 return (true, "table succesfully updated");
             }
+            else if(typeof(RowModel) == typeof(QueryTestRowModel))
+            {
+                QueryTestRowModel queryTestRowModel = (QueryTestRowModel)inventoryItems[0];
+                if(filters.ContainsKey("Id") && filters["Id"][0].Contains(queryTestRowModel.Id))
+                {
+                    if(updateValues.ContainsKey("Name"))
+                    {
+                        queryTestRowModel.Name = updateValues["Name"];
+                    }
+                    if(updateValues.ContainsKey("FilterValue1"))
+                    {
+                        queryTestRowModel.FilterValue1 = int.Parse(updateValues["FilterValue1"]);
+                    }
+                    if(updateValues.ContainsKey("FilterValue2"))
+                    {
+                        queryTestRowModel.FilterValue2 = int.Parse(updateValues["FilterValue2"]);
+                    }
+                    if(updateValues.ContainsKey("FilterValue3"))
+                    {
+                        queryTestRowModel.FilterValue3 = int.Parse(updateValues["FilterValue3"]);
+                    }
+                    
+                    return (true, "table succesfully updated");
+                }
+                else if(filters.ContainsKey("Id") && filters["Id"][0].Contains("throwsException"))
+                {
+                    throw new Exception("testException");
+                }
+                else
+                {
+                    return (false, "Id not found");
+                }
+            }
             else
             {
                 return (false, "not implemented yet");
