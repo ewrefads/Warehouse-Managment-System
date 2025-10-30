@@ -63,5 +63,49 @@ namespace Warehouse_Management_System.Commands
                 return (false, e.Message);
             }
         }
+        /*public (bool, string) UpdateOrderStatus(OrderStatus newStatus, string orderId)
+        {
+            try
+            {
+                if (typeof(RowModel) != typeof(Order))
+                {
+                    throw new Exception("This method only works on orders");
+                }
+                GetItem<Order> getOrder = new(queryHandlers[0]);
+                GetItem<Transaction> getTransaction = new(queryHandlers[0]);
+                Order order = getOrder.RetrieveItem(orderId).Item2;
+                if (order.Id != orderId)
+                {
+                    throw new Exception("Order could not be found");
+                }
+                List<Transaction> transactions = getTransaction.RetrieveItems(new Dictionary<string, List<string>>() { {"OrderId", new List<string>() { " = " + orderId} } }, null).Item2;
+                List<string> uncompletedTransactions = new List<string>();
+                if(newStatus == OrderStatus.Processed)
+                {
+                   
+                    foreach (Transaction transaction in transactions)
+                    {
+                        if(transaction.Status == TransactionStatus.Waiting || transaction.Status == TransactionStatus.Active)
+                        {
+                            uncompletedTransactions.Add(transaction.Id);
+                        }
+                    }
+                    if(uncompletedTransactions.Count > 0)
+                    {
+                        string message = "The following transactions should be marked as done or aborted before the order can be marked as proccessed: ";
+                        string transactionIdList = "";
+
+                        throw new Exception(message + transactionIdList);
+                    }
+                }
+                order.Status = newStatus;
+                UpdateItem<Order> updateOrder = new(queryHandlers[0]); 
+                return updateOrder.UpdateTableItem(new Order() {Id = orderId, Status = newStatus });
+            }
+            catch (Exception e)
+            {
+                return (false, e.Message);
+            }
+        }*/
     }
 }
