@@ -5,19 +5,16 @@ using Warehouse_Managemet_System.RowModels;
 using Warehouse_Managemet_System.Parsers;
 using Warehouse_Managemet_System.Seeders;
 
-namespace Warehouse_Managemet_System
+namespace Warehouse_Managemet_System.Driver
 {
     public class Driver
     {
         private Context _context;
         private WebApplication _app;
         private IServiceScope _scope;
-        private WebApplicationBuilder _builder;
 
-        public Driver(string[] args)
+        public Driver(WebApplicationBuilder builder)
         {
-            var builder = WebApplication.CreateBuilder(args);
-
             builder.Services.AddDbContext<Context>(options =>
                 options.UseMySql(
                     builder.Configuration.GetConnectionString("DefaultConnection"),
