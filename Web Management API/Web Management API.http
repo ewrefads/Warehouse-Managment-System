@@ -1,6 +1,6 @@
 @Web_Management_API_HostAddress = http://localhost:5226
 
-GET {{Web_Management_API_HostAddress}}/weatherforecast/
+GET {{Web_Management_API_HostAddress}}/ProductHandling/
 Accept: application/json
 
 ###

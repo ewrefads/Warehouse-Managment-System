@@ -120,12 +120,23 @@ namespace Warehouse_Management_Test.Mocks.QueryHandlers
             List<RowModel> returnList = new List<RowModel>();
             foreach (IRowModel item in inventoryItems)
             {
-                
                 if(filters.Count > 0)
                 {
                     if (filters.ContainsKey("Id") && filters["Id"][0].Contains(item.Id))
                     {
                         returnList.Add((RowModel)item);
+                    }
+                    else if(filters.ContainsKey("Id") && filters["Id"][0].Contains("throwsException"))
+                    {
+                        throw new Exception("testException");
+                    }
+                    else if(filters.ContainsKey("FilterValue1") && filters["FilterValue1"][0] == " >= 2")
+                    {
+                        QueryTestRowModel rowModel = (QueryTestRowModel)item;
+                        if(rowModel.FilterValue1 >= 2)
+                        {
+                            returnList.Add((RowModel)item);
+                        }
                     }
                 }
                 else
@@ -162,14 +173,47 @@ namespace Warehouse_Management_Test.Mocks.QueryHandlers
                 {
                     if (filters["Id"][0].Contains(transaction.Id))
                     {
-                        TransactionStatus orderStatus;
-                        if (Enum.TryParse(updateValues["Status"], out orderStatus))
+                        TransactionStatus transactionStatus;
+                        if (Enum.TryParse(updateValues["Status"], out transactionStatus))
                         {
-                            transaction.Status = orderStatus;
+                            transaction.Status = transactionStatus;
                         }
                     }
                 }
                 return (true, "table succesfully updated");
+            }
+            else if(typeof(RowModel) == typeof(QueryTestRowModel))
+            {
+                QueryTestRowModel queryTestRowModel = (QueryTestRowModel)inventoryItems[0];
+                if(filters.ContainsKey("Id") && filters["Id"][0].Contains(queryTestRowModel.Id))
+                {
+                    if(updateValues.ContainsKey("Name"))
+                    {
+                        queryTestRowModel.Name = updateValues["Name"];
+                    }
+                    if(updateValues.ContainsKey("FilterValue1"))
+                    {
+                        queryTestRowModel.FilterValue1 = int.Parse(updateValues["FilterValue1"]);
+                    }
+                    if(updateValues.ContainsKey("FilterValue2"))
+                    {
+                        queryTestRowModel.FilterValue2 = int.Parse(updateValues["FilterValue2"]);
+                    }
+                    if(updateValues.ContainsKey("FilterValue3"))
+                    {
+                        queryTestRowModel.FilterValue3 = int.Parse(updateValues["FilterValue3"]);
+                    }
+                    
+                    return (true, "table succesfully updated");
+                }
+                else if(filters.ContainsKey("Id") && filters["Id"][0].Contains("throwsException"))
+                {
+                    throw new Exception("testException");
+                }
+                else
+                {
+                    return (false, "Id not found");
+                }
             }
             else
             {

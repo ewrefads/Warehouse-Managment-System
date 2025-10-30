@@ -15,8 +15,7 @@ namespace Warehouse_Managemet_System.Commands
     public class QueryHandler<RowModel> : IQueryHandler where RowModel : IRowModel, new()
     {
         public ISQLExecuter sQLExecuter;
-        public static string connectionString = "server = Localhost; database = warehouseDB; port = 3306; user = testuser; password = test";
-        private MySqlConnection conn;
+        public static string connectionString = "server=localhost;port=3306;database=test;user=testuser;password=test";
         private string tableName;
         /// <summary>
         /// Constructor for the queryhandler
@@ -34,7 +33,6 @@ namespace Warehouse_Managemet_System.Commands
         {
             this.sQLExecuter = sQLExecuter;
             this.tableName = tableName;
-            conn = new MySqlConnection(connectionString);
         }
 
         /// <summary>
@@ -48,7 +46,7 @@ namespace Warehouse_Managemet_System.Commands
         {
             try
             {
-                using (conn)
+                using (MySqlConnection conn = new MySqlConnection())
                 {
                     Dictionary<string, string> paramaters = new Dictionary<string, string>();
                     string command = $"INSERT INTO {tableName} VALUES";
@@ -64,7 +62,15 @@ namespace Warehouse_Managemet_System.Commands
                     }
                     command += valueString;
                     command += ";";
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Open();
+                    }
                     string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Close();
+                    }
                     if (res.Contains("command executed succesfully"))
                     {
                         return (true, res);
@@ -74,6 +80,7 @@ namespace Warehouse_Managemet_System.Commands
                         throw new Exception("Sql query failed");
                     }
                 }
+                
             }
             catch (Exception e)
             {
@@ -117,7 +124,7 @@ namespace Warehouse_Managemet_System.Commands
         {
             try
             {
-                using (conn)
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     Dictionary<string, string> paramaters = new Dictionary<string, string>();
                     string command = $"UPDATE {tableName} SET ";
@@ -127,14 +134,22 @@ namespace Warehouse_Managemet_System.Commands
                     {
                         command += $"{valuePair.Item1} = {valuePair.Item2}";
                     }
-                    command += updateString;
+
                     if (filters.Count > 0)
                     {
                         updateString += $" WHERE {GetConditionString(filters, paramaters)}";
                     }
-                    
+                    command += updateString;
                     command += ";";
+                    if(connectionString.Length > 0)
+                    {
+                        conn.Open();
+                    }
                     string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Close();
+                    }
                     if (res.Contains("command executed succesfully"))
                     {
                         return (true, res);
@@ -144,6 +159,7 @@ namespace Warehouse_Managemet_System.Commands
                         throw new Exception("Sql query failed");
                     }
                 }
+                
             }
             catch (Exception ex)
             {
@@ -163,16 +179,8 @@ namespace Warehouse_Managemet_System.Commands
             List<(string, string)> valuePairs = new List<(string, string)>();
             foreach (string collumn in updateValues.Keys)
             {
-                if(!paramaters.ContainsKey($"@{collumn}"))
-                {
-                    paramaters.Add($"@{collumn}", collumn);
-                }
                 paramaters.Add($"@{collumn}val", updateValues[collumn]);
-                if(!float.TryParse(updateValues[collumn], out float res))
-                {
-                    paramaters[$"@{collumn}val"] = $"'{updateValues[collumn]}'";
-                }
-                valuePairs.Add(($"@{collumn}", $"@{collumn}val"));
+                valuePairs.Add(($"{collumn}", $"@{collumn}val"));
             }
             return valuePairs;
         }
@@ -188,7 +196,7 @@ namespace Warehouse_Managemet_System.Commands
         {
             try
             {
-                using (conn)
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     Dictionary<string, string> paramaters = new Dictionary<string, string>();
                     string command = $"DELETE FROM {tableName}";
@@ -197,7 +205,15 @@ namespace Warehouse_Managemet_System.Commands
                         command += $" WHERE {GetConditionString(filters, paramaters)}";
                     }
                     command += ";";
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Open();
+                    }
                     string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Close();
+                    }
                     if (res.Contains("command executed succesfully"))
                     {
                         return (true, res);
@@ -207,6 +223,7 @@ namespace Warehouse_Managemet_System.Commands
                         throw new Exception("Sql query failed");
                     }
                 }
+                
             }
             catch (Exception ex)
             {
@@ -226,7 +243,7 @@ namespace Warehouse_Managemet_System.Commands
         {
             try
             {
-                using (conn)
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     Dictionary<string, string> paramaters = new Dictionary<string, string>();
                     string command = "SELECT ";
@@ -258,17 +275,49 @@ namespace Warehouse_Managemet_System.Commands
                         command += $" WHERE {GetConditionString(filters, paramaters)}";
                     }
                     command += ";";
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Open();
+                    }
                     (bool, DataTable?) res = sQLExecuter.ExecuteQuery(command, conn, paramaters);
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Close();
+                    }
                     if (res.Item1)
                     {
                         DataTable dataTable = res.Item2;
                         List<RowModel> returnedRowModels = new List<RowModel>();
-                        foreach (DataRow row in dataTable.Rows)
+                        string[] columnNames = dataTable.Columns.Cast<DataColumn>()
+                                     .Select(x => x.ColumnName)
+                                     .ToArray();
+                        bool returnedData = false;
+                        if (columnNames.Contains("Id"))
                         {
-                            RowModel rowModel = new RowModel();
-                            rowModel.CreateFromDataRow(row);
-                            returnedRowModels.Add(rowModel);
+                            returnedData = true;
                         }
+                        else if (desiredCollumns.Count > 0)
+                        {
+                            foreach (string desiredCollumn in desiredCollumns)
+                            {
+                                if (columnNames.Contains(desiredCollumn))
+                                {
+                                    returnedData = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (returnedData)
+                        {
+                            foreach (DataRow row in dataTable.Rows)
+                            {
+                                RowModel rowModel = new RowModel();
+                                rowModel.CreateFromDataRow(row);
+                                returnedRowModels.Add(rowModel);
+
+                            }
+                        }
+
                         return returnedRowModels;
                     }
                     else
@@ -276,6 +325,7 @@ namespace Warehouse_Managemet_System.Commands
                         throw new Exception("Sql query failed");
                     }
                 }
+                
             }
             catch (Exception ex)
             {
@@ -294,20 +344,18 @@ namespace Warehouse_Managemet_System.Commands
             string conditionsString = "";
             foreach (string collumn in filters.Keys)
             {
-                if(!paramaters.ContainsKey($"@{collumn}"))
-                {
-                    paramaters.Add($"@{collumn}", collumn);
-                }
                 
                 for(int i = 0; i < filters[collumn].Count; i++)
                             {
-                    string condition = filters[collumn][i];
-                    paramaters.Add($"@{collumn}con{i}", condition);
+                    string[] condition = filters[collumn][i].Split(' ');
+                    
+                    paramaters.Add($"@{collumn}con{i}", condition[2]);
                     if (conditionsString.Length > 0)
                     {
                         conditionsString += "AND ";
                     }
-                    conditionsString += $"@{collumn} @{collumn}con{i} ";
+                    conditionsString += $"{collumn} {condition[1]} @{collumn}con{i} ";
+
                 }
             }
             return conditionsString;            

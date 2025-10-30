@@ -5,7 +5,7 @@ namespace Warehouse_Managemet_System.RowModels
     public class Product : IRowModel
     {
         public string? Id { get; set; }
-        public string? Name { get; set; }
+        public string? ProductName { get; set; }
         public double? Price { get; set; }
         public ICollection<RowModels.Transaction> Transactions { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }
@@ -16,7 +16,7 @@ namespace Warehouse_Managemet_System.RowModels
             try
             {
                 Id = "";
-                Name = "";
+                ProductName = "";
                 Price = -1.0;
                 Transactions = null;
                 OrderItems = null;
@@ -29,7 +29,7 @@ namespace Warehouse_Managemet_System.RowModels
                             Id = row["Id"].ToString();
                             break;
                         case "Name":
-                            Name = row["Name"].ToString();
+                            ProductName = row["ProductName"].ToString();
                             break;
                         case "Price":
                             Price = Convert.ToDouble(row["Price"]);
@@ -46,14 +46,22 @@ namespace Warehouse_Managemet_System.RowModels
 
         public string ToString()
         {
-            return "Product! Id: " + Id + ", Name: " + Name + ", Price: " + Price;
+            return "Product! Id: " + Id + ", ProductName: " + ProductName + ", Price: " + Price;
         }
         
         public List<string> GetAllValues()
         {
             return new List<string>()
             {
-                Id, Name, Price.ToString()
+                Id, ProductName, Price.ToString()
+            };
+        }
+        
+        public List<string> GetColumnNames()
+        {
+            return new List<string>()
+            {
+                "Id", "Name", "Price"
             };
         }
     }

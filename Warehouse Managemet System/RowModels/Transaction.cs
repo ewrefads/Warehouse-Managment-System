@@ -87,6 +87,14 @@ namespace Warehouse_Managemet_System.RowModels
                 Id, ProductId, Type.ToString(), Amount.ToString(), Status.ToString(), OrderId, FromWarehouseId, ToWarehouseId
             };
         }
+        
+        public List<string> GetColumnNames()
+        {
+            return new List<string>()
+            {
+                "Id", "ProductId", "Type", "Amount", "Status", "OrderId", "FromWarehouseId", "ToWarehouseId"
+            };
+        }
     }
 
     public enum TransactionType

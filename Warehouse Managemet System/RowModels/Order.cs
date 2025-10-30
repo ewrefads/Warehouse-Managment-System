@@ -67,6 +67,14 @@ namespace Warehouse_Managemet_System.RowModels
                 Id, Customer, CreationTime.ToString(), Status.ToString(), ActiveTransactionId
             };
         }
+        
+        public List<string> GetColumnNames()
+        {
+            return new List<string>()
+            {
+                "Id", "Customer", "CreationTime", "Status", "ActiveTransactionId"
+            };
+        }
     }
 
     public enum OrderStatus
