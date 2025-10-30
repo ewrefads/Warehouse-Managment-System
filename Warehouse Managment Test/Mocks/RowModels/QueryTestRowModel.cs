@@ -113,5 +113,13 @@ namespace Warehouse_Management_Test.Mocks.RowModels
                 Id, Name, FilterValue1.ToString(), FilterValue2.ToString(), FilterValue3.ToString()
             };
         }
+
+        public List<string> GetColumnNames()
+        {
+            return new List<string>()
+            {
+                "Id", "Name", "FilterValue1", "FilterValue2", "FilterValue3"
+            };
+        }
     }
 }
