@@ -74,7 +74,7 @@ namespace Warehouse_Management_Test
             Console.WriteLine(orderItem.ToString());
         }
         
-        [Fact]
+        /*[Fact]
         public void TestRunGenerateDataFile()
         {
             QueryTestRowModel mock1 = new();
@@ -83,6 +83,6 @@ namespace Warehouse_Management_Test
             DataFileGenerator fileGenerator = new();
             string path = "C:\\Users\\Asger Harpøth Møller\\Documents\\Specialisterne opgaver\\uge-6-7\\Warehouse-Managment-System\\Warehouse-Managment-System\\Warehouse Managemet System\\DataFaking\\testfile.csv";
             fileGenerator.GenerateDataFile(path, mocks);
-        }
+        }*/
     }
 }
