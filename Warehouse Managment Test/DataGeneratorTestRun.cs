@@ -73,6 +73,16 @@ namespace Warehouse_Management_Test
             IRowModel orderItem = generator.Generate();
             Console.WriteLine(orderItem.ToString());
         }
+
+        /*[Fact]
+        public void TestRunFaker()
+        {
+            DataGenerator dataGenerator = new();
+            DataFileGenerator fileGenerator = new();
+            DataFileManager fileManager = new();
+            string path = "C:\\Users\\Asger Harpøth Møller\\Documents\\Specialisterne opgaver\\uge-6-7\\Warehouse-Managment-System\\Warehouse-Managment-System\\Warehouse Managemet System\\DataFaking";
+            fileManager.CreateDataFiles(dataGenerator, fileGenerator, path);*/
+        }
         
         /*[Fact]
         public void TestRunGenerateDataFile()
