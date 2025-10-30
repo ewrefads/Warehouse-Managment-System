@@ -13,5 +13,6 @@ namespace Warehouse_Managemet_System.RowModels
         public bool CreateFromDataRow(DataRow row);
         public string ToString();
         public List<string> GetAllValues();
+        public List<string> GetColumnNames();
     }
 }

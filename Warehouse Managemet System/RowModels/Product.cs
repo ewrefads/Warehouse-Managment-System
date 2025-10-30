@@ -56,5 +56,13 @@ namespace Warehouse_Managemet_System.RowModels
                 Id, ProductName, Price.ToString()
             };
         }
+        
+        public List<string> GetColumnNames()
+        {
+            return new List<string>()
+            {
+                "Id", "Name", "Price"
+            };
+        }
     }
 }
