@@ -2,7 +2,7 @@ using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.DataFaking;
 
-public class DataFileManager
+public class DataFileManager : IDataFileManager
 {
     int numberOfProducts = 50;
     int numberOfWarehouses = 4;
