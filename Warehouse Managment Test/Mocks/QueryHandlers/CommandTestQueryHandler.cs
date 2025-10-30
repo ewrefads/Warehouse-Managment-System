@@ -120,12 +120,23 @@ namespace Warehouse_Management_Test.Mocks.QueryHandlers
             List<RowModel> returnList = new List<RowModel>();
             foreach (IRowModel item in inventoryItems)
             {
-                
                 if(filters.Count > 0)
                 {
                     if (filters.ContainsKey("Id") && filters["Id"][0].Contains(item.Id))
                     {
                         returnList.Add((RowModel)item);
+                    }
+                    else if(filters.ContainsKey("Id") && filters["Id"][0].Contains("throwsException"))
+                    {
+                        throw new Exception("testException");
+                    }
+                    else if(filters.ContainsKey("FilterValue1") && filters["FilterValue1"][0] == " >= 2")
+                    {
+                        QueryTestRowModel rowModel = (QueryTestRowModel)item;
+                        if(rowModel.FilterValue1 >= 2)
+                        {
+                            returnList.Add((RowModel)item);
+                        }
                     }
                 }
                 else
@@ -162,10 +173,10 @@ namespace Warehouse_Management_Test.Mocks.QueryHandlers
                 {
                     if (filters["Id"][0].Contains(transaction.Id))
                     {
-                        TransactionStatus orderStatus;
-                        if (Enum.TryParse(updateValues["Status"], out orderStatus))
+                        TransactionStatus transactionStatus;
+                        if (Enum.TryParse(updateValues["Status"], out transactionStatus))
                         {
-                            transaction.Status = orderStatus;
+                            transaction.Status = transactionStatus;
                         }
                     }
                 }

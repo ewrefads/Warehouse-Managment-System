@@ -16,13 +16,13 @@ namespace Warehouse_Management_Test
     public class CommandTests
     {
     }
-    
+
     public class AddItemTests
     {
         AddItem<QueryTestRowModel> addItem;
         CommandTestQueryHandler addProductQueryHandler = new CommandTestQueryHandler();
-        public AddItemTests() 
-        { 
+        public AddItemTests()
+        {
             addItem = new AddItem<QueryTestRowModel>(addProductQueryHandler);
         }
 
@@ -68,11 +68,11 @@ namespace Warehouse_Management_Test
             addItem.AddNewItems(items);
             addItem.AddNewItems(items);
             int matchingIds = 0;
-            foreach(QueryTestRowModel item in addProductQueryHandler.inventoryItems)
+            foreach (QueryTestRowModel item in addProductQueryHandler.inventoryItems)
             {
-                foreach(QueryTestRowModel item1 in addProductQueryHandler.inventoryItems)
+                foreach (QueryTestRowModel item1 in addProductQueryHandler.inventoryItems)
                 {
-                    if(item != item1 && item.Id == item1.Id)
+                    if (item != item1 && item.Id == item1.Id)
                     {
                         matchingIds++;
                     }
@@ -134,7 +134,7 @@ namespace Warehouse_Management_Test
                 new QueryTestRowModel("2", "test2", 2, 0, 0)
             };
             commandTestQueryHandler.inventoryItems = queryTestRowModels;
-            deleteItem.DeleteItems(new Dictionary<string, List<string>>() { {"FilterValue1", new List<string>() {" >= 1" } } });
+            deleteItem.DeleteItems(new Dictionary<string, List<string>>() { { "FilterValue1", new List<string>() { " >= 1" } } });
             Assert.Single(commandTestQueryHandler.inventoryItems);
         }
 
@@ -276,14 +276,14 @@ namespace Warehouse_Management_Test
         [Fact]
         public void OrderGetsCancelled()
         {
-            Order order = new Order() { Id = "0", Status = OrderStatus.Reserved, Transactions = new List<Transaction>()};
+            Order order = new Order() { Id = "0", Status = OrderStatus.Reserved, Transactions = new List<Transaction>() };
             commandTestQueryHandler.inventoryItems = new List<IRowModel>()
             {
                 order
             };
             DeleteItem<Order> deleteItemWithOrder = new DeleteItem<Order>(commandTestQueryHandler);
             (bool, string) res = deleteItemWithOrder.CancelOrder("0");
-            
+
             Assert.Equal(OrderStatus.Cancelled, order.Status);
         }
 
@@ -330,5 +330,146 @@ namespace Warehouse_Management_Test
         }
     }
 
+    public class GetItemTests
+    {
+        GetItem<QueryTestRowModel> getitem;
+        CommandTestQueryHandler commandTestQueryHandler = new CommandTestQueryHandler();
+        public GetItemTests()
+        {
+            getitem = new GetItem<QueryTestRowModel>(commandTestQueryHandler);
+        }
 
+        [Fact]
+        public void GetItemShouldReturnItem()
+        {
+            commandTestQueryHandler.inventoryItems.Add(new QueryTestRowModel() { Id = "0", Name = "Test" });
+            (bool, QueryTestRowModel) res = getitem.RetrieveItem("0");
+            Assert.Equal("Test", res.Item2.Name);
+        }
+        [Fact]
+        public void GetItemHandlesNoItemsReturned()
+        {
+            commandTestQueryHandler.inventoryItems.Add(new QueryTestRowModel() { Id = "0", Name = "Test" });
+            (bool, QueryTestRowModel) res = getitem.RetrieveItem("1");
+            Assert.Equal("No item with an id of 1 could be found", res.Item2.Id);
+        }
+
+        [Fact]
+        public void GetItemHandlesExceptions()
+        {
+            commandTestQueryHandler.inventoryItems.Add(new QueryTestRowModel() { Id = "0", Name = "Test" });
+            (bool, QueryTestRowModel) res = getitem.RetrieveItem("throwsException");
+            Assert.Equal("testException", res.Item2.Id);
+        }
+
+        [Fact]
+        public void GetItemsRetrieveCompleteList()
+        {
+            List<IRowModel> rowModels = new List<IRowModel>()
+            {
+                new QueryTestRowModel { Id = "0" },
+                new QueryTestRowModel { Id = "1" },
+                new QueryTestRowModel { Id = "2" }
+            };
+            commandTestQueryHandler.inventoryItems = rowModels;
+            (bool, List<QueryTestRowModel>) res = getitem.RetrieveItems(null, null);
+            Assert.Equal(rowModels.Count, res.Item2.Count);
+        }
+
+        [Fact]
+        public void GetItemsPassesFiltersOn()
+        {
+            List<IRowModel> rowModels = new List<IRowModel>()
+            {
+                new QueryTestRowModel { Id = "0", FilterValue1 = 1 },
+                new QueryTestRowModel { Id = "1", FilterValue1 = 2 },
+                new QueryTestRowModel { Id = "2", FilterValue1 = 3 }
+            };
+            commandTestQueryHandler.inventoryItems = rowModels;
+            (bool, List<QueryTestRowModel>) res = getitem.RetrieveItems(new Dictionary<string, List<string>>() { {"FilterValue1", new List<string>() {" >= 2"} } }, null);
+            Assert.Equal(2, res.Item2.Count);
+        }
+
+        [Fact]
+        public void GetItemsRetrievesById()
+        {
+            List<IRowModel> rowModels = new List<IRowModel>()
+            {
+                new QueryTestRowModel { Id = "0", FilterValue1 = 1 },
+                new QueryTestRowModel { Id = "1", FilterValue1 = 2 },
+                new QueryTestRowModel { Id = "2", FilterValue1 = 3 }
+            };
+            commandTestQueryHandler.inventoryItems = rowModels;
+            (bool, List<QueryTestRowModel>) res = getitem.RetrieveItems(null, new List<string>() {"0", "2" });
+            bool containsId0 = false;
+            bool containsId1 = false;
+            foreach(QueryTestRowModel rowModel in res.Item2)
+            {
+                if(rowModel.Id == "0")
+                {
+                    containsId0 = true;
+                }
+                if(rowModel.Id == "2")
+                {
+                    containsId1 = true;
+                }
+            }
+            Assert.True(containsId0 && containsId1 && res.Item2.Count == 2);
+        }
+
+        [Fact]
+        public void GetItemsRetrievesNothingOnInvalidIds()
+        {
+            List<IRowModel> rowModels = new List<IRowModel>()
+            {
+                new QueryTestRowModel { Id = "0", FilterValue1 = 1 },
+                new QueryTestRowModel { Id = "1", FilterValue1 = 2 },
+                new QueryTestRowModel { Id = "2", FilterValue1 = 3 }
+            };
+            commandTestQueryHandler.inventoryItems = rowModels;
+            (bool, List<QueryTestRowModel>) res = getitem.RetrieveItems(null, new List<string>() { "3", "4" });
+            bool containsId0 = false;
+            bool containsId1 = false;
+            foreach (QueryTestRowModel rowModel in res.Item2)
+            {
+                if (rowModel.Id == "3")
+                {
+                    containsId0 = true;
+                }
+                if (rowModel.Id == "4")
+                {
+                    containsId1 = true;
+                }
+            }
+            Assert.True(!containsId0 && !containsId1 && res.Item2.Count == 2);
+        }
+
+        [Fact]
+        public void GetItemsRetrievesNothingOnNoItemsMatchingFilters()
+        {
+            List<IRowModel> rowModels = new List<IRowModel>()
+            {
+                new QueryTestRowModel { Id = "0", FilterValue1 = 1 },
+                new QueryTestRowModel { Id = "1", FilterValue1 = 2 },
+                new QueryTestRowModel { Id = "2", FilterValue1 = 3 }
+            };
+            commandTestQueryHandler.inventoryItems = rowModels;
+            (bool, List<QueryTestRowModel>) res = getitem.RetrieveItems(new Dictionary<string, List<string>>() { {"FilterValue1", new List<string>() {" > 3" } } }, null);
+            Assert.True(res.Item1 && res.Item2.Count == 1 && res.Item2[0].Id == "No items matching the criteria could be found");
+        }
+
+        [Fact]
+        public void GetItemsHandlesQueryHandlerExceptions()
+        {
+            List<IRowModel> rowModels = new List<IRowModel>()
+            {
+                new QueryTestRowModel { Id = "0", FilterValue1 = 1 },
+                new QueryTestRowModel { Id = "1", FilterValue1 = 2 },
+                new QueryTestRowModel { Id = "2", FilterValue1 = 3 }
+            };
+            commandTestQueryHandler.inventoryItems = rowModels;
+            (bool, List<QueryTestRowModel>) res = getitem.RetrieveItems(new Dictionary<string, List<string>>() { {"Id", new List<string>() {" = throwsException" } } }, null);
+            Assert.True(!res.Item1 && res.Item2.Count == 1 && res.Item2[0].Id == "testException");
+        }
+    }
 }
