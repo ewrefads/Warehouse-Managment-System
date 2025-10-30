@@ -3,7 +3,7 @@ using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.DataFaking;
 
-public class DataFileGenerator
+public class DataFileGenerator : IDataFileGenerator
 {
     public void GenerateDataFile(string filePath, List<IRowModel> rows)
     {
