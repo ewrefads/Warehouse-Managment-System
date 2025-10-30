@@ -13,11 +13,11 @@ public class DataFileManager
 
     public void CreateDataFiles(IDataGenerator dataGenerator, IDataFileGenerator dataFileGenerator, string destinationPath)
     {
-        List<List<IRowModel>> tables = GenerateTables(dataGenerator);
+        Dictionary<string, List<IRowModel>> tables = GenerateTables(dataGenerator);
         GenerateTableFiles(dataFileGenerator, destinationPath, tables);
     }
 
-    private List<List<IRowModel>> GenerateTables(IDataGenerator dataGenerator)
+    private Dictionary<string, List<IRowModel>> GenerateTables(IDataGenerator dataGenerator)
     {
         //Generate product and warehouse data
         IRowGenerator productGenerator = new ProductGenerator();
@@ -40,13 +40,13 @@ public class DataFileManager
         IRowGenerator orderItemGenerator = new OrderItemGenerator(productIds, orderIds);
         List<IRowModel> orderItems = dataGenerator.GenerateRows(orderItemGenerator, numberOfOrderItems);
         //Return all lists of row data
-        List<List<IRowModel>> tables = new List<List<IRowModel>> {
-            products,
-            warehouses,
-            inventoryItems,
-            transactions,
-            orders,
-            orderItems
+        Dictionary<string, List<IRowModel>> tables = new Dictionary<string, List<IRowModel>> {
+            {"products", products},
+            {"warehouses", warehouses},
+            {"inventoryItems", inventoryItems},
+            {"transactions", transactions},
+            {"orders", orders},
+            {"orderItems", orderItems}
         };
         return tables;
     }
@@ -59,11 +59,12 @@ public class DataFileManager
         return ids;
     }
 
-    private void GenerateTableFiles(IDataFileGenerator dataFileGenerator, string destinationPath, List<List<IRowModel>> tables)
+    private void GenerateTableFiles(IDataFileGenerator dataFileGenerator, string destinationPath, Dictionary<string, List<IRowModel>> tables)
     {
-        foreach (List<IRowModel> table in tables)
+        foreach (KeyValuePair<string, List<IRowModel>> table in tables)
         {
-            dataFileGenerator.GenerateDataFile(destinationPath, table);
+            string filePath = destinationPath + "\\" + table.Key + ".csv";
+            dataFileGenerator.GenerateDataFile(filePath, table.Value);
         }
     }
 }
