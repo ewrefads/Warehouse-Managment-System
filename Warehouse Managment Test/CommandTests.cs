@@ -143,15 +143,6 @@ namespace Warehouse_Management_Test
             Assert.True(!res.Item1 && res.Item2 == "exception in queryHandler");
         }
 
-        [Fact]
-        public void ActualQueryHandlerHandlesInputFromCommand()
-        {
-            DeleteItem<QueryTestRowModel> DeleteItemWithActualQueryHandler = new DeleteItem<QueryTestRowModel>();
-            CommandTestSqlExecuter testSqlExecuter = new CommandTestSqlExecuter();
-            DeleteItemWithActualQueryHandler.queryHandler.sQLExecuter = testSqlExecuter;
-            (bool, string) res = DeleteItemWithActualQueryHandler.DeleteSpecificItem("0");
-            Assert.True(res.Item1);
-        }
 
         [Fact]
         public void InventoryItemAmountGetsSuccessfullyRemoved()

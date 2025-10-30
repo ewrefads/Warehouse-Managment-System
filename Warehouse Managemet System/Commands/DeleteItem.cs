@@ -16,12 +16,6 @@ namespace Warehouse_Management_System.Commands
     {
         public QueryHandler<RowModel> queryHandler;
 
-        public DeleteItem()
-        {
-
-            queryHandler = new QueryHandler<RowModel>("testTable", new SqlExecuter());
-            AddQueryHandler(queryHandler);
-        }
 
         public DeleteItem(IQueryHandler queryHandler)
         {
