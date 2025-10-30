@@ -219,80 +219,83 @@ namespace Warehouse_Managemet_System.Commands
         {
             try
             {
-                
-                Dictionary<string, string> paramaters = new Dictionary<string, string>();
-                string command = "SELECT ";
-                if (desiredCollumns.Count == 0)
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
-                    command += $"*";
-                }
-                else
-                {
-                    string collumns = "";
-                    for (int i = 0; i < desiredCollumns.Count; i++)
+                    Dictionary<string, string> paramaters = new Dictionary<string, string>();
+                    string command = "SELECT ";
+                    if (desiredCollumns.Count == 0)
                     {
-                        if (collumns.Length == 0)
-                        {
-                            collumns = desiredCollumns[i];
-                        }
-                        else
-                        {
-                            collumns += $", {desiredCollumns[i]}";
-                        }
+                        command += $"*";
                     }
-                    command += "@selectedCollumns";
-                    paramaters.Add("@selectedCollumns", collumns);
-
-                }
-                command += $" FROM {tableName}";
-                if (filters.Count > 0)
-                {
-                    command += $" WHERE {GetConditionString(filters, paramaters)}";
-                }
-                command += ";";
-                conn.Open();
-                (bool, DataTable?) res = sQLExecuter.ExecuteQuery(command, conn, paramaters);
-                conn.Close();
-                if (res.Item1)
-                {
-                    DataTable dataTable = res.Item2;
-                    List<RowModel> returnedRowModels = new List<RowModel>();
-                    string[] columnNames = dataTable.Columns.Cast<DataColumn>()
-                                 .Select(x => x.ColumnName)
-                                 .ToArray();
-                    bool returnedData = false;
-                    if (columnNames.Contains("Id"))
+                    else
                     {
-                        returnedData = true;
-                    }
-                    else if(desiredCollumns.Count > 0)
-                    {
-                        foreach(string desiredCollumn in desiredCollumns)
+                        string collumns = "";
+                        for (int i = 0; i < desiredCollumns.Count; i++)
                         {
-                            if(columnNames.Contains(desiredCollumn))
+                            if (collumns.Length == 0)
                             {
-                                returnedData = true;
-                                break;
+                                collumns = desiredCollumns[i];
+                            }
+                            else
+                            {
+                                collumns += $", {desiredCollumns[i]}";
                             }
                         }
-                    }
-                    if(returnedData)
-                    {
-                        foreach (DataRow row in dataTable.Rows)
-                        {
-                            RowModel rowModel = new RowModel();
-                            rowModel.CreateFromDataRow(row);
-                            returnedRowModels.Add(rowModel);
+                        command += "@selectedCollumns";
+                        paramaters.Add("@selectedCollumns", collumns);
 
-                        }
                     }
-                    
-                    return returnedRowModels;
+                    command += $" FROM {tableName}";
+                    if (filters.Count > 0)
+                    {
+                        command += $" WHERE {GetConditionString(filters, paramaters)}";
+                    }
+                    command += ";";
+                    conn.Open();
+                    (bool, DataTable?) res = sQLExecuter.ExecuteQuery(command, conn, paramaters);
+                    conn.Close();
+                    if (res.Item1)
+                    {
+                        DataTable dataTable = res.Item2;
+                        List<RowModel> returnedRowModels = new List<RowModel>();
+                        string[] columnNames = dataTable.Columns.Cast<DataColumn>()
+                                     .Select(x => x.ColumnName)
+                                     .ToArray();
+                        bool returnedData = false;
+                        if (columnNames.Contains("Id"))
+                        {
+                            returnedData = true;
+                        }
+                        else if (desiredCollumns.Count > 0)
+                        {
+                            foreach (string desiredCollumn in desiredCollumns)
+                            {
+                                if (columnNames.Contains(desiredCollumn))
+                                {
+                                    returnedData = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (returnedData)
+                        {
+                            foreach (DataRow row in dataTable.Rows)
+                            {
+                                RowModel rowModel = new RowModel();
+                                rowModel.CreateFromDataRow(row);
+                                returnedRowModels.Add(rowModel);
+
+                            }
+                        }
+
+                        return returnedRowModels;
+                    }
+                    else
+                    {
+                        throw new Exception("Sql query failed");
+                    }
                 }
-                else
-                {
-                    throw new Exception("Sql query failed");
-                }
+                
             }
             catch (Exception ex)
             {

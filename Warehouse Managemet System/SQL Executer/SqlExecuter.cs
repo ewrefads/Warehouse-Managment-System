@@ -33,7 +33,8 @@ namespace Warehouse_Managemet_System.SQL_Executer
                 MySqlDataReader res = cmd.ExecuteReader();
                 if(res.FieldCount > 0)
                 {
-                    DataTable dataTable = res.GetSchemaTable();
+                    DataTable dataTable = new DataTable();
+                    dataTable.Load(res);
                     return (true, dataTable);
                 }
                 else
