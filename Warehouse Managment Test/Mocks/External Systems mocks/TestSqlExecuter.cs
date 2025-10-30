@@ -338,7 +338,7 @@ namespace Warehouse_Management_Test.Mocks.External_Systems_mocks
                     {
                         case "Name":
                         case "Id":
-                            UpdateValues.Add(fieldName, paramaters[paramater].Split("'")[1]);
+                            UpdateValues.Add(fieldName, paramaters[paramater]);
                             break;                        
                         case "FilterValue1":
                         case "FilterValue2":

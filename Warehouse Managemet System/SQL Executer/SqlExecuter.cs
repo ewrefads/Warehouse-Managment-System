@@ -16,18 +16,13 @@ namespace Warehouse_Managemet_System.SQL_Executer
     {
         public string ExecuteNonReturningQuery(string command, MySqlConnection connection, Dictionary<string, string> paramaters)
         {
-            try
-            {
-                string res = "";
-                MySqlCommand cmd = CreateCommand(command, connection, paramaters);
-                int queryResult = cmd.ExecuteNonQuery();
-                res = $"command executed succesfully. {queryResult} rows affected";
-                return res;
-            }
-            catch(Exception e) 
-            { 
-                return e.Message;
-            }
+            string res = "";
+            MySqlCommand cmd = CreateCommand(command, connection, paramaters);
+            Console.WriteLine(cmd.CommandText);
+            int queryResult = cmd.ExecuteNonQuery();
+            
+            res = $"command executed succesfully. {queryResult} rows affected";
+            return res;
         }
 
         public (bool, DataTable) ExecuteQuery(string command, MySqlConnection connection, Dictionary<string, string> paramaters)
@@ -36,8 +31,15 @@ namespace Warehouse_Managemet_System.SQL_Executer
             {
                 MySqlCommand cmd = CreateCommand(command, connection, paramaters);
                 MySqlDataReader res = cmd.ExecuteReader();
-                DataTable dataTable = res.GetSchemaTable();
-                return (true, dataTable);
+                if(res.FieldCount > 0)
+                {
+                    DataTable dataTable = res.GetSchemaTable();
+                    return (true, dataTable);
+                }
+                else
+                {
+                    return (false, new DataTable());
+                }
             }
             catch (Exception e)
             {
@@ -59,9 +61,18 @@ namespace Warehouse_Managemet_System.SQL_Executer
             foreach (string paramater in paramaters.Keys)
             {
                 string newParamater = paramater;
+                object paramaterValue = paramaters[paramater];
                 if (paramater[0] != '@')
                 {
                     newParamater.Insert(0, "@");
+                }
+                if (!newParamater.Contains("@Id") && int.TryParse(paramaters[paramater], out int res))
+                {
+                    paramaterValue = res;
+                }
+                if (paramaters.Values.Contains("Price") && double.TryParse(paramaters[paramater], out double resdouble))
+                {
+                    paramaterValue = resdouble;
                 }
                 cmd.Parameters.AddWithValue(newParamater, paramaters[paramater]);
             }

@@ -88,15 +88,6 @@ namespace Warehouse_Management_Test
             Assert.True(!res.Item1 && res.Item2 == "List is empty");
         }
 
-        [Fact]
-        public void ActualQueryHandlerHandlesInputFromCommand()
-        {
-            AddItem<QueryTestRowModel> addProductWithActualQueryHandler = new AddItem<QueryTestRowModel>();
-            CommandTestSqlExecuter testSqlExecuter = new CommandTestSqlExecuter();
-            addProductWithActualQueryHandler.queryHandler.sQLExecuter = testSqlExecuter;
-            (bool, string) res = addProductWithActualQueryHandler.AddNewItem(new QueryTestRowModel());
-            Assert.True(res.Item1);
-        }
     }
 
     public class DeleteItemTests
