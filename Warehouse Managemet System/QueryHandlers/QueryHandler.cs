@@ -16,7 +16,6 @@ namespace Warehouse_Managemet_System.Commands
     {
         public ISQLExecuter sQLExecuter;
         public static string connectionString = "server=localhost;port=3306;database=test;user=testuser;password=test";
-        private MySqlConnection conn;
         private string tableName;
         /// <summary>
         /// Constructor for the queryhandler
@@ -34,7 +33,6 @@ namespace Warehouse_Managemet_System.Commands
         {
             this.sQLExecuter = sQLExecuter;
             this.tableName = tableName;
-            conn = new MySqlConnection(connectionString);
         }
 
         /// <summary>
@@ -48,31 +46,41 @@ namespace Warehouse_Managemet_System.Commands
         {
             try
             {
-                conn.Open();
-                Dictionary<string, string> paramaters = new Dictionary<string, string>();
-                string command = $"INSERT INTO {tableName} VALUES";
-                string valueString = "";
-                for (int i = 0; i < itemsToBeInserted.Count; i++)
+                using (MySqlConnection conn = new MySqlConnection())
                 {
-                    RowModel item = itemsToBeInserted[i];
-                    if (valueString.Length > 0)
+                    Dictionary<string, string> paramaters = new Dictionary<string, string>();
+                    string command = $"INSERT INTO {tableName} VALUES";
+                    string valueString = "";
+                    for (int i = 0; i < itemsToBeInserted.Count; i++)
                     {
-                        valueString += ",";
+                        RowModel item = itemsToBeInserted[i];
+                        if (valueString.Length > 0)
+                        {
+                            valueString += ",";
+                        }
+                        valueString += GetValueString(item.GetAllValues(), paramaters);
                     }
-                    valueString += GetValueString(item.GetAllValues(), paramaters);
+                    command += valueString;
+                    command += ";";
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Open();
+                    }
+                    string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Close();
+                    }
+                    if (res.Contains("command executed succesfully"))
+                    {
+                        return (true, res);
+                    }
+                    else
+                    {
+                        throw new Exception("Sql query failed");
+                    }
                 }
-                command += valueString;
-                command += ";";
-                string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
-                conn.Close();
-                if (res.Contains("command executed succesfully"))
-                {
-                    return (true, res);
-                }
-                else
-                {
-                    throw new Exception("Sql query failed");
-                }
+                
             }
             catch (Exception e)
             {
@@ -116,32 +124,42 @@ namespace Warehouse_Managemet_System.Commands
         {
             try
             {
-                Dictionary<string, string> paramaters = new Dictionary<string, string>();
-                string command = $"UPDATE {tableName} SET ";
-                List<(string, string)> valuePairs = GetValuePairs(updateValues, paramaters);
-                string updateString = "";
-                foreach ((string, string) valuePair in valuePairs)
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
-                    command += $"{valuePair.Item1} = {valuePair.Item2}";
+                    Dictionary<string, string> paramaters = new Dictionary<string, string>();
+                    string command = $"UPDATE {tableName} SET ";
+                    List<(string, string)> valuePairs = GetValuePairs(updateValues, paramaters);
+                    string updateString = "";
+                    foreach ((string, string) valuePair in valuePairs)
+                    {
+                        command += $"{valuePair.Item1} = {valuePair.Item2}";
+                    }
+
+                    if (filters.Count > 0)
+                    {
+                        updateString += $" WHERE {GetConditionString(filters, paramaters)}";
+                    }
+                    command += updateString;
+                    command += ";";
+                    if(connectionString.Length > 0)
+                    {
+                        conn.Open();
+                    }
+                    string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Close();
+                    }
+                    if (res.Contains("command executed succesfully"))
+                    {
+                        return (true, res);
+                    }
+                    else
+                    {
+                        throw new Exception("Sql query failed");
+                    }
                 }
                 
-                if (filters.Count > 0)
-                {
-                    updateString += $" WHERE {GetConditionString(filters, paramaters)}";
-                }
-                command += updateString;
-                command += ";";
-                conn.Open();
-                string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
-                conn.Close();
-                if (res.Contains("command executed succesfully"))
-                {
-                    return (true, res);
-                }
-                else
-                {
-                    throw new Exception("Sql query failed");
-                }
             }
             catch (Exception ex)
             {
@@ -187,9 +205,15 @@ namespace Warehouse_Managemet_System.Commands
                         command += $" WHERE {GetConditionString(filters, paramaters)}";
                     }
                     command += ";";
-                    conn.Open();
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Open();
+                    }
                     string res = sQLExecuter.ExecuteNonReturningQuery(command, conn, paramaters);
-                    conn.Close();
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Close();
+                    }
                     if (res.Contains("command executed succesfully"))
                     {
                         return (true, res);
@@ -251,9 +275,15 @@ namespace Warehouse_Managemet_System.Commands
                         command += $" WHERE {GetConditionString(filters, paramaters)}";
                     }
                     command += ";";
-                    conn.Open();
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Open();
+                    }
                     (bool, DataTable?) res = sQLExecuter.ExecuteQuery(command, conn, paramaters);
-                    conn.Close();
+                    if (connectionString.Length > 0)
+                    {
+                        conn.Close();
+                    }
                     if (res.Item1)
                     {
                         DataTable dataTable = res.Item2;

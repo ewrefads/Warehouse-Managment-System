@@ -34,6 +34,7 @@ namespace Warehouse_Management_Test
             sqlExecuter = new TestSqlExecuter(defaultTestData);
             data = defaultTestData;
             handler = new QueryHandler<QueryTestRowModel>("testTable", sqlExecuter);
+            QueryHandler<QueryTestRowModel>.connectionString = "";
         }
         
         [Fact]
