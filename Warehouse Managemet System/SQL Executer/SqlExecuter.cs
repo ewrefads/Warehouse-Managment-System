@@ -41,8 +41,7 @@ namespace Warehouse_Managemet_System.SQL_Executer
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                return (false, null);
+                throw e;
             }
         }
 
