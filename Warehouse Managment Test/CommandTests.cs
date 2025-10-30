@@ -472,4 +472,99 @@ namespace Warehouse_Management_Test
             Assert.True(!res.Item1 && res.Item2.Count == 1 && res.Item2[0].Id == "testException");
         }
     }
+
+    public class UpdateItemTests
+    {
+        UpdateItem<QueryTestRowModel> updateItem;
+        CommandTestQueryHandler commandTestQueryHandler = new CommandTestQueryHandler();
+        public UpdateItemTests()
+        {
+            updateItem = new UpdateItem<QueryTestRowModel>(commandTestQueryHandler);
+        }
+
+        [Fact]
+        public void UpdateItemUpdatesEveryValue()
+        {
+            QueryTestRowModel tableValues = new QueryTestRowModel { Id = "0", Name = "test", FilterValue1 = 1, FilterValue2 = 1, FilterValue3 = 1 };
+            List<IRowModel> rowModels = new List<IRowModel>()
+            {
+                tableValues
+            };
+            commandTestQueryHandler.inventoryItems = rowModels;
+            QueryTestRowModel updateValues = new QueryTestRowModel() { Id = "0", Name = "test1", FilterValue1 = 2, FilterValue2 = 3, FilterValue3 = 4 };
+            updateItem.UpdateTableItem(updateValues);
+            Assert.True(tableValues.CompareTo(updateValues));
+        }
+
+        [Fact]
+        public void UpdateItemSkipsNegativeNumbers()
+        {
+            QueryTestRowModel tableValues = new QueryTestRowModel { Id = "0", Name = "test", FilterValue1 = 1, FilterValue2 = 1, FilterValue3 = 1 };
+            List<IRowModel> rowModels = new List<IRowModel>()
+            {
+                tableValues
+            };
+            commandTestQueryHandler.inventoryItems = rowModels;
+            QueryTestRowModel updateValues = new QueryTestRowModel() { Id = "0", Name = "test1", FilterValue1 = 2, FilterValue2 = -1, FilterValue3 = 4 };
+            updateItem.UpdateTableItem(updateValues);
+            updateValues.FilterValue2 = tableValues.FilterValue2;
+            Assert.True(tableValues.CompareTo(updateValues));
+        }
+        [Fact]
+        public void UpdateItemSkipsEmptyStrings()
+        {
+            QueryTestRowModel tableValues = new QueryTestRowModel { Id = "0", Name = "test", FilterValue1 = 1, FilterValue2 = 1, FilterValue3 = 1 };
+            List<IRowModel> rowModels = new List<IRowModel>()
+            {
+                tableValues
+            };
+            commandTestQueryHandler.inventoryItems = rowModels;
+            QueryTestRowModel updateValues = new QueryTestRowModel() { Id = "0", Name = "", FilterValue1 = 2, FilterValue2 = 3, FilterValue3 = 4 };
+            updateItem.UpdateTableItem(updateValues);
+            updateValues.Name = tableValues.Name;
+            Assert.True(tableValues.CompareTo(updateValues));
+        }
+
+        [Fact]
+        public void UpdateItemSkipsNullValues()
+        {
+            QueryTestRowModel tableValues = new QueryTestRowModel { Id = "0", Name = "test", FilterValue1 = 1, FilterValue2 = 1, FilterValue3 = 1 };
+            List<IRowModel> rowModels = new List<IRowModel>()
+            {
+                tableValues
+            };
+            commandTestQueryHandler.inventoryItems = rowModels;
+            QueryTestRowModel updateValues = new QueryTestRowModel() { Id = "0", Name = null, FilterValue1 = 2, FilterValue2 = 3, FilterValue3 = 4 };
+            updateItem.UpdateTableItem(updateValues);
+            updateValues.Name = tableValues.Name;
+            Assert.True(tableValues.CompareTo(updateValues));
+        }
+
+        [Fact]
+        public void UpdateItemThrowsAndHandlesExceptionIfNoUpdateValuesWereGiven()
+        {
+            QueryTestRowModel tableValues = new QueryTestRowModel { Id = "0", Name = "test", FilterValue1 = 1, FilterValue2 = 1, FilterValue3 = 1 };
+            List<IRowModel> rowModels = new List<IRowModel>()
+            {
+                tableValues
+            };
+            commandTestQueryHandler.inventoryItems = rowModels;
+            QueryTestRowModel updateValues = new QueryTestRowModel() { Id = "0", Name = "", FilterValue1 = -1, FilterValue2 = -1, FilterValue3 = -1 };
+            (bool, string) res = updateItem.UpdateTableItem(updateValues);
+            Assert.True(!res.Item1 && res.Item2 == "No update values were given");
+        }
+        [Fact]
+        public void UpdateItemHandlesQueryHandlerExceptions()
+        {
+            QueryTestRowModel tableValues = new QueryTestRowModel { Id = "0", Name = "test", FilterValue1 = 1, FilterValue2 = 1, FilterValue3 = 1 };
+            List<IRowModel> rowModels = new List<IRowModel>()
+            {
+                tableValues
+            };
+            commandTestQueryHandler.inventoryItems = rowModels;
+            QueryTestRowModel updateValues = new QueryTestRowModel() { Id = "throwsException", Name = "test1", FilterValue1 = -1, FilterValue2 = -1, FilterValue3 = -1 };
+            (bool, string) res = updateItem.UpdateTableItem(updateValues);
+            Assert.True(!res.Item1 && res.Item2 == "testException");
+        }
+    }
 }
