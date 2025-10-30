@@ -27,5 +27,10 @@ namespace Warehouse_Managment_Test.Mocks.RowModels
                 Id, Amount.ToString()
             };
         }
+
+        public List<string> GetColumnNames()
+        {
+            return null;
+        }
     }
 }
