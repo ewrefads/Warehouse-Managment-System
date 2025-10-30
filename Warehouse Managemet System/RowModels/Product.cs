@@ -57,7 +57,7 @@ namespace Warehouse_Managemet_System.RowModels
             };
         }
         
-        public List<string> GetAllValues()
+        public List<string> GetColumnNames()
         {
             return new List<string>()
             {
