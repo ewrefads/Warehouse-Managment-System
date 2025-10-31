@@ -2,6 +2,9 @@ using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.DataFaking;
 
+/// <summary>
+/// <inheritdoc/>
+/// </summary>
 public class DataFileManager : IDataFileManager
 {
     int numberOfProducts = 50;
@@ -11,6 +14,12 @@ public class DataFileManager : IDataFileManager
     int numberOfOrders = 20;
     int numberOfOrderItems = 30;
 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
+    /// <param name="dataGenerator"></param>
+    /// <param name="dataFileGenerator"></param>
+    /// <param name="destinationPath"></param>
     public void CreateDataFiles(IDataGenerator dataGenerator, IDataFileGenerator dataFileGenerator, string destinationPath)
     {
         Dictionary<string, List<IRowModel>> tables = GenerateTables(dataGenerator);
