@@ -28,7 +28,7 @@ namespace Warehouse_Managemet_System.RowModels
                         case "Id":
                             Id = row["Id"].ToString();
                             break;
-                        case "Name":
+                        case "ProductName":
                             ProductName = row["ProductName"].ToString();
                             break;
                         case "Price":
