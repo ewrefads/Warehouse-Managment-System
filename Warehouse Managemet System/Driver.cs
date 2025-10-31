@@ -7,6 +7,7 @@ using Warehouse_Managemet_System.Seeders;
 using Warehouse_Managemet_System.SQL_Executer;
 using Warehouse_Managemet_System.Commands;
 using Warehouse_Management_System.Commands;
+using Warehouse_Managemet_System.DataFaking;
 
 namespace Warehouse_Managemet_System.Driver
 {
@@ -58,15 +59,19 @@ namespace Warehouse_Managemet_System.Driver
 
         public void SetUpDatabase(IServiceScope scope)
         {
+            DataFileManager manager = new DataFileManager();
+            DataFileGenerator fileG = new DataFileGenerator();
+            DataGenerator gen = new DataGenerator();
+            manager.CreateDataFiles(gen, fileG, "DataFiles");
             _context = scope.ServiceProvider.GetRequiredService<Context>();
             Parser parser = new Warehouse_Managemet_System.Parsers.Parser();
             Seeder seeder = new Seeder(_context, parser);
-            seeder.PopulateTable<Product>("");
-            seeder.PopulateTable<OrderItem>("");
-            seeder.PopulateTable<Order>("");
-            seeder.PopulateTable<Transaction>("");
-            seeder.PopulateTable<InventoryItem>("");
-            seeder.PopulateTable<Warehouse>("");
+            seeder.PopulateTable<Product>("products.csv");
+            seeder.PopulateTable<OrderItem>("orderItems.csv");
+            seeder.PopulateTable<Order>("order.csv");
+            seeder.PopulateTable<Transaction>("transaction.csv");
+            seeder.PopulateTable<InventoryItem>("inventoryItem.csv");
+            seeder.PopulateTable<Warehouse>("warehouse.csv");
             SqlExecuter executer = new SqlExecuter();
             string productTable = _context.GetTable<Product>();
             string orderItemTable = _context.GetTable<OrderItem>();
