@@ -10,22 +10,23 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 Driver driver = new Driver(builder);
+var app = driver._app;
 using (var scope = driver.GetScope())
 {
     driver.SetUpDatabase(scope);
 }
 
 // Configure the HTTP request pipeline.
-if (driver._app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    driver._app.UseSwagger();
-    driver._app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-driver._app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
-driver._app.UseAuthorization();
+app.UseAuthorization();
 
-driver._app.MapControllers();
+app.MapControllers();
 
-driver._app.Run();
+app.Run();
