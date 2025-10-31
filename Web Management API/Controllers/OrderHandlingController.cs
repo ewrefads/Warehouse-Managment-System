@@ -12,6 +12,8 @@ namespace Web_Management_API.Controllers
     {
         private GetItem<Order> getOrder;
         private QueryHandler<Order> orderHandler;
+        private AddItem<Order> AddOrder;
+        private QueryHandler<Product> productHandler;
 
         public OrderHandlingController()
         {
@@ -71,8 +73,10 @@ namespace Web_Management_API.Controllers
 
         [HttpPost(Name = "CreateOrder")]
         public IActionResult CreateOrder(string customer, string OrderItems, string amounts)
-        {
+        { 
             Order order = new Order() {Customer = customer, CreationTime = DateTime.Now };
+            string[] orderItems = OrderItems.Split(",");
+            string[] amountsPerItem = amounts.Split(',');
             return BadRequest("Not implemented yet");
         }
     }

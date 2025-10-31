@@ -62,6 +62,10 @@ namespace Warehouse_Managemet_System.Driver
             DataFileManager manager = new DataFileManager();
             DataFileGenerator fileG = new DataFileGenerator();
             DataGenerator gen = new DataGenerator();
+            if(!Directory.Exists("DataFiles"))
+            {
+                Directory.CreateDirectory("DataFiles");
+            }
             manager.CreateDataFiles(gen, fileG, "DataFiles");
             _context = scope.ServiceProvider.GetRequiredService<Context>();
             Parser parser = new Warehouse_Managemet_System.Parsers.Parser();
