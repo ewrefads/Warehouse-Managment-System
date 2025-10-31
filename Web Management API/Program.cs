@@ -10,7 +10,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 Driver driver = new Driver(builder);
-var app = builder.Build();
+var app = driver._app;
+using (var scope = driver.GetScope())
+{
+    driver.SetUpDatabase(scope);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
