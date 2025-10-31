@@ -3,11 +3,17 @@ using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.DataFaking;
 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
 public class DataFileGenerator : IDataFileGenerator
 {
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public void GenerateDataFile(string filePath, List<IRowModel> rows)
     {
-        using(StreamWriter sw = File.CreateText(filePath))
+        using (StreamWriter sw = File.CreateText(filePath))
         {
             bool columnNamesWritten = false;
             foreach (IRowModel row in rows)
