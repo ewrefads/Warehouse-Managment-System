@@ -169,24 +169,26 @@ namespace Warehouse_Management_Test.Mocks.External_Systems_mocks
                 DataTable result = new DataTable();
                 bool returnValue = true;
                 int ignoredKeyAmount = 0;
-                if (paramaters.ContainsKey("@selectedCollumns"))
+                if (!command.Contains("*"))
                 {
-                    ignoredKeyAmount++;
-                    string[] desiredCollumns = paramaters["@selectedCollumns"].Split(", ");
-                    for (int i = 0; i < desiredCollumns.Length; i++)
+                    string[] words = command.Split(' ');
+                    int index = 0;
+                    while (words[index] != "FROM")
                     {
-                        if (desiredCollumns[i] == "Name" || desiredCollumns[i] == "Id")
+                        string word = words[index].Split(',')[0];
+                        if (word == "Name" || word == "Id")
                         {
-                            result.Columns.Add(desiredCollumns[i], typeof(string));
+                            result.Columns.Add(word, typeof(string));
                         }
-                        else if (desiredCollumns[i] == "FilterValue4")
+                        else if (word == "FilterValue4")
                         {
                             returnValue = false;
                         }
-                        else
+                        else if (word!= "SELECT")
                         {
-                            result.Columns.Add(desiredCollumns[i], typeof(int));
+                            result.Columns.Add(word, typeof(int));
                         }
+                        index++;
                     }
                 }
                 else

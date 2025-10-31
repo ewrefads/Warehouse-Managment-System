@@ -3,8 +3,14 @@ using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.DataFaking;
 
-public class DataGenerator
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
+public class DataGenerator : IDataGenerator
 {
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public List<IRowModel> GenerateRows(IRowGenerator rowGenerator, int amount, int? seed = null)
     {
         SetSeed(seed);
@@ -17,6 +23,9 @@ public class DataGenerator
         return rows;
     }
 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public IRowModel GenerateRow(IRowGenerator rowGenerator, int? seed = null)
     {
         SetSeed(seed);
@@ -24,7 +33,7 @@ public class DataGenerator
         return row;
     }
 
-    public void SetSeed(int? seed)
+    private void SetSeed(int? seed)
     {
         if (seed is int s)
         {

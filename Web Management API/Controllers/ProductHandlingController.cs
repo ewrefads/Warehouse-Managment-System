@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Warehouse_Management_System.Commands;
 using Warehouse_Managemet_System.Commands;
+using Warehouse_Managemet_System.Driver;
 using Warehouse_Managemet_System.RowModels;
 using Warehouse_Managemet_System.SQL_Executer;
 using Web_Management_API.DisplayRowModels;
@@ -13,14 +14,10 @@ namespace Web_Management_API.Controllers
     {
         private readonly ILogger<ProductHandlingController> _logger;
         private GetItem<Product> getProduct;
-        private QueryHandler<Product> queryHandler;
         private GetItem<InventoryItem> getInventoryItem;
-        private QueryHandler<InventoryItem> inventoryItemHandler;
-        private QueryHandler<OrderItem> orderItemHandler;
         private GetItem<OrderItem> getOrderItem;
         private AddItem<Product> addProduct;
         private AddItem<InventoryItem> addInventoryItem;
-        private QueryHandler<Warehouse> warehouseHandler;
         private GetItem<Warehouse> getWarehouse;
         private UpdateItem<Product> updateProduct;
         private UpdateItem<InventoryItem> updateInventoryItem;
@@ -28,24 +25,20 @@ namespace Web_Management_API.Controllers
         private DeleteItem<Product> deleteProduct;
         private DeleteItem<InventoryItem> deleteInventoryItem;
         private DeleteItem<OrderItem> deleteOrderItem;
-        public ProductHandlingController(ILogger<ProductHandlingController> logger)
+        public ProductHandlingController(ILogger<ProductHandlingController> logger, Driver driver)
         {
-            queryHandler = new QueryHandler<Product>("product", new SqlExecuter());
-            getProduct = new GetItem<Product>(queryHandler);
-            orderItemHandler = new QueryHandler<OrderItem>("Order", new SqlExecuter());
-            inventoryItemHandler = new QueryHandler<InventoryItem>("InventoryItem", new SqlExecuter());
-            warehouseHandler = new QueryHandler<Warehouse>("Warehouse", new SqlExecuter());
-            getInventoryItem = new GetItem<InventoryItem>(inventoryItemHandler);
-            getOrderItem = new GetItem<OrderItem>(orderItemHandler);
-            getWarehouse = new GetItem<Warehouse>(warehouseHandler);
-            addProduct = new AddItem<Product>(queryHandler);
-            addInventoryItem = new AddItem<InventoryItem>(inventoryItemHandler);
-            updateProduct = new UpdateItem<Product>(queryHandler);
-            updateInventoryItem = new UpdateItem<InventoryItem>(inventoryItemHandler);
-            updateOrderItem = new UpdateItem<OrderItem>(orderItemHandler);
-            deleteProduct = new DeleteItem<Product>(queryHandler);
-            deleteInventoryItem = new DeleteItem<InventoryItem>(inventoryItemHandler);
-            deleteOrderItem = new DeleteItem<OrderItem>(orderItemHandler);
+            getProduct = driver._getProdcuct;
+            getInventoryItem = driver._getInventoryItem;
+            getOrderItem = driver._getOrderItem;
+            getWarehouse = driver._getWarehouse;
+            addProduct = driver._addProduct;
+            addInventoryItem = driver._addInventoryItem;
+            updateProduct = driver._updateProduct;
+            updateInventoryItem = driver._updateInventoryItem;
+            updateOrderItem = driver._updateOrderItem;
+            deleteProduct = driver._deleteProduct;
+            deleteInventoryItem = driver._deleteInventoryItem;
+            deleteOrderItem = driver._deleteOrderItem;
             _logger = logger;
         }
         [HttpGet(Name = "GetProduct")]

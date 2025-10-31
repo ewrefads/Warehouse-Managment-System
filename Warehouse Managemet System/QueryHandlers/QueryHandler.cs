@@ -15,7 +15,7 @@ namespace Warehouse_Managemet_System.Commands
     public class QueryHandler<RowModel> : IQueryHandler where RowModel : IRowModel, new()
     {
         public ISQLExecuter sQLExecuter;
-        public static string connectionString = "server=localhost;port=3306;database=test;user=testuser;password=test";
+        public string connectionString = "server=localhost;port=3306;database=test;user=testuser;password=test";
         private string tableName;
         /// <summary>
         /// Constructor for the queryhandler
@@ -33,6 +33,7 @@ namespace Warehouse_Managemet_System.Commands
         {
             this.sQLExecuter = sQLExecuter;
             this.tableName = tableName;
+
         }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace Warehouse_Managemet_System.Commands
         {
             try
             {
-                using (MySqlConnection conn = new MySqlConnection())
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     Dictionary<string, string> paramaters = new Dictionary<string, string>();
                     string command = $"INSERT INTO {tableName} VALUES";
@@ -265,8 +266,8 @@ namespace Warehouse_Managemet_System.Commands
                                 collumns += $", {desiredCollumns[i]}";
                             }
                         }
-                        command += "@selectedCollumns";
-                        paramaters.Add("@selectedCollumns", collumns);
+                        command += collumns;
+                        //paramaters.Add("@selectedCollumns", collumns);
 
                     }
                     command += $" FROM {tableName}";

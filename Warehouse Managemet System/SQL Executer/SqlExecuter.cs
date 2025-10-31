@@ -67,7 +67,7 @@ namespace Warehouse_Managemet_System.SQL_Executer
                 {
                     newParamater.Insert(0, "@");
                 }
-                if (!newParamater.Contains("@Id") && int.TryParse(paramaters[paramater], out int res))
+                if (!newParamater.ToLower().Contains("@id") && int.TryParse(paramaters[paramater], out int res))
                 {
                     paramaterValue = res;
                 }
