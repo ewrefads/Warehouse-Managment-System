@@ -17,9 +17,6 @@ public class DataFileManager : IDataFileManager
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
-    /// <param name="dataGenerator"></param>
-    /// <param name="dataFileGenerator"></param>
-    /// <param name="destinationPath"></param>
     public void CreateDataFiles(IDataGenerator dataGenerator, IDataFileGenerator dataFileGenerator, string destinationPath)
     {
         Dictionary<string, List<IRowModel>> tables = GenerateTables(dataGenerator);
