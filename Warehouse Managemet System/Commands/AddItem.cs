@@ -17,12 +17,6 @@ namespace Warehouse_Management_System.Commands
     {
         public QueryHandler<RowModel> queryHandler;
 
-        public AddItem()
-        {
-
-            queryHandler = new QueryHandler<RowModel>("testTable", new SqlExecuter());
-            AddQueryHandler(queryHandler);    
-        }
 
         public AddItem(IQueryHandler queryHandler)
         {

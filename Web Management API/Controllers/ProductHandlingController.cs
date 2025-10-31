@@ -30,7 +30,7 @@ namespace Web_Management_API.Controllers
         private DeleteItem<OrderItem> deleteOrderItem;
         public ProductHandlingController(ILogger<ProductHandlingController> logger)
         {
-            queryHandler = new QueryHandler<Product>("Product", new SqlExecuter());
+            queryHandler = new QueryHandler<Product>("product", new SqlExecuter());
             getProduct = new GetItem<Product>(queryHandler);
             orderItemHandler = new QueryHandler<OrderItem>("Order", new SqlExecuter());
             inventoryItemHandler = new QueryHandler<InventoryItem>("InventoryItem", new SqlExecuter());
@@ -116,7 +116,7 @@ namespace Web_Management_API.Controllers
             foreach(Product product in items)
             {
                 List<InventoryItem> inventoryItems = getInventoryItem.RetrieveItems(new Dictionary<string, List<string>>() { {"ProductId", new List<string>() { " = " + product.Id } } }, null).Item2;
-                ExtendedInfoProduct extendedInfoProduct = new ExtendedInfoProduct() { Id = product.Id, Name = product.Name, Price = product.Price, ReservedAmount = 0, StorageAmount = 0, TotalAmount = 0 };
+                ExtendedInfoProduct extendedInfoProduct = new ExtendedInfoProduct() { Id = product.Id, Name = product.ProductName, Price = product.Price, ReservedAmount = 0, StorageAmount = 0, TotalAmount = 0 };
                 if (inventoryItems[0].Id != "No items matching the criteria could be found")
                 {
                     foreach(InventoryItem inventoryItem in inventoryItems)
@@ -147,7 +147,7 @@ namespace Web_Management_API.Controllers
         {
             (bool, List<Product>) itemAllreadyExists = getProduct.RetrieveItems(new Dictionary<string, List<string>>() { {"Name", new List<string>() { " = " + Name } } },null);
             (bool, string) res;
-            if (itemAllreadyExists.Item1 && itemAllreadyExists.Item2[0].Name != null && WarehouseId == null)
+            if (itemAllreadyExists.Item1 && (itemAllreadyExists.Item2[0].ProductName != null && itemAllreadyExists.Item2[0].ProductName == Name) && WarehouseId == null)
             {
                 return BadRequest("Product Allready Exists");
             }
@@ -162,9 +162,9 @@ namespace Web_Management_API.Controllers
                 res = addInventoryItem.AddNewItem(inventoryItem);
                 
             }
-            else if(!itemAllreadyExists.Item1 || itemAllreadyExists.Item2[0].Name == null)
+            else if(!itemAllreadyExists.Item1 || (itemAllreadyExists.Item2[0].ProductName == null || itemAllreadyExists.Item2[0].ProductName != Name))
             {
-                Product product = new Product() { Name = Name, Price = Price };
+                Product product = new Product() { ProductName = Name, Price = Price };
                 string extraInfo = "";
                 if(WarehouseId != null && Amount != null)
                 {
@@ -206,7 +206,7 @@ namespace Web_Management_API.Controllers
             (bool, string) res = (false, "Unknown error");
             if(productId != null)
             {
-                Product product = new Product() { Id = productId, Name = name, Price = price };
+                Product product = new Product() { Id = productId, ProductName = name, Price = price };
                 res = updateProduct.UpdateTableItem(product);
             }
             else if(inventoryId != null)
@@ -259,7 +259,7 @@ namespace Web_Management_API.Controllers
             {
                 int totalAmount = 0;
                 List<string> inventoryItemIds = new List<string>();
-                List<InventoryItem> inventoryItems = getInventoryItem.RetrieveItems(new Dictionary<string, List<string>>() { { "ProductId", new List<string>() { " = " + productId } } }, null).Item2;
+                List<InventoryItem> inventoryItems = new List<InventoryItem>();/*getInventoryItem.RetrieveItems(new Dictionary<string, List<string>>() { { "ProductId", new List<string>() { " = " + productId } } }, null).Item2;*/
                 foreach(InventoryItem inventoryItem in inventoryItems)
                 {
                     if(inventoryItem.Amount != null && inventoryItem.Amount > 0)
@@ -269,7 +269,7 @@ namespace Web_Management_API.Controllers
                     }
                 }
                 List<string> orderItemsIds = new List<string>();
-                List<OrderItem> orderItems = getOrderItem.RetrieveItems(new Dictionary<string, List<string>>() { { "ProductId", new List<string>() { " = " + productId } } }, null).Item2;
+                List<OrderItem> orderItems = new List<OrderItem>(); /*getOrderItem.RetrieveItems(new Dictionary<string, List<string>>() { { "ProductId", new List<string>() { " = " + productId } } }, null).Item2;*/
                 foreach (OrderItem orderItem in orderItems)
                 {
                     if (orderItem.Amount != null && orderItem.Amount > 0)
@@ -295,7 +295,7 @@ namespace Web_Management_API.Controllers
                     {
                         deleteOrderItem.DeleteSpecificItem(orderItem.Id);
                     }
-                    res = deleteInventoryItem.DeleteSpecificItem(productId);
+                    res = deleteProduct.DeleteSpecificItem(productId);
                 }
             }
             else if(inventoryId != null)

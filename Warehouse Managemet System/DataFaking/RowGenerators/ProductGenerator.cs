@@ -12,7 +12,7 @@ public class ProductGenerator : IRowGenerator
     {
         productFaker = new Faker<Product>()
             .RuleFor(r => r.Id, f => "" + nextId++)
-            .RuleFor(r => r.Name, f => f.Commerce.ProductName())
+            .RuleFor(r => r.ProductName, f => f.Commerce.ProductName())
             .RuleFor(r => r.Price, f => f.Random.Double(0.0, 400.0));
     }
 
