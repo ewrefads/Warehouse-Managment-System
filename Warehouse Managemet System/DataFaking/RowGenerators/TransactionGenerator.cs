@@ -3,11 +3,19 @@ using Warehouse_Managemet_System.RowModels;
 
 namespace Warehouse_Managemet_System.DataFaking;
 
+/// <summary>
+/// <inheritdoc/>
+/// </summary>
 public class TransactionGenerator : IRowGenerator
 {
     private Faker<Transaction> transactionFaker;
     private int nextId = 0;
 
+    /// <summary>
+    /// Constructor method
+    /// </summary>
+    /// <param name="productIds">List<string>, list of valid IDs for products</param>
+    /// <param name="warehouseIds">List<string>, list of valid IDs for warehouses</param>
     public TransactionGenerator(List<string> productIds, List<string> warehouseIds)
     {
         transactionFaker = new Faker<Transaction>()
@@ -22,6 +30,9 @@ public class TransactionGenerator : IRowGenerator
                 ? null : f.PickRandom(warehouseIds));
     }
 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public IRowModel Generate()
     {
         Transaction transaction = transactionFaker.Generate();
