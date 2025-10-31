@@ -1,19 +1,20 @@
-using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System;
+using Warehouse_Management_System.ClassServices;
+using Warehouse_Management_System.Commands;
+using Warehouse_Managemet_System.Commands;
 using Warehouse_Managemet_System.Contexts;
-using Warehouse_Managemet_System.RowModels;
+using Warehouse_Managemet_System.DataFaking;
 using Warehouse_Managemet_System.Parsers;
+using Warehouse_Managemet_System.RowModels;
 using Warehouse_Managemet_System.Seeders;
 using Warehouse_Managemet_System.SQL_Executer;
-using Warehouse_Managemet_System.Commands;
-using Warehouse_Management_System.Commands;
-using Warehouse_Managemet_System.DataFaking;
 
 namespace Warehouse_Managemet_System.Driver
 {
     public class Driver
     {
-        private Context _context;
         public WebApplication _app;
         public GetItem<Product> _getProdcuct;
         public GetItem<OrderItem> _getOrderItem;
@@ -39,17 +40,11 @@ namespace Warehouse_Managemet_System.Driver
         public DeleteItem<Transaction> _deleteTransaction;
         public DeleteItem<InventoryItem> _deleteInventoryItem;
         public DeleteItem<Warehouse> _deleteWarehouse;
+        private string connectionString;
 
         public Driver(WebApplicationBuilder builder)
         {
-            string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<Context>(options =>
-                options.UseMySql(
-                    connectionString,
-                    new MySqlServerVersion(new Version(8, 0, 30))
-                ));
-
-            _app = builder.Build();
+            connectionString = builder.Configuration.GetConnectionString("DBConnection");
         }
 
         public IServiceScope GetScope()
@@ -57,38 +52,27 @@ namespace Warehouse_Managemet_System.Driver
             return _app.Services.CreateScope();
         }
 
-        public void SetUpDatabase(IServiceScope scope)
+        public void SetUpDatabase(Context context)
         {
-            DataFileManager manager = new DataFileManager();
-            DataFileGenerator fileG = new DataFileGenerator();
-            DataGenerator gen = new DataGenerator();
-            if(!Directory.Exists("DataFiles"))
-            {
-                Directory.CreateDirectory("DataFiles");
-            }
-            manager.CreateDataFiles(gen, fileG, "DataFiles");
-            _context = scope.ServiceProvider.GetRequiredService<Context>();
-            Parser parser = new Warehouse_Managemet_System.Parsers.Parser();
-            Seeder seeder = new Seeder(_context, parser);
-            seeder.PopulateTable<Product>("products.csv");
-            seeder.PopulateTable<OrderItem>("orderItems.csv");
-            seeder.PopulateTable<Order>("order.csv");
-            seeder.PopulateTable<Transaction>("transaction.csv");
-            seeder.PopulateTable<InventoryItem>("inventoryItem.csv");
-            seeder.PopulateTable<Warehouse>("warehouse.csv");
             SqlExecuter executer = new SqlExecuter();
-            string productTable = _context.GetTable<Product>();
-            string orderItemTable = _context.GetTable<OrderItem>();
-            string orderTable = _context.GetTable<Order>();
-            string transactionTable = _context.GetTable<Transaction>();
-            string inventoryItemTable = _context.GetTable<InventoryItem>();
-            string warehouseTable = _context.GetTable<Warehouse>();
+            string productTable = context.GetTable<Product>();
+            string orderItemTable = context.GetTable<OrderItem>();
+            string orderTable = context.GetTable<Order>();
+            string transactionTable = context.GetTable<Transaction>();
+            string inventoryItemTable = context.GetTable<InventoryItem>();
+            string warehouseTable = context.GetTable<Warehouse>();
             QueryHandler<Product> productHandler = new QueryHandler<Product>(productTable, executer);
+            //productHandler.connectionString = connectionString;
             QueryHandler<OrderItem> orderItemHandler = new QueryHandler<OrderItem>(orderItemTable, executer);
+            //orderItemHandler.connectionString = connectionString;
             QueryHandler<Order> orderHandler = new QueryHandler<Order>(orderTable, executer);
+            //orderHandler.connectionString = connectionString;
             QueryHandler<Transaction> transactionHandler = new QueryHandler<Transaction>(transactionTable, executer);
+            //transactionHandler.connectionString = connectionString;
             QueryHandler<InventoryItem> inventoryItemHandler = new QueryHandler<InventoryItem>(inventoryItemTable, executer);
+            //inventoryItemHandler.connectionString = connectionString;
             QueryHandler<Warehouse> warehouseHandler = new QueryHandler<Warehouse>(warehouseTable, executer);
+
             _getProdcuct = new GetItem<Product>(productHandler);
             _getOrderItem = new GetItem<OrderItem>(orderItemHandler);
             _getOrder = new GetItem<Order>(orderHandler);
